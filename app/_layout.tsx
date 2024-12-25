@@ -5,7 +5,7 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 export default function Layout() {
   return (
     <GluestackUIProvider>
-      <Stack />
+      <Stack screenOptions={{ headerShown: false }} />
     </GluestackUIProvider>
   );
 }
