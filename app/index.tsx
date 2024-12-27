@@ -1,108 +1,87 @@
-import { useState } from "react";
-import { Redirect } from "expo-router";
-import { Button, ButtonText } from "@/components/ui/button"; // Certifique-se de que você tem esses componentes
-import { Box } from "@/components/ui/box"; // Certifique-se de que você tem o Box
-import { Text } from "@/components/ui/text"; // Certifique-se de que você tem o Text
-import { VStack } from "@/components/ui/vstack"; // Certifique-se de que você tem o VStack
-import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input"; // Certifique-se de que você tem o Input
+import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import { Box } from "@/components/ui/box";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
+import { Input, InputIcon, InputSlot, InputField } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ButtonText } from "@/components/ui/button";
+import { EyeIcon, EyeOffIcon } from "lucide-react-native";
 
-export default function LoginScreen() {
+const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [error, setError] = useState("");
+  const router = useRouter();
 
-  // Função para simular login
   const handleLogin = () => {
-    // Simulação simples de login (substitua com sua lógica real)
-    if (email === "user@example.com" && password === "123456") {
-      setIsLoggedIn(true); // Redireciona se o login for bem-sucedido
-      setError(""); // Limpa erro
-    } else {
-      setError("Credenciais inválidas!"); // Exibe erro em caso de falha no login
-    }
+    console.log("Email:", email, "Password:", password);
+    router.push("/medico");
   };
 
-  // Função para alternar visibilidade da senha
-  const handleShowPassword = () => {
-    setShowPassword((prevState) => !prevState);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const handleState = () => {
+    setShowPassword((showState) => {
+      return !showState;
+    });
   };
-
-  if (isLoggedIn) {
-    return <Redirect href="/" />; // Redireciona para a tela inicial após login
-  }
 
   return (
-    <Box className="flex-1 justify-center items-center bg-gray-100 px-6 md:px-12">
-      <VStack className="space-md items-center w-full max-w-lg">
-        <Text className="text-xl font-bold text-gray-800 mb-6 text-center">
-          Bem-vindo!
+    <Box className="flex-1 justify-center items-center bg-background-50 p-5">
+      <VStack space="md" className="w-11/12">
+        <Text size="xl" className="text-center font-bold text-typography-900">
+          Bem-vindo ao App!
         </Text>
-        {/* Input para e-mail */}
-        <VStack className="space-xs w-full">
-          <Text className="text-gray-700">Email</Text>
-          <Input>
-            <InputField
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Digite seu email"
-              className="bg-white border rounded-lg p-4"
-            />
-          </Input>
-        </VStack>
 
-        {/* Input para senha */}
-        <VStack className="space-xs w-full mt-4">
-          <Text className="text-gray-700">Senha</Text>
-          <Input>
-            <InputField
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Digite sua senha"
-              className="bg-white border rounded-lg p-4"
-              secureTextEntry={!showPassword}
-            />
-            <InputSlot>
-              <InputIcon onPress={handleShowPassword}>
-                <Text className="text-blue-500">
-                  {showPassword ? "Ocultar" : "Mostrar"}
-                </Text>
-              </InputIcon>
-            </InputSlot>
-          </Input>
-        </VStack>
+        {/* Campo de Email */}
+        <Text className="text-typography-900 leading-1">E-mail</Text>
+        <Input variant="outline" size="md" className="border-typography-300">
+          <InputField
+            placeholder="Digite seu e-mail"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            className="text-typography-900"
+          />
+        </Input>
 
-        {/* Exibindo erro, se houver */}
-        {error && (
-          <Text className="text-red-500 mt-4 text-center">{error}</Text>
-        )}
+        {/* Campo de Senha */}
+        <Text className="text-typography-900 leading-1">Senha</Text>
+        <Input variant="outline" size="md" className="border-typography-300">
+          <InputField
+            value={password}
+            onChangeText={setPassword}
+            type={showPassword ? "text" : "password"}
+            placeholder="Digite sua senha"
+          />
+          <InputSlot className="pr-3" onPress={handleState}>
+            <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
+          </InputSlot>
+        </Input>
 
-        {/* Botões de login e cadastro */}
-        <VStack className="space-4 w-full mt-6">
-          <Button
-            onPress={handleLogin}
-            className="bg-blue-500 w-full py-4 rounded-lg"
-          >
-            <ButtonText className="text-white text-lg">Entrar</ButtonText>
-          </Button>
-
-          <Button
-            onPress={() => alert("Tela de Cadastro")}
-            className="bg-gray-500 w-full py-4 rounded-lg mt-4"
-          >
-            <ButtonText className="text-white text-lg">Cadastrar</ButtonText>
-          </Button>
-        </VStack>
-
-        {/* Link de "Esqueceu a senha?" */}
-        <Text
-          className="text-blue-500 mt-4 cursor-pointer"
-          onPress={() => alert("Tela de recuperação de senha")}
+        {/* Botão de Login */}
+        <Button
+          size="md"
+          variant="solid"
+          action="primary"
+          onPress={handleLogin}
         >
-          Esqueceu sua senha?
-        </Text>
+          <ButtonText className="font-bold">Entrar</ButtonText>
+        </Button>
+
+        {/* Botão para Criar Conta */}
+        <Button
+          size="md"
+          variant="outline"
+          action="secondary"
+          onPress={() => router.push("/signup")}
+        >
+          <ButtonText className="font-bold">Criar uma conta</ButtonText>
+        </Button>
       </VStack>
     </Box>
   );
-}
+};
+
+export default LoginScreen;
