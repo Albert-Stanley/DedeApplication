@@ -1,20 +1,27 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { Input, InputIcon, InputSlot, InputField } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ButtonText } from "@/components/ui/button";
-import { EyeIcon, EyeOffIcon } from "lucide-react-native";
+import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
+import { Button, ButtonText } from "@/components/ui/button";
+import { EyeIcon, EyeOffIcon, AlertCircleIcon } from "lucide-react-native";
+import {
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+  FormControlError,
+  FormControlErrorText,
+  FormControlErrorIcon,
+} from "@/components/ui/form-control";
 import {
   Checkbox,
   CheckboxIndicator,
   CheckboxLabel,
   CheckboxIcon,
 } from "@/components/ui/checkbox";
-import { Icon, CheckIcon } from "@/components/ui/icon";
+import { CheckIcon } from "@/components/ui/icon";
+import { useRouter } from "expo-router";
+import { Box } from "@/components/ui/box";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
@@ -23,27 +30,68 @@ const SignupScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+
+  // Estados para validação
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
   const router = useRouter();
 
   const handleSignup = () => {
-    console.log(
-      "Nome:",
-      name,
-      "Email:",
-      email,
-      "Senha:",
-      password,
-      "Confirmação de Senha:",
-      confirmPassword
-    );
+    let isValid = true;
 
-    // Lógica para criação de conta (ex.: chamada à API)
-    router.push("/");
+    // Validação do nome
+    if (!name.trim()) {
+      setNameError(true);
+      isValid = false;
+    } else {
+      setNameError(false);
+    }
+
+    // Validação do email
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError(true);
+      isValid = false;
+    } else {
+      setEmailError(false);
+    }
+
+    // Validação da senha
+    if (password.length < 6) {
+      setPasswordError(true);
+      isValid = false;
+    } else {
+      setPasswordError(false);
+    }
+
+    // Validação da confirmação de senha
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(true);
+      isValid = false;
+    } else {
+      setConfirmPasswordError(false);
+    }
+
+    // Verificar se os termos de uso foram aceitos
+    if (!isTermsAccepted) {
+      alert(
+        "Você precisa aceitar os Termos de Uso e a Política de Privacidade para continuar."
+      );
+      isValid = false;
+    }
+
+    if (isValid) {
+      console.log("Cadastro realizado com sucesso!");
+      router.push("/");
+    }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      <Box className="flex-1 justify-center items-center px-4">
+      <Box className="flex-1 justify-center items-center px-4 space-y-2">
         <VStack space="lg" className="w-full max-w-lg p-6">
           <Text
             size="2xl"
@@ -53,98 +101,113 @@ const SignupScreen = () => {
           </Text>
 
           {/* Campo de Nome */}
-          <VStack space="xs">
-            <Text className="text-typography-900 font-medium text-base">
-              Nome
-            </Text>
-            <Input
-              variant="outline"
-              size="lg"
-              className="border-typography-300 rounded-lg"
-            >
+          <FormControl isInvalid={nameError}>
+            <FormControlLabel>
+              <FormControlLabelText>Nome</FormControlLabelText>
+            </FormControlLabel>
+            <Input>
               <InputField
                 placeholder="Digite seu nome"
                 value={name}
-                onChangeText={setName}
-                className="text-typography-900"
+                onChangeText={(text) => {
+                  setName(text);
+                  setNameError(false);
+                }}
               />
             </Input>
-          </VStack>
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>Nome é obrigatório.</FormControlErrorText>
+            </FormControlError>
+          </FormControl>
 
           {/* Campo de Email */}
-          <VStack space="xs">
-            <Text className="text-typography-900 font-medium text-base">
-              E-mail
-            </Text>
-            <Input
-              variant="outline"
-              size="lg"
-              className="border-typography-300 rounded-lg"
-            >
+          <FormControl isInvalid={emailError}>
+            <FormControlLabel>
+              <FormControlLabelText>Email</FormControlLabelText>
+            </FormControlLabel>
+            <Input>
               <InputField
                 placeholder="Digite seu e-mail"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError(false);
+                }}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                autoCorrect={false}
-                className="text-typography-900"
               />
             </Input>
-          </VStack>
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>Email inválido.</FormControlErrorText>
+            </FormControlError>
+          </FormControl>
 
           {/* Campo de Senha */}
-          <VStack space="xs">
-            <Text className=" font-medium text-base">Senha</Text>
-            <Input
-              variant="outline"
-              size="lg"
-              className="border-typography-300 rounded-lg"
-            >
+          <FormControl isInvalid={passwordError}>
+            <FormControlLabel>
+              <FormControlLabelText>Senha</FormControlLabelText>
+            </FormControlLabel>
+            <Input>
               <InputField
                 placeholder="Crie uma senha"
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setPasswordError(false);
+                }}
                 secureTextEntry={!showPassword}
-                className="text-typography-900"
               />
-              <InputSlot
-                className="pr-3"
-                onPress={() => setShowPassword(!showPassword)}
-              >
+              <InputSlot onPress={() => setShowPassword(!showPassword)}>
                 <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
               </InputSlot>
             </Input>
-          </VStack>
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>
+                A senha deve ter pelo menos 6 caracteres.
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
 
           {/* Campo de Confirmar Senha */}
-          <VStack space="xs">
-            <Text className="text-typography-900 font-medium text-base">
-              Confirme sua senha
-            </Text>
-            <Input
-              variant="outline"
-              size="lg"
-              className="border-typography-300 rounded-lg"
-            >
+          <FormControl isInvalid={confirmPasswordError}>
+            <FormControlLabel>
+              <FormControlLabelText>Confirme sua senha</FormControlLabelText>
+            </FormControlLabel>
+            <Input>
               <InputField
                 placeholder="Confirme sua senha"
                 value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChangeText={(text) => {
+                  setConfirmPassword(text);
+                  setConfirmPasswordError(false);
+                }}
                 secureTextEntry={!showConfirmPassword}
-                className="text-typography-900"
               />
               <InputSlot
-                className="pr-3"
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 <InputIcon as={showConfirmPassword ? EyeIcon : EyeOffIcon} />
               </InputSlot>
             </Input>
-          </VStack>
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>
+                As senhas não coincidem.
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
 
           {/* Checkbox de Termos de Uso */}
-          <Checkbox size="md" value="Remember me" aria-label="Remember me">
+          <Checkbox
+            size="md"
+            value="terms"
+            aria-label="terms"
+            isChecked={isTermsAccepted}
+            onChange={setIsTermsAccepted}
+          >
             <CheckboxIndicator>
               <CheckboxIcon as={CheckIcon} />
             </CheckboxIndicator>
@@ -154,29 +217,21 @@ const SignupScreen = () => {
                 Termos de Uso
               </Text>{" "}
               &{" "}
-              <Text className=" text-sm text-primary-500 underline">
+              <Text className="text-sm text-primary-500 underline">
                 Política de Privacidade
               </Text>
             </CheckboxLabel>
           </Checkbox>
 
           {/* Botão de Cadastro */}
-          <Button
-            size="lg"
-            variant="solid"
-            action="primary"
-            className="rounded-lg"
-            onPress={handleSignup}
-          >
-            <ButtonText className="font-bold  text-lg">Cadastrar</ButtonText>
+          <Button className="w-full" onPress={handleSignup}>
+            <ButtonText className="font-bold text-lg">Cadastrar</ButtonText>
           </Button>
 
           {/* Voltar para Login */}
           <Button
-            size="lg"
+            className="w-full border-primary-500"
             variant="outline"
-            action="secondary"
-            className="rounded-lg border-primary-500"
             onPress={() => router.push("/")}
           >
             <ButtonText className="font-bold text-primary-500 text-lg">

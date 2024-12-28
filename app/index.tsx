@@ -12,14 +12,44 @@ import { EyeIcon, EyeOffIcon } from "lucide-react-native";
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleLogin = () => {
-    console.log("Email:", email, "Senha:", password);
+  const validateInputs = () => {
+    let isValid = true;
 
-    // Lógica para autenticação (ex.: chamada à API)
-    router.push("/homepage");
+    // Validação do e-mail
+    if (!email) {
+      setEmailError("Por favor, insira um e-mail.");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Por favor, insira um e-mail válido.");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    // Validação da senha
+    if (!password) {
+      setPasswordError("Por favor, insira sua senha.");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("A senha deve ter pelo menos 6 caracteres.");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    return isValid;
+  };
+
+  const handleLogin = () => {
+    if (validateInputs()) {
+      console.log("E-mail:", email, "Senha:", password);
+      router.push("/homepage");
+    }
   };
 
   return (
@@ -36,33 +66,45 @@ const LoginScreen = () => {
             <Input
               variant="outline"
               size="lg"
-              className="border-typography-300 rounded-lg"
+              className={`rounded-lg ${
+                emailError ? "border-red-500" : "border-typography-300"
+              }`}
             >
               <InputField
                 placeholder="Digite seu e-mail"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError(""); // Limpa erro ao digitar
+                }}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
               />
             </Input>
+            {emailError ? (
+              <Text className="text-red-500 text-sm">{emailError}</Text>
+            ) : null}
           </VStack>
 
           {/* Campo de Senha */}
           <VStack space="xs">
-            <Text className=" font-medium text-base">Senha</Text>
+            <Text className="font-medium text-base">Senha</Text>
             <Input
               variant="outline"
               size="lg"
-              className="border-typography-300 rounded-lg"
+              className={`rounded-lg ${
+                passwordError ? "border-red-500" : "border-typography-300"
+              }`}
             >
               <InputField
-                placeholder="Crie uma senha"
+                placeholder="Digite sua senha"
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  setPasswordError(""); // Limpa erro ao digitar
+                }}
                 secureTextEntry={!showPassword}
-                className="text-typography-900"
               />
               <InputSlot
                 className="pr-3"
@@ -71,6 +113,9 @@ const LoginScreen = () => {
                 <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
               </InputSlot>
             </Input>
+            {passwordError ? (
+              <Text className="text-red-500 text-sm">{passwordError}</Text>
+            ) : null}
           </VStack>
 
           {/* Botão de Login */}

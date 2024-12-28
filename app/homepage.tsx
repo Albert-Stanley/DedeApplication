@@ -11,7 +11,7 @@ const HomePage = () => {
     <SafeAreaView className="flex-1 bg-background-50">
       <Box className="flex-1 justify-center items-center px-4">
         <Text size="2xl" className="text-center font-bold text-typography-900">
-          Bem-vindo ao App!
+          Formulário de Atendimento Médico
         </Text>
       </Box>
     </SafeAreaView>
