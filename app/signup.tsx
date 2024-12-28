@@ -95,9 +95,7 @@ const SignupScreen = () => {
 
           {/* Campo de Senha */}
           <VStack space="xs">
-            <Text className="text-typography-900 font-medium text-base">
-              Senha
-            </Text>
+            <Text className=" font-medium text-base">Senha</Text>
             <Input
               variant="outline"
               size="lg"
@@ -170,9 +168,7 @@ const SignupScreen = () => {
             className="rounded-lg"
             onPress={handleSignup}
           >
-            <ButtonText className="font-bold text-white text-lg">
-              Cadastrar
-            </ButtonText>
+            <ButtonText className="font-bold  text-lg">Cadastrar</ButtonText>
           </Button>
 
           {/* Voltar para Login */}
