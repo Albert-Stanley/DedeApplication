@@ -48,7 +48,7 @@ const LoginScreen = () => {
   const handleLogin = () => {
     if (validateInputs()) {
       console.log("E-mail:", email, "Senha:", password);
-      router.push("/homepage");
+      router.push("/auth/homepage");
     }
   };
 
