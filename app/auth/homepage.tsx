@@ -29,7 +29,10 @@ import {
   ChevronDownIcon,
   Icon,
   CircleIcon,
+  EditIcon,
 } from "@/components/ui/icon";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { Divider } from "@/components/ui/divider";
 
 // Tipagem do estado do formulário
 interface FormData {
@@ -38,6 +41,8 @@ interface FormData {
     aporte: string | null;
     progredirDieta: string | null;
     suspenderDieta: string | null;
+    antiemeticosProCineticos: string | null;
+    evacuacaoultimas48h: string | null;
   };
 }
 
@@ -48,6 +53,8 @@ const HomePage = () => {
       aporte: null,
       progredirDieta: null,
       suspenderDieta: null,
+      antiemeticosProCineticos: null,
+      evacuacaoultimas48h: null,
     },
   });
 
@@ -169,6 +176,7 @@ const HomePage = () => {
                     </VStack>
                   </FormControl>
                 </View>
+                <Divider />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -204,7 +212,7 @@ const HomePage = () => {
                   )}
                 </AccordionTrigger>
               </AccordionHeader>
-              <AccordionContent>
+              <AccordionContent className="flex-wrap">
                 <FormControl>
                   <FormControlLabel>
                     <FormControlLabelText>Aporte:</FormControlLabelText>
@@ -290,6 +298,85 @@ const HomePage = () => {
                     </VStack>
                   </RadioGroup>
                 </FormControl>
+                <FormControl>
+                  <FormControlLabel>
+                    <FormControlLabelText>
+                      Antieméticos/pro cinéticos:
+                    </FormControlLabelText>
+                  </FormControlLabel>
+                  <RadioGroup
+                    value={formData.nutricao.antiemeticosProCineticos || ""}
+                    onChange={(value) =>
+                      handleCheckboxChange(
+                        "nutricao",
+                        "antiemeticosProCineticos",
+                        value
+                      )
+                    }
+                    className="my-2"
+                  >
+                    <VStack space="sm">
+                      <Radio size="sm" value="Sim">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Sim</RadioLabel>
+                      </Radio>
+                      <Radio size="sm" value="Não">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Não</RadioLabel>
+                      </Radio>
+                    </VStack>
+                  </RadioGroup>
+                </FormControl>
+                <FormControl>
+                  <FormControlLabel>
+                    <FormControlLabelText>
+                      Evacuação últimas 48h:
+                    </FormControlLabelText>
+                  </FormControlLabel>
+                  <RadioGroup
+                    value={formData.nutricao.evacuacaoultimas48h || ""}
+                    onChange={(value) =>
+                      handleCheckboxChange(
+                        "nutricao",
+                        "evacuacaoultimas48h",
+                        value
+                      )
+                    }
+                    className="my-2"
+                  >
+                    <VStack space="sm">
+                      <Radio size="sm" value="Sim">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Sim</RadioLabel>
+                      </Radio>
+                      <Radio size="sm" value="Não">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Não</RadioLabel>
+                      </Radio>
+                    </VStack>
+                  </RadioGroup>
+                </FormControl>
+                <View className="my-4">
+                  <Text className=" font-bold  mb-2">Ajuste:</Text>
+                  <Input>
+                    <InputField placeholder="Descreva o ajuste" />
+                    <InputSlot>
+                      <InputIcon
+                        as={EditIcon}
+                        className="text-typography-white"
+                      />
+                    </InputSlot>
+                  </Input>
+                </View>
+                <Divider />
               </AccordionContent>
             </AccordionItem>
           </Accordion>
