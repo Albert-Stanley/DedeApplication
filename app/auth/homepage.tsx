@@ -3,20 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView, View, Button } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
-import { FormControl } from "@/components/ui/form-control";
 import {
-  Checkbox,
-  CheckboxIcon,
-  CheckboxIndicator,
-  CheckboxLabel,
-} from "@/components/ui/checkbox";
-import { Divider } from "@/components/ui/divider";
-import {
-  CheckIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-  Icon,
-} from "@/components/ui/icon";
+  FormControl,
+  FormControlLabel,
+  FormControlLabelText,
+} from "@/components/ui/form-control";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +15,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { RadioGroup, RadioIndicator, RadioLabel } from "@/components/ui/radio";
+import { Radio, RadioIcon } from "@/components/ui/radio";
+import {
+  Checkbox,
+  CheckboxIndicator,
+  CheckboxIcon,
+  CheckboxLabel,
+} from "@/components/ui/checkbox";
+import {
+  CheckIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  Icon,
+  CircleIcon,
+} from "@/components/ui/icon";
 
 // Tipagem do estado do formulário
 interface FormData {
@@ -36,7 +42,6 @@ interface FormData {
 }
 
 const HomePage = () => {
-  // Estado do formulário com tipo especificado
   const [formData, setFormData] = useState<FormData>({
     diagnosticasPendentes: [],
     nutricao: {
@@ -46,10 +51,9 @@ const HomePage = () => {
     },
   });
 
-  // Função para atualizar checkboxes gerais
   const handleCheckboxChange = (
     section: keyof FormData,
-    field: string,
+    field: keyof FormData["nutricao"],
     value: string | null
   ) => {
     setFormData((prev) => ({
@@ -61,7 +65,6 @@ const HomePage = () => {
     }));
   };
 
-  // Função para atualizar checkboxes da seção "Ferramentas diagnósticas"
   const handleDiagnosticasChange = (value: string, isChecked: boolean) => {
     setFormData((prev) => ({
       ...prev,
@@ -71,9 +74,8 @@ const HomePage = () => {
     }));
   };
 
-  // Função para salvar os dados
   const handleSave = () => {
-    console.log("Dados salvos:", formData);
+    console.log("Dados salvos:", JSON.stringify(formData, null, 2));
   };
 
   return (
@@ -83,7 +85,7 @@ const HomePage = () => {
           space="lg"
           className="flex-1 justify-center items-center px-4 space-y--1"
         >
-          <Text size="sm" className="text-center font-bold">
+          <Text size="sm" className="text-center mt-8 font-bold">
             Dados do Paciente:
           </Text>
           <Text size="sm" className="text-center font-bold">
@@ -127,10 +129,8 @@ const HomePage = () => {
               <AccordionContent>
                 <View className="flex-1">
                   <FormControl>
-                    {/* Checkbox para ferramentas diagnósticas */}
                     <VStack space="sm" className="flex-row flex-wrap">
                       <Checkbox
-                        accessible={true}
                         value={"Imagem"}
                         onChange={(isChecked) =>
                           handleDiagnosticasChange("Imagem", isChecked)
@@ -167,7 +167,6 @@ const HomePage = () => {
                         <CheckboxLabel>N/A</CheckboxLabel>
                       </Checkbox>
                     </VStack>
-                    <Divider />
                   </FormControl>
                 </View>
               </AccordionContent>
@@ -180,7 +179,7 @@ const HomePage = () => {
             variant="filled"
             type="single"
             isCollapsible={true}
-            className="m-5 w-[90%] border border-outline-200"
+            className="m-2 -mt-8 w-[90%] border border-outline-200"
           >
             <AccordionItem value="nutrition-section">
               <AccordionHeader>
@@ -207,66 +206,89 @@ const HomePage = () => {
               </AccordionHeader>
               <AccordionContent>
                 <FormControl>
-                  <Checkbox
-                    value={"Pleno"}
-                    onChange={(isChecked) =>
-                      handleCheckboxChange(
-                        "nutricao",
-                        "aporte",
-                        isChecked ? "Pleno" : null
-                      )
+                  <FormControlLabel>
+                    <FormControlLabelText>Aporte:</FormControlLabelText>
+                  </FormControlLabel>
+                  <RadioGroup
+                    value={formData.nutricao.aporte || ""}
+                    onChange={(value) =>
+                      handleCheckboxChange("nutricao", "aporte", value)
                     }
+                    className="my-2"
                   >
-                    <CheckboxIndicator>
-                      <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                    <CheckboxLabel>Aporte Pleno</CheckboxLabel>
-                  </Checkbox>
-                  <Checkbox
-                    value={"Parcial"}
-                    onChange={(isChecked) =>
-                      handleCheckboxChange(
-                        "nutricao",
-                        "aporte",
-                        isChecked ? "Parcial" : null
-                      )
+                    <VStack space="sm">
+                      <Radio size="sm" value="Pleno">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Pleno</RadioLabel>
+                      </Radio>
+                      <Radio size="sm" value="Parcial">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Parcial</RadioLabel>
+                      </Radio>
+                    </VStack>
+                  </RadioGroup>
+                </FormControl>
+                <FormControl>
+                  <FormControlLabel>
+                    <FormControlLabelText>
+                      Progredir dieta:
+                    </FormControlLabelText>
+                  </FormControlLabel>
+                  <RadioGroup
+                    value={formData.nutricao.progredirDieta || ""}
+                    onChange={(value) =>
+                      handleCheckboxChange("nutricao", "progredirDieta", value)
                     }
+                    className="my-2"
                   >
-                    <CheckboxIndicator>
-                      <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                    <CheckboxLabel>Aporte Parcial</CheckboxLabel>
-                  </Checkbox>
-                  <Checkbox
-                    value={"Sim"}
-                    onChange={(isChecked) =>
-                      handleCheckboxChange(
-                        "nutricao",
-                        "progredirDieta",
-                        isChecked ? "Sim" : null
-                      )
+                    <VStack space="sm">
+                      <Radio size="sm" value="Sim">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Sim</RadioLabel>
+                      </Radio>
+                      <Radio size="sm" value="Não">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Não</RadioLabel>
+                      </Radio>
+                    </VStack>
+                  </RadioGroup>
+                </FormControl>
+                <FormControl>
+                  <FormControlLabel>
+                    <FormControlLabelText>
+                      Suspender dieta:
+                    </FormControlLabelText>
+                  </FormControlLabel>
+                  <RadioGroup
+                    value={formData.nutricao.suspenderDieta || ""}
+                    onChange={(value) =>
+                      handleCheckboxChange("nutricao", "suspenderDieta", value)
                     }
+                    className="my-2"
                   >
-                    <CheckboxIndicator>
-                      <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                    <CheckboxLabel>Progredir dieta</CheckboxLabel>
-                  </Checkbox>
-                  <Checkbox
-                    value={"Não"}
-                    onChange={(isChecked) =>
-                      handleCheckboxChange(
-                        "nutricao",
-                        "suspenderDieta",
-                        isChecked ? "Sim" : null
-                      )
-                    }
-                  >
-                    <CheckboxIndicator>
-                      <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                    <CheckboxLabel>Suspender dieta</CheckboxLabel>
-                  </Checkbox>
+                    <VStack space="sm">
+                      <Radio size="sm" value="Sim">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Sim</RadioLabel>
+                      </Radio>
+                      <Radio size="sm" value="Não">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Não</RadioLabel>
+                      </Radio>
+                    </VStack>
+                  </RadioGroup>
                 </FormControl>
               </AccordionContent>
             </AccordionItem>
