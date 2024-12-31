@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, View, Button } from "react-native";
+import { ScrollView, View } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import {
@@ -33,6 +33,8 @@ import {
 } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
+import { UserRoundPen } from "lucide-react-native";
+import { Button, ButtonGroup, ButtonText } from "@/components/ui/button";
 
 // Tipagem do estado do formulário
 interface FormData {
@@ -92,15 +94,22 @@ const HomePage = () => {
           space="lg"
           className="flex-1 justify-center items-center px-4 space-y--1"
         >
-          <Text size="sm" className="text-center mt-8 font-bold">
-            Dados do Paciente:
-          </Text>
-          <Text size="sm" className="text-center font-bold">
-            Nome: João da Silva
-          </Text>
-          <Text size="sm" className="text-center font-bold">
-            Diagnóstico:
-          </Text>
+          <View className="relative">
+            <ButtonGroup className="absolute top-4 -right-60">
+              <Button className="bg-trasparent ">
+                <Icon className="text-typography-500" as={UserRoundPen} />
+              </Button>
+            </ButtonGroup>
+            <Text size="sm" className="text-center mt-8 font-bold">
+              Dados do Paciente:
+            </Text>
+            <Text size="sm" className="text-center font-bold">
+              Nome: João da Silva
+            </Text>
+            <Text size="sm" className="text-center font-bold">
+              Diagnóstico:
+            </Text>
+          </View>
 
           {/* Ferramentas diagnósticas pendentes */}
           <Accordion
@@ -376,13 +385,32 @@ const HomePage = () => {
                     </InputSlot>
                   </Input>
                 </View>
-                <Divider />
+                <Checkbox
+                  size="md"
+                  isInvalid={false}
+                  isDisabled={false}
+                  value={""}
+                >
+                  <CheckboxIndicator>
+                    <CheckboxIcon as={CheckIcon} />
+                  </CheckboxIndicator>
+                  <CheckboxLabel>Conduta mantida</CheckboxLabel>
+                </Checkbox>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
 
           {/* Botão para salvar */}
-          <Button title="Salvar" onPress={handleSave} />
+
+          <Button
+            onPress={handleSave}
+            size="sm"
+            variant="outline"
+            action="primary"
+            className="mt-1 px-3 py-2 bg-white border shadow-sm block w-auto rounded-md sm:text-sm focus:ring-1"
+          >
+            <ButtonText className="text-black-500 ">Salvar</ButtonText>
+          </Button>
         </VStack>
       </ScrollView>
     </SafeAreaView>

@@ -48,7 +48,7 @@ const LoginScreen = () => {
   const handleLogin = () => {
     if (validateInputs()) {
       console.log("E-mail:", email, "Senha:", password);
-      router.push("/auth/homepage");
+      router.push("/homepage");
     }
   };
 
@@ -135,7 +135,7 @@ const LoginScreen = () => {
             variant="outline"
             action="secondary"
             className="rounded-lg border-primary-500"
-            onPress={() => router.push("/auth/homepage")}
+            onPress={() => router.push("/signup")}
           >
             <ButtonText className="font-bold text-primary-500 text-lg">
               Criar uma conta
