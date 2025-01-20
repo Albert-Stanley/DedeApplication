@@ -33,8 +33,13 @@ import {
 } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Divider } from "@/components/ui/divider";
-import { UserRoundPen } from "lucide-react-native";
-import { Button, ButtonGroup, ButtonText } from "@/components/ui/button";
+import { SaveAll, UserRoundPen } from "lucide-react-native";
+import {
+  Button,
+  ButtonGroup,
+  ButtonIcon,
+  ButtonText,
+} from "@/components/ui/button";
 
 // Tipagem do estado do formulário
 interface FormData {
@@ -90,16 +95,16 @@ const HomePage = () => {
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       <ScrollView>
+        <ButtonGroup className="grid justify-items-end ">
+          <Button className="bg-trasparent ">
+            <Icon className="text-typography-500" as={UserRoundPen} />
+          </Button>
+        </ButtonGroup>
         <VStack
           space="lg"
           className="flex-1 justify-center items-center px-4 space-y--1"
         >
-          <View className="relative">
-            <ButtonGroup className="absolute top-4 -right-60">
-              <Button className="bg-trasparent ">
-                <Icon className="text-typography-500" as={UserRoundPen} />
-              </Button>
-            </ButtonGroup>
+          <View>
             <Text size="sm" className="text-center mt-8 font-bold">
               Dados do Paciente:
             </Text>
@@ -405,11 +410,12 @@ const HomePage = () => {
           <Button
             onPress={handleSave}
             size="sm"
-            variant="outline"
+            variant="solid"
             action="primary"
-            className="mt-1 px-3 py-2 bg-white border shadow-sm block w-auto rounded-md sm:text-sm focus:ring-1"
+            className="mt-2"
           >
-            <ButtonText className="text-black-500 ">Salvar</ButtonText>
+            <ButtonText className="text-stone-950">Salvar</ButtonText>
+            <ButtonIcon className="ml-2" as={SaveAll} />
           </Button>
         </VStack>
       </ScrollView>

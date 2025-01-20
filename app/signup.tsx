@@ -4,12 +4,8 @@ import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { Button, ButtonText } from "@/components/ui/button";
-import {
-  EyeIcon,
-  EyeOffIcon,
-  AlertCircleIcon,
-  Scroll,
-} from "lucide-react-native";
+import { EyeIcon, EyeOffIcon, AlertCircleIcon } from "lucide-react-native";
+import { CircleIcon } from "@/components/ui/icon";
 import {
   FormControl,
   FormControlLabel,
@@ -28,6 +24,15 @@ import { CheckIcon } from "@/components/ui/icon";
 import { useRouter } from "expo-router";
 import { Box } from "@/components/ui/box";
 import { ScrollView } from "react-native";
+import {
+  Radio,
+  RadioGroup,
+  RadioIndicator,
+  RadioLabel,
+  RadioIcon,
+} from "@/components/ui/radio";
+import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
@@ -43,7 +48,7 @@ const SignupScreen = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-
+  const [selectedValue, setSelectedValue] = React.useState("medico");
   const router = useRouter();
 
   const handleSignup = () => {
@@ -108,7 +113,7 @@ const SignupScreen = () => {
             </Text>
 
             {/* Campo de Nome */}
-            <FormControl isInvalid={nameError}>
+            <FormControl size="lg" isInvalid={nameError}>
               <FormControlLabel>
                 <FormControlLabelText>Nome</FormControlLabelText>
               </FormControlLabel>
@@ -124,18 +129,18 @@ const SignupScreen = () => {
               </Input>
               <FormControlError>
                 <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>Nome é obrigatório.</FormControlErrorText>
+                <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
               </FormControlError>
             </FormControl>
 
             {/* Campo de Email */}
-            <FormControl isInvalid={emailError}>
+            <FormControl size="lg" isInvalid={emailError}>
               <FormControlLabel>
-                <FormControlLabelText>Email</FormControlLabelText>
+                <FormControlLabelText>Email Institucional</FormControlLabelText>
               </FormControlLabel>
               <Input size="lg">
                 <InputField
-                  placeholder="Digite seu e-mail"
+                  placeholder="Digite seu e-mail institucional"
                   value={email}
                   onChangeText={(text) => {
                     setEmail(text);
@@ -151,8 +156,58 @@ const SignupScreen = () => {
               </FormControlError>
             </FormControl>
 
+            {/* Campo Selecionar Profissão */}
+            <FormControl size="lg">
+              <FormControlLabel>
+                <FormControlLabelText>Profissão</FormControlLabelText>
+              </FormControlLabel>
+              <RadioGroup value={selectedValue} onChange={setSelectedValue}>
+                <HStack space="2xl">
+                  <Radio value="medico">
+                    <RadioIndicator>
+                      <RadioIcon as={CircleIcon} />
+                    </RadioIndicator>
+                    <RadioLabel>Médico(a)</RadioLabel>
+                  </Radio>
+                  <Radio value="enfermeiro">
+                    <RadioIndicator>
+                      <RadioIcon as={CircleIcon} />
+                    </RadioIndicator>
+                    <RadioLabel>Enfermeiro(a)</RadioLabel>
+                  </Radio>
+                  <Radio value="secretario">
+                    <RadioIndicator>
+                      <RadioIcon as={CircleIcon} />
+                    </RadioIndicator>
+                    <RadioLabel>Secretário(a)</RadioLabel>
+                  </Radio>
+                </HStack>
+              </RadioGroup>
+            </FormControl>
+
+            {/* Campo de Input para o CRM */}
+            <FormControl size="lg" isInvalid={nameError}>
+              <FormControlLabel>
+                <FormControlLabelText>CRM</FormControlLabelText>
+              </FormControlLabel>
+              <Input size="lg">
+                <InputField
+                  placeholder="Digite seu CRM"
+                  value={name}
+                  onChangeText={(text) => {
+                    setName(text);
+                    setNameError(false);
+                  }}
+                />
+              </Input>
+              <FormControlError>
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+
             {/* Campo de Senha */}
-            <FormControl isInvalid={passwordError}>
+            <FormControl size="lg" isInvalid={passwordError}>
               <FormControlLabel>
                 <FormControlLabelText>Senha</FormControlLabelText>
               </FormControlLabel>
@@ -210,6 +265,28 @@ const SignupScreen = () => {
                 <FormControlErrorText>
                   As senhas não coincidem.
                 </FormControlErrorText>
+              </FormControlError>
+            </FormControl>
+
+            {/* Campo Imput Nome do Hospital*/}
+
+            <FormControl size="lg" isInvalid={nameError}>
+              <FormControlLabel>
+                <FormControlLabelText>Nome Hospital</FormControlLabelText>
+              </FormControlLabel>
+              <Input size="lg">
+                <InputField
+                  placeholder="Digite o nome do hospital"
+                  value={name}
+                  onChangeText={(text) => {
+                    setName(text);
+                    setNameError(false);
+                  }}
+                />
+              </Input>
+              <FormControlError>
+                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
               </FormControlError>
             </FormControl>
 
