@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
@@ -8,6 +8,8 @@ import { Input, InputSlot, InputField, InputIcon } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ButtonText } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react-native";
+import { HStack } from "@/components/ui/hstack";
+import { LinkText } from "@/components/ui/link";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -117,7 +119,14 @@ const LoginScreen = () => {
               <Text className="text-red-500 text-sm">{passwordError}</Text>
             ) : null}
           </VStack>
-
+          {/* Botão de Esqueceu a Senha */}
+          <HStack className="w-full justify-between ">
+            <Link href="/auth/forgot-password">
+              <LinkText className="font-medium text-md text-primary-700 group-hover/link:text-primary-600">
+                Esqueceu a Senha?
+              </LinkText>
+            </Link>
+          </HStack>
           {/* Botão de Login */}
           <Button
             size="lg"

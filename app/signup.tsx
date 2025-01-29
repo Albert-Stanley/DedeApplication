@@ -162,7 +162,7 @@ const SignupScreen = () => {
                 <FormControlLabelText>Profissão</FormControlLabelText>
               </FormControlLabel>
               <RadioGroup value={selectedValue} onChange={setSelectedValue}>
-                <HStack space="2xl">
+                <HStack space="md">
                   <Radio value="medico">
                     <RadioIndicator>
                       <RadioIcon as={CircleIcon} />
