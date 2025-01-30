@@ -58,10 +58,9 @@ const LoginScreen = () => {
     <SafeAreaView className="flex-1 bg-background-50">
       <Box className="flex-1 justify-center items-center px-4">
         <VStack space="lg" className="w-full max-w-lg p-6">
-          <Text size="2xl" className="text-center font-bold">
-            Bem-vindo ao App!
+          <Text size="2xl" className="text-left mb-4 font-bold">
+            Faça login com seu e-mail e senha
           </Text>
-
           {/* Campo de Email */}
           <VStack space="xs">
             <Text className="font-medium text-base">E-mail</Text>
@@ -123,7 +122,7 @@ const LoginScreen = () => {
           <HStack className="w-full justify-between ">
             <Link href="/auth/forgot-password">
               <LinkText className="font-medium text-md text-primary-700 group-hover/link:text-primary-600">
-                Esqueceu a Senha?
+                Esqueceu sua Senha?
               </LinkText>
             </Link>
           </HStack>
@@ -132,22 +131,26 @@ const LoginScreen = () => {
             size="lg"
             variant="solid"
             action="primary"
-            className="rounded-lg"
+            className="rounded-lg mb-6"
             onPress={handleLogin}
           >
             <ButtonText className="font-bold text-lg">Entrar</ButtonText>
           </Button>
+
+          <Text size="xl" className="text-left  font-bold">
+            Não possui registro? Faça seu cadastro
+          </Text>
 
           {/* Voltar para Cadastro */}
           <Button
             size="lg"
             variant="outline"
             action="secondary"
-            className="rounded-lg border-primary-500"
+            className="rounded-lg border-primary-200"
             onPress={() => router.push("/signup")}
           >
             <ButtonText className="font-bold text-primary-500 text-lg">
-              Criar uma conta
+              Cadastre-se agora
             </ButtonText>
           </Button>
         </VStack>

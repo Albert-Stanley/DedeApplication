@@ -31,8 +31,9 @@ import {
   RadioLabel,
   RadioIcon,
 } from "@/components/ui/radio";
-import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
+import { useForm, Controller } from "react-hook-form";
+import RNPickerSelect from "react-native-picker-select";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
@@ -42,6 +43,8 @@ const SignupScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const { control, watch } = useForm();
+  const profissaoSelecionada = watch("profissao");
 
   // Estados para validação
   const [nameError, setNameError] = useState(false);
@@ -161,50 +164,62 @@ const SignupScreen = () => {
               <FormControlLabel>
                 <FormControlLabelText>Profissão</FormControlLabelText>
               </FormControlLabel>
-              <RadioGroup value={selectedValue} onChange={setSelectedValue}>
-                <HStack space="md">
-                  <Radio value="medico">
-                    <RadioIndicator>
-                      <RadioIcon as={CircleIcon} />
-                    </RadioIndicator>
-                    <RadioLabel>Médico(a)</RadioLabel>
-                  </Radio>
-                  <Radio value="enfermeiro">
-                    <RadioIndicator>
-                      <RadioIcon as={CircleIcon} />
-                    </RadioIndicator>
-                    <RadioLabel>Enfermeiro(a)</RadioLabel>
-                  </Radio>
-                  <Radio value="secretario">
-                    <RadioIndicator>
-                      <RadioIcon as={CircleIcon} />
-                    </RadioIndicator>
-                    <RadioLabel>Secretário(a)</RadioLabel>
-                  </Radio>
-                </HStack>
-              </RadioGroup>
+              <Controller
+                control={control}
+                name="profissao"
+                render={({ field: { onChange, value } }) => (
+                  <RadioGroup
+                    className="mr-6"
+                    value={value}
+                    onChange={onChange}
+                  >
+                    <HStack space="md">
+                      <Radio value="medico">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Médico(a)</RadioLabel>
+                      </Radio>
+                      <Radio value="enfermeiro">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Enfermeiro(a)</RadioLabel>
+                      </Radio>
+                      <Radio value="secretario">
+                        <RadioIndicator>
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Secretário(a)</RadioLabel>
+                      </Radio>
+                    </HStack>
+                  </RadioGroup>
+                )}
+              />
             </FormControl>
 
-            {/* Campo de Input para o CRM */}
-            <FormControl size="lg" isInvalid={nameError}>
-              <FormControlLabel>
-                <FormControlLabelText>CRM</FormControlLabelText>
-              </FormControlLabel>
-              <Input size="lg">
-                <InputField
-                  placeholder="Digite seu CRM"
-                  value={name}
-                  onChangeText={(text) => {
-                    setName(text);
-                    setNameError(false);
-                  }}
+            {/* Exibe o campo CRM/CRO apenas se a profissão for "médico" */}
+            {profissaoSelecionada === "medico" && (
+              <FormControl size="lg">
+                <FormControlLabel>
+                  <FormControlLabelText>CRM/CRO</FormControlLabelText>
+                </FormControlLabel>
+                <Controller
+                  control={control}
+                  name="crm"
+                  rules={{ required: profissaoSelecionada === "medico" }}
+                  render={({ field: { onChange, value } }) => (
+                    <Input size="lg">
+                      <InputField
+                        placeholder="Digite seu CRM ou CRO"
+                        value={value}
+                        onChangeText={onChange}
+                      />
+                    </Input>
+                  )}
                 />
-              </Input>
-              <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
-              </FormControlError>
-            </FormControl>
+              </FormControl>
+            )}
 
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={passwordError}>
@@ -320,8 +335,9 @@ const SignupScreen = () => {
 
             {/* Voltar para Login */}
             <Button
-              className="w-full border-primary-500"
               variant="outline"
+              action="secondary"
+              className="rounded-lg border-primary-200"
               onPress={() => router.push("/")}
             >
               <ButtonText className="font-bold text-primary-500 text-lg">
