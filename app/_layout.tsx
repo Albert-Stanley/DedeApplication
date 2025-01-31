@@ -2,6 +2,7 @@ import "@/global.css";
 import { Stack } from "expo-router";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StatusBar } from "react-native";
+import React from "react";
 
 export default function Layout() {
   return (

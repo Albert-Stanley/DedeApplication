@@ -147,7 +147,7 @@ const LoginScreen = () => {
             variant="outline"
             action="secondary"
             className="rounded-lg border-primary-200"
-            onPress={() => router.push("/signup")}
+            onPress={() => router.push("/auth/signup")}
           >
             <ButtonText className="font-bold text-primary-500 text-lg">
               Cadastre-se agora
