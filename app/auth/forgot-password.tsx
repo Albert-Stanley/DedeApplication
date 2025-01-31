@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
 import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Keyboard, Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -22,6 +22,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
+import { View } from "react-native";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Por favor, insira um e-mail.").email(),
@@ -60,19 +61,22 @@ const ForgotPasswordScreen = () => {
     handleSubmit(onSubmit)();
   };
 
+  const handleBack = () => {
+    router.replace("/");
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       {/* Header with Back Button */}
-      <VStack className="absolute top-0 left-0 right-0 px-2 pt-12">
+      <VStack className="absolute top-0 left-0 right-0 px-4 pt-12 z-10">
         <Pressable
-          onPress={() => {
-            router.back();
-          }}
-          className="w-20 h-10 items-center justify-center"
+          onPress={handleBack}
+          accessibilityRole="button"
+          className="w-12 h-12 p-2 items-center justify-center rounded-full bg-background-200 hover:bg-background-300 active:bg-background-400 pointer-events-auto"
         >
           <Icon
             as={ArrowLeftIcon}
-            className="md:hidden stroke-background-800"
+            className="stroke-background-800"
             size="xl"
           />
         </Pressable>
@@ -109,6 +113,7 @@ const ForgotPasswordScreen = () => {
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
+                      keyboardType="email-address"
                       onSubmitEditing={handleKeyPress}
                       returnKeyType="done"
                     />
