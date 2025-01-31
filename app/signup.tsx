@@ -23,7 +23,7 @@ import {
 import { CheckIcon } from "@/components/ui/icon";
 import { useRouter } from "expo-router";
 import { Box } from "@/components/ui/box";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import {
   Radio,
   RadioGroup,
@@ -33,27 +33,41 @@ import {
 } from "@/components/ui/radio";
 import { HStack } from "@/components/ui/hstack";
 import { useForm, Controller } from "react-hook-form";
-import RNPickerSelect from "react-native-picker-select";
+import Modal from "react-native-modal";
+import { Platform } from "react-native";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
+  const [nomeHospital, setNomeHospital] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+
+  // Hook do formulário
   const { control, watch } = useForm();
   const profissaoSelecionada = watch("profissao");
+  const router = useRouter();
 
   // Estados para validação
   const [nameError, setNameError] = useState(false);
+  const [nomeHospitalError, setNomeHospitalError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [selectedValue, setSelectedValue] = React.useState("medico");
-  const router = useRouter();
 
+  // Modal termos de uso e politica de privacidade
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+
+  const openModal = (content: string) => {
+    setModalContent(content);
+    setIsModalVisible(true);
+  };
+
+  // Função para realizar o cadastro
   const handleSignup = () => {
     let isValid = true;
 
@@ -63,6 +77,14 @@ const SignupScreen = () => {
       isValid = false;
     } else {
       setNameError(false);
+    }
+
+    // Validação do nome do hospital
+    if (!nomeHospital.trim()) {
+      setNomeHospitalError(true);
+      isValid = false;
+    } else {
+      setNomeHospitalError(false);
     }
 
     // Validação do email
@@ -114,7 +136,6 @@ const SignupScreen = () => {
             >
               Crie sua conta
             </Text>
-
             {/* Campo de Nome */}
             <FormControl size="lg" isInvalid={nameError}>
               <FormControlLabel>
@@ -135,15 +156,14 @@ const SignupScreen = () => {
                 <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
               </FormControlError>
             </FormControl>
-
             {/* Campo de Email */}
             <FormControl size="lg" isInvalid={emailError}>
               <FormControlLabel>
-                <FormControlLabelText>Email Institucional</FormControlLabelText>
+                <FormControlLabelText>Email</FormControlLabelText>
               </FormControlLabel>
               <Input size="lg">
                 <InputField
-                  placeholder="Digite seu e-mail institucional"
+                  placeholder="Digite seu e-mail"
                   value={email}
                   onChangeText={(text) => {
                     setEmail(text);
@@ -158,7 +178,6 @@ const SignupScreen = () => {
                 <FormControlErrorText>Email inválido.</FormControlErrorText>
               </FormControlError>
             </FormControl>
-
             {/* Campo Selecionar Profissão */}
             <FormControl size="lg">
               <FormControlLabel>
@@ -197,7 +216,6 @@ const SignupScreen = () => {
                 )}
               />
             </FormControl>
-
             {/* Exibe o campo CRM/CRO apenas se a profissão for "médico" */}
             {profissaoSelecionada === "medico" && (
               <FormControl size="lg">
@@ -220,7 +238,6 @@ const SignupScreen = () => {
                 />
               </FormControl>
             )}
-
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={passwordError}>
               <FormControlLabel>
@@ -250,7 +267,6 @@ const SignupScreen = () => {
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
             {/* Campo de Confirmar Senha */}
             <FormControl size="lg" isInvalid={confirmPasswordError}>
               <FormControlLabel>
@@ -282,20 +298,18 @@ const SignupScreen = () => {
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
-
             {/* Campo Imput Nome do Hospital*/}
-
-            <FormControl size="lg" isInvalid={nameError}>
+            <FormControl size="lg" isInvalid={nomeHospitalError}>
               <FormControlLabel>
                 <FormControlLabelText>Nome Hospital</FormControlLabelText>
               </FormControlLabel>
               <Input size="lg">
                 <InputField
                   placeholder="Digite o nome do hospital"
-                  value={name}
+                  value={nomeHospital}
                   onChangeText={(text) => {
-                    setName(text);
-                    setNameError(false);
+                    setNomeHospital(text);
+                    setNomeHospitalError(false);
                   }}
                 />
               </Input>
@@ -306,33 +320,98 @@ const SignupScreen = () => {
             </FormControl>
 
             {/* Checkbox de Termos de Uso */}
-            <Checkbox
-              size="md"
-              value="terms"
-              aria-label="terms"
-              isChecked={isTermsAccepted}
-              onChange={setIsTermsAccepted}
+            <Box className="flex-1 justify-center items-center ">
+              <VStack space="lg" className="w-full max-w-lg ">
+                <Checkbox
+                  size="md"
+                  value="terms"
+                  aria-label="terms"
+                  isChecked={isTermsAccepted}
+                  onChange={setIsTermsAccepted}
+                >
+                  <CheckboxIndicator>
+                    <CheckboxIcon as={CheckIcon} />
+                  </CheckboxIndicator>
+                  <CheckboxLabel className="text-md leading-tight text-typography-700 flex-row flex-wrap">
+                    {Platform.OS === "web" ? (
+                      <>
+                        Eu aceito os{" "}
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openModal("termos");
+                          }}
+                          style={{
+                            color: "#1E90FF",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          Termos de Uso
+                        </a>{" "}
+                        &{" "}
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            openModal("politica");
+                          }}
+                          style={{
+                            color: "#1E90FF",
+                            textDecoration: "underline",
+                          }}
+                        >
+                          Política de Privacidade
+                        </a>
+                      </>
+                    ) : (
+                      <Text className="text-sm leading-tight text-typography-700 flex-row flex-wrap">
+                        Eu aceito os{" "}
+                        <Text
+                          className="text-sm text-primary-500 underline"
+                          onPress={() => openModal("termos")}
+                        >
+                          Termos de Uso
+                        </Text>{" "}
+                        &{" "}
+                        <Text
+                          className="text-sm text-primary-500 underline"
+                          onPress={() => openModal("politica")}
+                        >
+                          Política de Privacidade
+                        </Text>
+                      </Text>
+                    )}
+                  </CheckboxLabel>
+                </Checkbox>
+              </VStack>
+            </Box>
+            {/* Modal de Termos de Uso e Política de Privacidade */}
+            <Modal
+              isVisible={isModalVisible}
+              onBackdropPress={() => setIsModalVisible(false)}
             >
-              <CheckboxIndicator>
-                <CheckboxIcon as={CheckIcon} />
-              </CheckboxIndicator>
-              <CheckboxLabel className="text-sm leading-tight text-typography-700">
-                Eu aceito os{" "}
-                <Text className="text-sm text-primary-500 underline">
-                  Termos de Uso
-                </Text>{" "}
-                &{" "}
-                <Text className="text-sm text-primary-500 underline">
-                  Política de Privacidade
+              <View className="bg-white p-6 rounded-lg">
+                <Text className="text-lg font-bold">
+                  {modalContent === "termos"
+                    ? "Termos de Uso"
+                    : "Política de Privacidade"}
                 </Text>
-              </CheckboxLabel>
-            </Checkbox>
+                <Text className="mt-2">
+                  {modalContent === "termos"
+                    ? "Aqui você pode exibir os Termos de Uso completos."
+                    : "Aqui você pode exibir a Política de Privacidade completa."}
+                </Text>
+                <Button onPress={() => setIsModalVisible(false)}>
+                  <ButtonText>Fechar</ButtonText>
+                </Button>
+              </View>
+            </Modal>
 
             {/* Botão de Cadastro */}
             <Button className="w-full" onPress={handleSignup}>
               <ButtonText className="font-bold text-lg">Cadastrar</ButtonText>
             </Button>
-
             {/* Voltar para Login */}
             <Button
               variant="outline"

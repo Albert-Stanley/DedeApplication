@@ -18,7 +18,11 @@ const homepage = () => {
       <Box className="flex-1 justify-center items-center px-4">
         <VStack space="lg" className="w-full max-w-lg p-6">
           <ButtonGroup className="grid justify-items-end ">
-            <Button onPress={handleLogin} className="bg-trasparent ">
+            <Button
+              onPress={handleLogin}
+              action="secondary"
+              className="bg-trasparent "
+            >
               <Icon as={UserRoundPen} />
             </Button>
           </ButtonGroup>
