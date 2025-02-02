@@ -245,8 +245,8 @@ const SignupScreen = () => {
                 placeholder="UF"
                 value={uf}
                 onChangeText={(text) => {
-                  setEmail(text);
-                  setEmailError(false);
+                  setUf(text);
+                  setUfError(false);
                 }}
                 keyboardType="number-pad"
                 autoCapitalize="none"
