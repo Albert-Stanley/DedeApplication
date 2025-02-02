@@ -1,15 +1,10 @@
-const fetchDataCadastro = async () => {
+const fechDataLogin = async () => {
   try {
-    const response = await fetch("http://192.168.160.1/Users", {
+    const response = await fetch("http://192.168.160.1/Auth", {
       method: "POST",
       body: JSON.stringify({
-        Name: "Nicholas Peixoto",
-        Email: "lorenzomendes@magma3.com.br",
-        Role: "Doctor",
-        CRM: "806722",
+        CRMorEmail: "287637",
         Password: "Lorenzo05*",
-        HospitalName: "HospitalABC",
-        UF: "Rj",
       }),
       headers: {
         "Content-Type": "application/json",
@@ -27,4 +22,4 @@ const fetchDataCadastro = async () => {
   }
 };
 
-export default { fetchDataCadastro };
+export default { fechDataLogin };

@@ -22,7 +22,6 @@ import { Pressable } from "@/components/ui/pressable";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
-import { View } from "react-native";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "Por favor, insira um e-mail.").email(),

@@ -44,7 +44,7 @@ const SignupScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [uf, setUf] = useState("");
   // Hook do formulário
   const { control, watch } = useForm();
   const profissaoSelecionada = watch("profissao");
@@ -56,6 +56,7 @@ const SignupScreen = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [ufError, setUfError] = useState(false);
 
   // Modal termos de uso e politica de privacidade
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -77,6 +78,13 @@ const SignupScreen = () => {
       isValid = false;
     } else {
       setNameError(false);
+    }
+    // Validação da Uf
+    if (!uf.trim()) {
+      setUfError(true);
+      isValid = false;
+    } else {
+      setUfError(false);
     }
 
     // Validação do nome do hospital
@@ -199,12 +207,6 @@ const SignupScreen = () => {
                         </RadioIndicator>
                         <RadioLabel>Médico(a)</RadioLabel>
                       </Radio>
-                      <Radio value="enfermeiro">
-                        <RadioIndicator>
-                          <RadioIcon as={CircleIcon} />
-                        </RadioIndicator>
-                        <RadioLabel>Enfermeiro(a)</RadioLabel>
-                      </Radio>
                       <Radio value="secretario">
                         <RadioIndicator>
                           <RadioIcon as={CircleIcon} />
@@ -238,6 +240,18 @@ const SignupScreen = () => {
                 />
               </FormControl>
             )}
+            <Input size="lg">
+              <InputField
+                placeholder="UF"
+                value={uf}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  setEmailError(false);
+                }}
+                keyboardType="number-pad"
+                autoCapitalize="none"
+              />
+            </Input>
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={passwordError}>
               <FormControlLabel>
