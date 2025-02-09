@@ -3,7 +3,6 @@ import React from "react";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { LogOut, MoveLeft, Edit } from "lucide-react-native";
 import { router } from "expo-router";
-import { Box } from "@/components/ui/box";
 
 const Profile = () => {
   const goBack = () => {

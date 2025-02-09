@@ -23,7 +23,7 @@ import {
 import { CheckIcon } from "@/components/ui/icon";
 import { useRouter } from "expo-router";
 import { Box } from "@/components/ui/box";
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import {
   Radio,
   RadioGroup,
@@ -35,6 +35,7 @@ import { HStack } from "@/components/ui/hstack";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
+import { signup, UserData } from "../../services/api/authServices";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
@@ -46,7 +47,11 @@ const SignupScreen = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [uf, setUf] = useState("");
   // Hook do formulário
-  const { control, watch } = useForm();
+  const {
+    control,
+    watch,
+    formState: { errors },
+  } = useForm();
   const profissaoSelecionada = watch("profissao");
   const router = useRouter();
 
@@ -57,7 +62,7 @@ const SignupScreen = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [ufError, setUfError] = useState(false);
-
+  const [crm, setCrm] = useState("");
   // Modal termos de uso e politica de privacidade
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -69,17 +74,16 @@ const SignupScreen = () => {
   };
 
   // Função para realizar o cadastro
-  const handleSignup = () => {
+  const handleSignup = async () => {
     let isValid = true;
 
-    // Validação do nome
     if (!name.trim()) {
       setNameError(true);
       isValid = false;
     } else {
       setNameError(false);
     }
-    // Validação da Uf
+
     if (!uf.trim()) {
       setUfError(true);
       isValid = false;
@@ -87,7 +91,6 @@ const SignupScreen = () => {
       setUfError(false);
     }
 
-    // Validação do nome do hospital
     if (!nomeHospital.trim()) {
       setNomeHospitalError(true);
       isValid = false;
@@ -95,7 +98,6 @@ const SignupScreen = () => {
       setNomeHospitalError(false);
     }
 
-    // Validação do email
     if (!/\S+@\S+\.\S+/.test(email)) {
       setEmailError(true);
       isValid = false;
@@ -103,7 +105,6 @@ const SignupScreen = () => {
       setEmailError(false);
     }
 
-    // Validação da senha
     if (password.length < 6) {
       setPasswordError(true);
       isValid = false;
@@ -111,7 +112,6 @@ const SignupScreen = () => {
       setPasswordError(false);
     }
 
-    // Validação da confirmação de senha
     if (password !== confirmPassword) {
       setConfirmPasswordError(true);
       isValid = false;
@@ -119,17 +119,40 @@ const SignupScreen = () => {
       setConfirmPasswordError(false);
     }
 
-    // Verificar se os termos de uso foram aceitos
     if (!isTermsAccepted) {
-      alert(
-        "Você precisa aceitar os Termos de Uso e a Política de Privacidade para continuar."
+      Alert.alert(
+        "Termos de Uso",
+        "Você precisa aceitar os Termos de Uso para continuar."
       );
       isValid = false;
     }
 
-    if (isValid) {
-      console.log("Cadastro realizado com sucesso!");
+    if (profissaoSelecionada === "medico" && !crm.trim()) {
+      Alert.alert("Erro", "O CRM é obrigatório para médicos.");
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    // Criando objeto para enviar à API
+    const userData: UserData = {
+      Name: name,
+      Email: email,
+      Role: profissaoSelecionada === "medico" ? "Doctor" : "Secretary",
+      CRM: profissaoSelecionada === "medico" ? crm : undefined,
+      Password: password,
+      HospitalName: nomeHospital,
+      UF: uf.toUpperCase(),
+    };
+
+    try {
+      console.log("Enviando dados para API...", userData);
+      await signup(userData);
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
       router.push("/");
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      Alert.alert("Erro", "Não foi possível realizar o cadastro.");
     }
   };
 
@@ -153,10 +176,7 @@ const SignupScreen = () => {
                 <InputField
                   placeholder="Digite seu nome"
                   value={name}
-                  onChangeText={(text) => {
-                    setName(text);
-                    setNameError(false);
-                  }}
+                  onChangeText={setName}
                 />
               </Input>
               <FormControlError>
@@ -220,38 +240,41 @@ const SignupScreen = () => {
             </FormControl>
             {/* Exibe o campo CRM/CRO apenas se a profissão for "médico" */}
             {profissaoSelecionada === "medico" && (
-              <FormControl size="lg">
+              <FormControl size="lg" isInvalid={!!errors.crm}>
                 <FormControlLabel>
                   <FormControlLabelText>CRM/CRO</FormControlLabelText>
                 </FormControlLabel>
                 <Controller
                   control={control}
                   name="crm"
-                  rules={{ required: profissaoSelecionada === "medico" }}
+                  rules={{
+                    required:
+                      profissaoSelecionada === "medico"
+                        ? "O CRM/CRO é obrigatório"
+                        : false,
+                  }}
                   render={({ field: { onChange, value } }) => (
                     <Input size="lg">
                       <InputField
                         placeholder="Digite seu CRM ou CRO"
                         value={value}
                         onChangeText={onChange}
+                        keyboardType="numeric"
                       />
                     </Input>
                   )}
                 />
+                {errors.crm && (
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertCircleIcon} />
+                    <FormControlErrorText>
+                      {errors.crm?.message?.toString()}
+                    </FormControlErrorText>
+                  </FormControlError>
+                )}
               </FormControl>
             )}
-            <Input size="lg">
-              <InputField
-                placeholder="UF"
-                value={uf}
-                onChangeText={(text) => {
-                  setUf(text);
-                  setUfError(false);
-                }}
-                keyboardType="number-pad"
-                autoCapitalize="none"
-              />
-            </Input>
+
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={passwordError}>
               <FormControlLabel>

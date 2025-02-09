@@ -11,7 +11,7 @@ const homepage = () => {
   const router = useRouter();
 
   const handleLogin = () => {
-    router.push("/profile");
+    router.push("/screens/user/profile");
   };
   return (
     <SafeAreaView className="flex-1 bg-background-50">

@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
 import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { Keyboard, Platform } from "react-native";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +24,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "Por favor, insira um e-mail.").email(),
+  email: z
+    .string()
+    .min(1, "Por favor, insira um e-mail.")
+    .email("E-mail inválido, tente novamente."),
 });
 
 type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
