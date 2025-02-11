@@ -13,7 +13,6 @@ import {
 import { Input, InputField } from "@/components/ui/input";
 import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonText } from "@/components/ui/button";
-import { Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,13 +54,15 @@ const ForgotPasswordScreen = () => {
         );
       },
     });
+    console.log("Dados enviados:", _data);
+
     reset();
   };
 
-  const handleKeyPress = () => {
-    Keyboard.dismiss();
-    handleSubmit(onSubmit)();
-  };
+  // const handleKeyPress = () => {
+  //   Keyboard.dismiss();
+  //   handleSubmit(onSubmit)();
+  // };
 
   const handleBack = () => {
     router.replace("/");
@@ -116,7 +117,7 @@ const ForgotPasswordScreen = () => {
                       onChangeText={onChange}
                       onBlur={onBlur}
                       keyboardType="email-address"
-                      onSubmitEditing={handleKeyPress}
+                      onSubmitEditing={handleSubmit(onSubmit)}
                       returnKeyType="done"
                     />
                   </Input>

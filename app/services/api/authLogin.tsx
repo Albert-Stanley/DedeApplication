@@ -1,25 +1,22 @@
-const fechDataLogin = async () => {
+const authLogin = async (data: { email: string; password: string }) => {
   try {
     const response = await fetch("http://192.168.160.1/Auth", {
       method: "POST",
       body: JSON.stringify({
-        CRMorEmail: "287637",
-        Password: "Lorenzo05*",
+        CRMorEmail: data.email,
+        Password: data.password,
       }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     if (!response.ok) {
       throw new Error(`Erro: ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log("Dados recebidos:", data);
+    return await response.json(); // Retorna os dados corretamente
   } catch (error) {
-    console.error("Erro na requisição:", error);
+    return { success: false, message: "Usuário ou senha incorretos." };
   }
 };
 
-export default { fechDataLogin };
+export default authLogin;
