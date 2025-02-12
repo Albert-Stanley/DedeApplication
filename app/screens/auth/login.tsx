@@ -21,8 +21,8 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-// import authLogin from "@/app/services/api/authLogin";
 import { Alert } from "react-native";
+import authLogin from "../../services/api/authLogin";
 
 const LoginSchema = z.object({
   email: z
@@ -49,19 +49,18 @@ const LoginScreen = () => {
   });
 
   const onSubmit = async (data: Login) => {
-    // try {
-    //   const response = await authLogin(data);
+    try {
+      const response = await authLogin(data);
 
-    //   if (!response.success) {
-    //     throw new Error("Usuário ou senha incorretos.");
-    //   }
+      if (!response.success) {
+        throw new Error("Usuário ou senha incorretos.");
+      }
 
-    //   router.push("/screens/home");
-    // } catch (error: any) {
-    //   setErrorMessage(error.message);
-    //   Alert.alert("Erro no Login", error.message);
-    // }
-    router.push("/screens/home");
+      router.push("/screens/home");
+    } catch (error: any) {
+      setErrorMessage(error.message);
+      Alert.alert("Erro no Login", error.message);
+    }
   };
 
   return (
