@@ -1,4 +1,4 @@
-const authLogin = async ({
+export const authLogin = async ({
   email,
   password,
 }: {
@@ -6,7 +6,9 @@ const authLogin = async ({
   password: string;
 }) => {
   try {
-    const response = await fetch("http://192.168.160.1/Auth", {
+    const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:5000"; // Caso a variável de ambiente não esteja definida API_URL, utilize o valor padrão "http://localhost:5000"
+
+    const response = await fetch(`${API_URL}/Auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ Email: email, Password: password }),
@@ -24,5 +26,3 @@ const authLogin = async ({
     };
   }
 };
-
-export default authLogin;

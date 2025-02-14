@@ -22,7 +22,7 @@ import {
   FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Alert } from "react-native";
-import authLogin from "../../services/api/authLogin";
+import { authLogin } from "../../services/api/authLogin";
 
 const LoginSchema = z.object({
   email: z
@@ -53,15 +53,26 @@ const LoginScreen = () => {
       const response = await authLogin(data);
 
       if (!response.success) {
-        throw new Error("Usuário ou senha incorretos.");
+        setErrorMessage(response.message || "Usuário ou senha incorretos.");
+        Alert.alert(
+          "Erro no Login",
+          response.message || "Usuário ou senha incorretos."
+        );
+        return;
       }
 
       router.push("/screens/home");
-    } catch (error: any) {
-      setErrorMessage(error.message);
-      Alert.alert("Erro no Login", error.message);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
+      setErrorMessage(errorMessage);
+      Alert.alert("Erro no Login", errorMessage);
     }
   };
+
+  useEffect(() => {
+    setErrorMessage(null);
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
