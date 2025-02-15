@@ -22,7 +22,7 @@ import {
   FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Alert } from "react-native";
-import { authLogin } from "../../services/api/authLogin";
+import { login } from "../../services/authServices";
 
 const LoginSchema = z.object({
   email: z
@@ -50,7 +50,7 @@ const LoginScreen = () => {
 
   const onSubmit = async (data: Login) => {
     try {
-      const response = await authLogin(data);
+      const response = await login(data.email, data.password);
 
       if (!response.success) {
         setErrorMessage(response.message || "Usuário ou senha incorretos.");
@@ -187,6 +187,7 @@ const LoginScreen = () => {
             variant="outline"
             action="secondary"
             className="rounded-lg border-primary-200"
+            onPress={() => router.push("/screens/auth/signup")}
           >
             <ButtonText className="font-bold text-primary-500 text-lg">
               Cadastre-se agora

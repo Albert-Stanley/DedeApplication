@@ -35,7 +35,7 @@ import { HStack } from "@/components/ui/hstack";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
-import { signup, UserData } from "../../services/api/authServices";
+import { signup, UserData } from "../../services/authServices";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
