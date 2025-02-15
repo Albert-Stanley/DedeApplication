@@ -1,4 +1,4 @@
-import { api } from "./api";
+import api from "./api";
 
 interface AuthResponse {
   success: any;
@@ -36,18 +36,3 @@ export const register = async (
   });
   return response.data;
 };
-
-// // Logout (limpa o token armazenado)
-// export const logout = async () => {
-//   try {
-//     await api.post("/auth/logout");
-//   } catch (error) {
-//     console.error("Erro ao fazer logout:", error);
-//   }
-// };
-
-// // Refresh Token (caso o token expire)
-// export const refreshToken = async () => {
-//   const response = await api.post<AuthResponse>("/auth/refresh");
-//   return response.data;
-// };

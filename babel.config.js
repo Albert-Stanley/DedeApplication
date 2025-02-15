@@ -1,15 +1,15 @@
 module.exports = function (api) {
   api.cache(true);
-  api.cache(true);
+
   return {
     presets: [
       [
         "babel-preset-expo",
         {
-          jsxImportSource: "nativewind",
+          jsxImportSource: "nativewind", // Isso está correto para usar o nativewind com JSX
         },
       ],
-      "nativewind/babel",
+      "nativewind/babel", // Para as configurações do NativeWind
     ],
 
     plugins: [
@@ -19,11 +19,17 @@ module.exports = function (api) {
           root: ["./"],
           alias: {
             "@": "./",
-            "tailwind.config": "./tailwind.config.js",
+            "tailwind.config": "./tailwind.config.js", // Alias para o arquivo de configuração do Tailwind
           },
         },
       ],
-      "module:react-native-dotenv",
+      [
+        "module:react-native-dotenv", // Certifique-se de que o plugin está sendo aplicado corretamente
+        {
+          moduleName: "@env", // Nome do módulo que você usará para importar as variáveis de ambiente
+          path: ".env", // Caminho para o arquivo .env
+        },
+      ],
     ],
   };
 };
