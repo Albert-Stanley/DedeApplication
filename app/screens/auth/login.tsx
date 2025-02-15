@@ -22,14 +22,14 @@ import {
   FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Alert } from "react-native";
-import { login } from "../../services/authServices";
+import { login, verifyUser } from "../../services/authServices";
 
 const LoginSchema = z.object({
-  email: z
+  CRMorEmail: z
     .string()
     .min(1, "Por favor, insira um e-mail.")
     .email("E-mail inválido, tente novamente."),
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
+  Password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
 });
 
 type Login = z.infer<typeof LoginSchema>;
@@ -45,22 +45,35 @@ const LoginScreen = () => {
     control,
   } = useForm<Login>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { CRMorEmail: "", Password: "" },
   });
 
   const onSubmit = async (data: Login) => {
     try {
-      const response = await login(data.email, data.password);
+      // Primeiro, verifica se o usuário existe
+      const verifyResponse = await verifyUser(data.CRMorEmail);
 
-      if (!response.success) {
-        setErrorMessage(response.message || "Usuário ou senha incorretos.");
+      if (!verifyResponse.success) {
+        setErrorMessage(verifyResponse.message);
+        Alert.alert("Erro", verifyResponse.message);
+        return;
+      }
+
+      // Se o usuário for encontrado, faz o login
+      const loginResponse = await login(data.CRMorEmail, data.Password);
+
+      if (!loginResponse.success) {
+        setErrorMessage(
+          loginResponse.message || "Usuário ou senha incorretos."
+        );
         Alert.alert(
           "Erro no Login",
-          response.message || "Usuário ou senha incorretos."
+          loginResponse.message || "Usuário ou senha incorretos."
         );
         return;
       }
 
+      // Sucesso no login
       router.push("/screens/home");
     } catch (error) {
       const errorMessage =
@@ -82,18 +95,18 @@ const LoginScreen = () => {
       <Box className="flex-1 justify-center items-center px-4">
         <VStack space="lg" className="w-full max-w-lg p-6">
           <Text size="2xl" className="text-left mb-4 font-bold">
-            Faça login com seu e-mail e senha
+            Faça login com seu CRM e-mail e senha
           </Text>
 
-          {/* Campo de Email */}
-          <FormControl isInvalid={!!errors?.email} className="w-full">
+          {/* Campo de CRM ou Email */}
+          <FormControl isInvalid={!!errors?.CRMorEmail} className="w-full">
             <FormControlLabel>
               <FormControlLabelText className="font-medium text-base">
-                E-mail
+                CRM ou E-mail
               </FormControlLabelText>
             </FormControlLabel>
             <Controller
-              name="email"
+              name="CRMorEmail"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input className="mb-4" size="lg">
@@ -111,21 +124,21 @@ const LoginScreen = () => {
             <FormControlError>
               <FormControlErrorIcon as={AlertTriangle} />
               <FormControlErrorText>
-                {errors?.email?.message}
+                {errors?.CRMorEmail?.message}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
 
           {/* Campo de Senha */}
 
-          <FormControl isInvalid={!!errors?.password} className="w-full">
+          <FormControl isInvalid={!!errors?.Password} className="w-full">
             <FormControlLabel>
               <FormControlLabelText className="font-medium text-base">
                 Senha
               </FormControlLabelText>
             </FormControlLabel>
             <Controller
-              name="password"
+              name="Password"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input className="mb-4" size="lg">
@@ -153,7 +166,7 @@ const LoginScreen = () => {
             <FormControlError>
               <FormControlErrorIcon as={AlertTriangle} />
               <FormControlErrorText>
-                {errors?.password?.message}
+                {errors?.Password?.message}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
