@@ -6,7 +6,7 @@ import { router } from "expo-router";
 
 const Profile = () => {
   const goBack = () => {
-    router.replace("/homepage");
+    router.replace("/screens/home");
   };
 
   const handleLogout = () => {

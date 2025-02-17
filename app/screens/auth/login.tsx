@@ -28,8 +28,14 @@ const LoginSchema = z.object({
   CRMorEmail: z
     .string()
     .min(1, "Por favor, insira um e-mail.")
+    .max(100, "O e-mail deve ter no máximo 100 caracteres.")
     .email("E-mail inválido, tente novamente."),
-  Password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres."),
+  Password: z
+    .string()
+    .min(6, "A senha deve ter pelo menos 6 caracteres.")
+    .max(100, "A senha deve ter no máximo 100 caracteres.")
+    .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
+    .regex(/[0-9]/, "A senha deve conter ao menos um número."),
 });
 
 type Login = z.infer<typeof LoginSchema>;
@@ -95,7 +101,7 @@ const LoginScreen = () => {
       <Box className="flex-1 justify-center items-center px-4">
         <VStack space="lg" className="w-full max-w-lg p-6">
           <Text size="2xl" className="text-left mb-4 font-bold">
-            Faça login com seu CRM e-mail e senha
+            Entre com seu CRM ou e-mail e senha.
           </Text>
 
           {/* Campo de CRM ou Email */}
@@ -111,6 +117,7 @@ const LoginScreen = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input className="mb-4" size="lg">
                   <InputField
+                    id="CRMorEmail"
                     placeholder="Digite seu e-mail"
                     value={value}
                     onChangeText={onChange}
@@ -143,6 +150,7 @@ const LoginScreen = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input className="mb-4" size="lg">
                   <InputField
+                    id="Password"
                     placeholder="Digite sua senha"
                     value={value}
                     onChangeText={onChange}

@@ -40,6 +40,7 @@ import {
   ButtonIcon,
   ButtonText,
 } from "@/components/ui/button";
+import { router } from "expo-router";
 
 // Tipagem do estado do formulário
 interface FormData {
@@ -92,11 +93,15 @@ const FormScreen = () => {
     console.log("Dados salvos:", JSON.stringify(formData, null, 2));
   };
 
+  const goProfile = () => {
+    router.push("/screens/user/profile");
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       <ScrollView>
         <ButtonGroup className="grid justify-items-end ">
-          <Button className="bg-trasparent ">
+          <Button onPress={goProfile} className="bg-trasparent ">
             <Icon className="text-typography-500" as={UserRoundPen} />
           </Button>
         </ButtonGroup>

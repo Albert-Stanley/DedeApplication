@@ -1,34 +1,43 @@
-import api from "./api"; // Importando a instância do axios configurada
+import api from "./api"; // Instância do axios
+import { saveToken, getToken } from "./storageService"; // Serviço para guardar o token
 
-// Interface de User
+// Interface do usuário
 interface User {
   id: string;
   CRMorEmail: string;
   name: string;
-  Password: string;
+  role: string;
 }
 
-// Interface para a resposta do Auth
+// Interface da resposta do login
 interface AuthResponse {
   success: boolean;
   message: string;
   user?: User;
+  token?: string;
 }
 
-// Função de login (POST) – Envia as credenciais do usuário para o backend
+// Função de Login (POST)
 export const login = async (
   CRMorEmail: string,
   Password: string
 ): Promise<AuthResponse> => {
   try {
-    // Envia o request para o backend para verificar as credenciais
     const response = await api.post<AuthResponse>("/users/login", {
-      // <= mudar o endpoint se necessáro
       CRMorEmail,
       Password,
     });
 
-    // Retorna a resposta, com sucesso ou erro
+    if (!response.data.success || !response.data.token) {
+      return {
+        success: false,
+        message: response.data.message || "Erro ao autenticar usuário.",
+      };
+    }
+
+    // Salva o token no storage para usar depois
+    saveToken(response.data.token);
+
     return response.data;
   } catch (error: any) {
     console.error("Erro no login:", error.message);
@@ -39,13 +48,11 @@ export const login = async (
   }
 };
 
-// Função para verificar se o usuário existe no banco de dados (GET)
+// Função para verificar se o usuário existe (GET)
 export const verifyUser = async (CRMorEmail: string): Promise<AuthResponse> => {
   try {
-    // Faz um GET para procurar o usuário no banco de dados
-    const response = await api.get<User[]>(`/users`);
+    const response = await api.get<User[]>("/users");
 
-    // Encontra o usuário pela correspondência de CRMorEmail
     const user = response.data.find((user) => user.CRMorEmail === CRMorEmail);
 
     if (!user) {
@@ -55,16 +62,10 @@ export const verifyUser = async (CRMorEmail: string): Promise<AuthResponse> => {
       };
     }
 
-    // Retorna os dados do usuário
     return {
       success: true,
       message: "Usuário encontrado",
-      user: {
-        id: user.id,
-        CRMorEmail: user.CRMorEmail,
-        name: user.name,
-        Password: "",
-      },
+      user,
     };
   } catch (error: any) {
     console.error("Erro ao verificar usuário:", error.message);
@@ -73,4 +74,9 @@ export const verifyUser = async (CRMorEmail: string): Promise<AuthResponse> => {
       message: error.message || "Erro ao conectar com a API",
     };
   }
+};
+
+// Função para pegar o token armazenado usando mmkv
+export const fetchToken = (): string | null => {
+  return getToken();
 };
