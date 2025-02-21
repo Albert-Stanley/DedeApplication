@@ -35,7 +35,7 @@ import { HStack } from "@/components/ui/hstack";
 import { useForm, Controller } from "react-hook-form";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
-import { signup, UserData } from "../../services/authServices";
+// import { signup, UserData } from "../../../services/authServices";
 
 const SignupScreen = () => {
   const [name, setName] = useState("");
@@ -135,25 +135,25 @@ const SignupScreen = () => {
     if (!isValid) return;
 
     // Criando objeto para enviar à API
-    const userData: UserData = {
-      Name: name,
-      Email: email,
-      Role: profissaoSelecionada === "medico" ? "Doctor" : "Secretary",
-      CRM: profissaoSelecionada === "medico" ? crm : undefined,
-      Password: password,
-      HospitalName: nomeHospital,
-      UF: uf.toUpperCase(),
-    };
+    // const userData: UserData = {
+    //   Name: name,
+    //   Email: email,
+    //   Role: profissaoSelecionada === "medico" ? "Doctor" : "Secretary",
+    //   CRM: profissaoSelecionada === "medico" ? crm : undefined,
+    //   Password: password,
+    //   HospitalName: nomeHospital,
+    //   UF: uf.toUpperCase(),
+    // };
 
-    try {
-      console.log("Enviando dados para API...", userData);
-      await signup(userData);
-      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-      router.push("/");
-    } catch (error) {
-      console.error("Erro ao cadastrar:", error);
-      Alert.alert("Erro", "Não foi possível realizar o cadastro.");
-    }
+    //   try {
+    //     console.log("Enviando dados para API...", userData);
+    //     await signup(userData);
+    //     Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+    //     router.push("/");
+    //   } catch (error) {
+    //     console.error("Erro ao cadastrar:", error);
+    //     Alert.alert("Erro", "Não foi possível realizar o cadastro.");
+    //   }
   };
 
   return (

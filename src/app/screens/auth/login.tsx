@@ -22,7 +22,7 @@ import {
   FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Alert } from "react-native";
-import { login, verifyUser } from "../../services/authServices";
+import { login, verifyUser } from "../../../services/authServices";
 
 const LoginSchema = z.object({
   CRMorEmail: z

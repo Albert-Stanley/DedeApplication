@@ -6,19 +6,21 @@
     "esModuleInterop": true,
     "moduleResolution": "node", // Garantir que o Node.js resolva os módulos corretamente
     "resolveJsonModule": true, // Permitindo a importação de arquivos .json (útil para .env)
+    "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "tailwind.config": [
-        "./tailwind.config.js"
-      ]
+      "@/*": ["src/*"],
+      "tailwind.config": ["./tailwind.config.js"]
     }
   },
   "include": [
     "env.d.ts",
-    "app/**/*",
+    "src/app/**/*",
     "node_modules/react-native-dotenv", // Certifique-se de incluir isso para o typescript reconhecer as variáveis de ambiente
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    "src/services",
+    "src/_layout.tsx",
+    "src/services",
+    "src/auth",
+    "src/screens"
   ]
 }
