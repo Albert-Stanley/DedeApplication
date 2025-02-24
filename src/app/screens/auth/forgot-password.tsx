@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/form-control";
 import { Input, InputField } from "@/components/ui/input";
 import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react-native";
+import { AlertTriangle, SendIcon } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -139,6 +139,7 @@ const ForgotPasswordScreen = () => {
               onPress={handleSubmit(onSubmit)}
             >
               <ButtonText className="font-bold text-lg">Enviar Link</ButtonText>
+              <ButtonIcon as={SendIcon} />
             </Button>
           </VStack>
         </VStack>

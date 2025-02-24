@@ -5,9 +5,14 @@ import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Input, InputSlot, InputField, InputIcon } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonIcon } from "@/components/ui/button";
 import { ButtonText } from "@/components/ui/button";
-import { AlertTriangle, EyeIcon, EyeOffIcon } from "lucide-react-native";
+import {
+  AlertTriangle,
+  EyeIcon,
+  EyeOffIcon,
+  LogInIcon,
+} from "lucide-react-native";
 import { HStack } from "@/components/ui/hstack";
 import { LinkText } from "@/components/ui/link";
 import z from "zod";
@@ -197,6 +202,7 @@ const LoginScreen = () => {
             onPress={handleSubmit(onSubmit)}
           >
             <ButtonText className="font-bold text-lg">Entrar</ButtonText>
+            <ButtonIcon as={LogInIcon} />
           </Button>
           <Text size="xl" className="text-left  font-bold">
             Não possui registro? Faça seu cadastro
