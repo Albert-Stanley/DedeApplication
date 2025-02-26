@@ -245,10 +245,14 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <FormControlError>
-                <FormControlErrorIcon as={AlertTriangle} />
-                <FormControlErrorText>Email inválido.</FormControlErrorText>
-              </FormControlError>
+              {errors?.Email && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.Email.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
             </FormControl>
 
             {/* Campo de Profissão */}
@@ -285,11 +289,14 @@ const SignupScreen = () => {
                   </RadioGroup>
                 )}
               />
-              <FormControlError>
-                <FormControlErrorText>
-                  {errors.Role?.message}
-                </FormControlErrorText>
-              </FormControlError>
+              {errors?.Role && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.Role.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
             </FormControl>
 
             {/* Exibe o campo CRM/CRO apenas se a profissão for "médico" */}
@@ -313,11 +320,14 @@ const SignupScreen = () => {
                     </Input>
                   )}
                 />
-                <FormControlError>
-                  <FormControlErrorText>
-                    {errors.CRM?.message}
-                  </FormControlErrorText>
-                </FormControlError>
+                {errors?.CRM && (
+                  <FormControlError>
+                    <FormControlErrorIcon as={AlertTriangle} />
+                    <FormControlErrorText>
+                      {errors.CRM.message}
+                    </FormControlErrorText>
+                  </FormControlError>
+                )}
               </FormControl>
             )}
             {/* Campo de Senha */}
@@ -354,12 +364,14 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <FormControlError>
-                <FormControlErrorIcon as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.Password?.message}
-                </FormControlErrorText>
-              </FormControlError>
+              {errors?.Password && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.Password.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
             </FormControl>
 
             {/* Campo de Confirmar Senha */}
@@ -396,13 +408,14 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-
-              <FormControlError>
-                <FormControlErrorIcon as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.ConfirmPassword?.message}
-                </FormControlErrorText>
-              </FormControlError>
+              {errors?.ConfirmPassword && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.ConfirmPassword.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
             </FormControl>
 
             {/* Campo Imput Nome do Hospital*/}
@@ -426,12 +439,14 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <FormControlError>
-                <FormControlErrorIcon as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors?.HospitalName?.message}
-                </FormControlErrorText>
-              </FormControlError>
+              {errors?.HospitalName && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.HospitalName.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
             </FormControl>
 
             {/* Checkbox de Termos de Uso */}

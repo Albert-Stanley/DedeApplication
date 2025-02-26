@@ -136,7 +136,7 @@ const LoginScreen = () => {
                 </Input>
               )}
             />
-            {errors.CRMorEmail && (
+            {errors?.CRMorEmail && (
               <FormControlError>
                 <FormControlErrorIcon as={AlertTriangle} />
                 <FormControlErrorText>
