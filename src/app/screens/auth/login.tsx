@@ -33,8 +33,8 @@ const LoginSchema = z.object({
   CRMorEmail: z
     .string()
     .min(1, "Por favor, insira um e-mail.")
-    .max(100, "O e-mail deve ter no máximo 100 caracteres.")
-    .email("E-mail inválido, tente novamente."),
+    .max(100, "O e-mail ou CRM deve ter no máximo 100 caracteres."),
+  // .email("E-mail inválido, tente novamente."),
   Password: z
     .string()
     .min(6, "A senha deve ter pelo menos 6 caracteres.")
@@ -46,10 +46,12 @@ const LoginSchema = z.object({
 type Login = z.infer<typeof LoginSchema>;
 
 const LoginScreen = () => {
+  // Hooks de estado
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
+  // Hook do formulário
   const {
     handleSubmit,
     formState: { errors },
@@ -59,6 +61,7 @@ const LoginScreen = () => {
     defaultValues: { CRMorEmail: "", Password: "" },
   });
 
+  // Função de submissão do formulário
   const onSubmit = async (data: Login) => {
     try {
       // Primeiro, verifica se o usuário existe
@@ -133,12 +136,14 @@ const LoginScreen = () => {
                 </Input>
               )}
             />
-            <FormControlError>
-              <FormControlErrorIcon as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.CRMorEmail?.message}
-              </FormControlErrorText>
-            </FormControlError>
+            {errors.CRMorEmail && (
+              <FormControlError>
+                <FormControlErrorIcon as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors.CRMorEmail.message}
+                </FormControlErrorText>
+              </FormControlError>
+            )}
           </FormControl>
 
           {/* Campo de Senha */}
@@ -176,12 +181,14 @@ const LoginScreen = () => {
                 </Input>
               )}
             />
-            <FormControlError>
-              <FormControlErrorIcon as={AlertTriangle} />
-              <FormControlErrorText>
-                {errors?.Password?.message}
-              </FormControlErrorText>
-            </FormControlError>
+            {errors?.Password && (
+              <FormControlError>
+                <FormControlErrorIcon as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors.Password.message}
+                </FormControlErrorText>
+              </FormControlError>
+            )}
           </FormControl>
 
           {/* Botão de Esqueceu a Senha */}

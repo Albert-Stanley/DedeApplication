@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { Button, ButtonText } from "@/components/ui/button";
-import { EyeIcon, EyeOffIcon, AlertCircleIcon } from "lucide-react-native";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  AlertTriangle,
+  SearchIcon,
+} from "lucide-react-native";
 import { CircleIcon } from "@/components/ui/icon";
 import {
   FormControl,
@@ -32,193 +37,236 @@ import {
   RadioIcon,
 } from "@/components/ui/radio";
 import { HStack } from "@/components/ui/hstack";
-import { useForm, Controller } from "react-hook-form";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
-// import { signup, UserData } from "../../../services/authServices";
+import z from "zod";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const ufs = [
+  "AC",
+  "AL",
+  "AP",
+  "AM",
+  "BA",
+  "CE",
+  "DF",
+  "ES",
+  "GO",
+  "MA",
+  "MT",
+  "MS",
+  "MG",
+  "PA",
+  "PB",
+  "PR",
+  "PE",
+  "PI",
+  "RJ",
+  "RN",
+  "RS",
+  "RO",
+  "RR",
+  "SC",
+  "SP",
+  "SE",
+  "TO",
+];
+
+const SignupSchema = z
+  .object({
+    Name: z
+      .string()
+      .min(1, "Por favor, insira seu nome.")
+      .max(100, "O nome deve ter no máximo 100 caracteres.")
+      .regex(
+        /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/,
+        "O nome não pode conter números ou caracteres especiais."
+      ),
+    Email: z
+      .string()
+      .email("E-mail inválido.")
+      .max(150, "Máximo de 150 caracteres."),
+    Role: z.string(),
+    CRM: z
+      .string()
+      .min(1, "Por favor, insira seu CRM.")
+      .max(10, "O CRM deve ter no máximo 10 caracteres.")
+      .regex(/^\d+$/, "O CRM deve conter apenas números."),
+    Password: z
+      .string()
+      .min(6, "A senha deve ter pelo menos 6 caracteres.")
+      .max(100, "A senha deve ter no máximo 100 caracteres.")
+      .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
+      .regex(/[0-9]/, "A senha deve conter ao menos um número.")
+      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial."),
+    ConfirmPassword: z
+      .string()
+      .min(6, "A senha deve ter pelo menos 6 caracteres.")
+      .max(100, "A senha deve ter no máximo 100 caracteres.")
+      .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
+      .regex(/[0-9]/, "A senha deve conter ao menos um número.")
+      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial."),
+    HospitalName: z
+      .string()
+      .min(1, "Por favor, insira o nome do hospital.")
+      .max(100, "O nome do hospital deve ter no máximo 100 caracteres."), //
+    UF: z
+      .string()
+      .length(2, "A UF deve ter exatamente 2 caracteres.")
+      .refine((uf) => ufs.includes(uf.toUpperCase()), {
+        message: "UF inválida. Escolha uma UF válida.",
+      }),
+  })
+  .refine((data) => data.Password === data.ConfirmPassword, {
+    message: "As senhas não coincidem.",
+    path: ["ConfirmPassword"], // Especificamos o campo que receberá a mensagem de erro
+  });
+
+type Signup = z.infer<typeof SignupSchema>;
 
 const SignupScreen = () => {
-  const [name, setName] = useState("");
-  const [nomeHospital, setNomeHospital] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // Hooks de estado para exibir ou ocultar a senha
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [uf, setUf] = useState("");
-  // Hook do formulário
-  const {
-    control,
-    watch,
-    formState: { errors },
-  } = useForm();
-  const profissaoSelecionada = watch("profissao");
-  const router = useRouter();
+  const [profissaoSelecionada, setProfissaoSelecionada] = useState<string>("");
 
-  // Estados para validação
-  const [nameError, setNameError] = useState(false);
-  const [nomeHospitalError, setNomeHospitalError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [ufError, setUfError] = useState(false);
-  const [crm, setCrm] = useState("");
   // Modal termos de uso e politica de privacidade
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
-
   const openModal = (content: string) => {
     setModalContent(content);
     setIsModalVisible(true);
   };
 
-  // Função para realizar o cadastro
-  const handleSignup = async () => {
-    let isValid = true;
+  // Hook do formulário
+  const {
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm<Signup>({
+    resolver: zodResolver(SignupSchema),
+    defaultValues: {
+      Name: "",
+      Email: "",
+      Role: "",
+      CRM: "",
+      Password: "",
+      ConfirmPassword: "",
+      HospitalName: "",
+      UF: "",
+    },
+  });
 
-    if (!name.trim()) {
-      setNameError(true);
-      isValid = false;
-    } else {
-      setNameError(false);
-    }
+  const router = useRouter();
 
-    if (!uf.trim()) {
-      setUfError(true);
-      isValid = false;
-    } else {
-      setUfError(false);
-    }
-
-    if (!nomeHospital.trim()) {
-      setNomeHospitalError(true);
-      isValid = false;
-    } else {
-      setNomeHospitalError(false);
-    }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setEmailError(true);
-      isValid = false;
-    } else {
-      setEmailError(false);
-    }
-
-    if (password.length < 6) {
-      setPasswordError(true);
-      isValid = false;
-    } else {
-      setPasswordError(false);
-    }
-
-    if (password !== confirmPassword) {
-      setConfirmPasswordError(true);
-      isValid = false;
-    } else {
-      setConfirmPasswordError(false);
-    }
-
+  // Função de submissão do formulário
+  const onSubmit = (data: Signup) => {
     if (!isTermsAccepted) {
       Alert.alert(
         "Termos de Uso",
         "Você precisa aceitar os Termos de Uso para continuar."
       );
-      isValid = false;
+      return;
     }
-
-    if (profissaoSelecionada === "medico" && !crm.trim()) {
-      Alert.alert("Erro", "O CRM é obrigatório para médicos.");
-      isValid = false;
-    }
-
-    if (!isValid) return;
-
-    // Criando objeto para enviar à API
-    // const userData: UserData = {
-    //   Name: name,
-    //   Email: email,
-    //   Role: profissaoSelecionada === "medico" ? "Doctor" : "Secretary",
-    //   CRM: profissaoSelecionada === "medico" ? crm : undefined,
-    //   Password: password,
-    //   HospitalName: nomeHospital,
-    //   UF: uf.toUpperCase(),
-    // };
-
-    //   try {
-    //     console.log("Enviando dados para API...", userData);
-    //     await signup(userData);
-    //     Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-    //     router.push("/");
-    //   } catch (error) {
-    //     console.error("Erro ao cadastrar:", error);
-    //     Alert.alert("Erro", "Não foi possível realizar o cadastro.");
-    //   }
+    console.log("Dados enviados:", data);
+    Alert.alert("Cadastro realizado!", "Os dados foram enviados com sucesso.");
   };
+
+  useEffect(() => {
+    setIsTermsAccepted(false);
+  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-2">
           <VStack space="lg" className="w-full max-w-lg p-6">
+            {/* Cabeçalho */}
             <Text
               size="2xl"
               className="text-center font-bold text-typography-900"
             >
               Crie sua conta
             </Text>
+
             {/* Campo de Nome */}
-            <FormControl size="lg" isInvalid={nameError}>
+            <FormControl size="lg" isInvalid={!!errors?.Name}>
               <FormControlLabel>
                 <FormControlLabelText>Nome</FormControlLabelText>
               </FormControlLabel>
-              <Input size="lg">
-                <InputField
-                  placeholder="Digite seu nome"
-                  value={name}
-                  onChangeText={setName}
-                />
-              </Input>
-              <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
-              </FormControlError>
+              <Controller
+                name="Name"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-4" size="lg">
+                    <InputField
+                      id="Name"
+                      placeholder="Digite seu Nome"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      returnKeyType="done"
+                    />
+                  </Input>
+                )}
+              />
+              {errors?.Name && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.Name.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
             </FormControl>
+
             {/* Campo de Email */}
-            <FormControl size="lg" isInvalid={emailError}>
+            <FormControl size="lg" isInvalid={!!errors?.Email}>
               <FormControlLabel>
                 <FormControlLabelText>Email</FormControlLabelText>
               </FormControlLabel>
-              <Input size="lg">
-                <InputField
-                  placeholder="Digite seu e-mail"
-                  value={email}
-                  onChangeText={(text) => {
-                    setEmail(text);
-                    setEmailError(false);
-                  }}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </Input>
+              <Controller
+                name="Email"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-4" size="lg">
+                    <InputField
+                      id="Email"
+                      placeholder="Digite seu e-mail"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      keyboardType="email-address"
+                      returnKeyType="done"
+                    />
+                  </Input>
+                )}
+              />
               <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorIcon as={AlertTriangle} />
                 <FormControlErrorText>Email inválido.</FormControlErrorText>
               </FormControlError>
             </FormControl>
-            {/* Campo Selecionar Profissão */}
-            <FormControl size="lg">
+
+            {/* Campo de Profissão */}
+            <FormControl size="lg" isInvalid={!!errors.Role}>
               <FormControlLabel>
                 <FormControlLabelText>Profissão</FormControlLabelText>
               </FormControlLabel>
               <Controller
                 control={control}
-                name="profissao"
+                name="Role"
                 render={({ field: { onChange, value } }) => (
                   <RadioGroup
                     className="mr-6"
-                    value={value}
-                    onChange={onChange}
+                    value={value || profissaoSelecionada} // Garantir que 'value' é string ou undefined
+                    onChange={(newValue: string) => {
+                      setProfissaoSelecionada(newValue); // Atualiza o estado
+                      onChange(newValue); // Atualiza o campo do formulário
+                    }}
                   >
                     <HStack space="md">
                       <Radio value="medico">
@@ -237,122 +285,152 @@ const SignupScreen = () => {
                   </RadioGroup>
                 )}
               />
+              <FormControlError>
+                <FormControlErrorText>
+                  {errors.Role?.message}
+                </FormControlErrorText>
+              </FormControlError>
             </FormControl>
+
             {/* Exibe o campo CRM/CRO apenas se a profissão for "médico" */}
             {profissaoSelecionada === "medico" && (
-              <FormControl size="lg" isInvalid={!!errors.crm}>
+              <FormControl size="lg" isInvalid={!!errors.CRM}>
                 <FormControlLabel>
                   <FormControlLabelText>CRM/CRO</FormControlLabelText>
                 </FormControlLabel>
                 <Controller
                   control={control}
-                  name="crm"
-                  rules={{
-                    required:
-                      profissaoSelecionada === "medico"
-                        ? "O CRM/CRO é obrigatório"
-                        : false,
-                  }}
-                  render={({ field: { onChange, value } }) => (
-                    <Input size="lg">
+                  name="CRM"
+                  render={({ field }) => (
+                    <Input>
+                      <InputSlot className="pl-3"></InputSlot>
                       <InputField
+                        value={field.value || ""}
+                        onChangeText={field.onChange}
                         placeholder="Digite seu CRM ou CRO"
-                        value={value}
-                        onChangeText={onChange}
                         keyboardType="numeric"
                       />
                     </Input>
                   )}
                 />
-                {errors.crm && (
-                  <FormControlError>
-                    <FormControlErrorIcon as={AlertCircleIcon} />
-                    <FormControlErrorText>
-                      {errors.crm?.message?.toString()}
-                    </FormControlErrorText>
-                  </FormControlError>
-                )}
+                <FormControlError>
+                  <FormControlErrorText>
+                    {errors.CRM?.message}
+                  </FormControlErrorText>
+                </FormControlError>
               </FormControl>
             )}
-
             {/* Campo de Senha */}
-            <FormControl size="lg" isInvalid={passwordError}>
+            <FormControl isInvalid={!!errors?.Password} className="w-full">
               <FormControlLabel>
-                <FormControlLabelText>Senha</FormControlLabelText>
+                <FormControlLabelText className="font-medium text-base">
+                  Senha
+                </FormControlLabelText>
               </FormControlLabel>
-              <Input size="lg">
-                <InputField
-                  placeholder="Crie uma senha"
-                  value={password}
-                  onChangeText={(text) => {
-                    setPassword(text);
-                    setPasswordError(false);
-                  }}
-                  secureTextEntry={!showPassword}
-                />
-                <InputSlot onPress={() => setShowPassword(!showPassword)}>
-                  <InputIcon
-                    className="mr-2"
-                    as={showPassword ? EyeIcon : EyeOffIcon}
-                  />
-                </InputSlot>
-              </Input>
+              <Controller
+                name="Password"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-4" size="lg">
+                    <InputField
+                      id="Password"
+                      placeholder="Digite sua senha"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      secureTextEntry={!showPassword}
+                      returnKeyType="done"
+                    />
+                    <InputSlot
+                      onPress={() => setShowPassword(!showPassword)}
+                      className="mr-2"
+                    >
+                      {showPassword ? (
+                        <InputIcon as={EyeIcon} />
+                      ) : (
+                        <InputIcon as={EyeOffIcon} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                )}
+              />
               <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorIcon as={AlertTriangle} />
                 <FormControlErrorText>
-                  A senha deve ter pelo menos 6 caracteres.
+                  {errors?.Password?.message}
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
+
             {/* Campo de Confirmar Senha */}
-            <FormControl size="lg" isInvalid={confirmPasswordError}>
+            <FormControl size="lg" isInvalid={!!errors?.ConfirmPassword}>
               <FormControlLabel>
                 <FormControlLabelText>Confirme sua senha</FormControlLabelText>
               </FormControlLabel>
-              <Input size="lg">
-                <InputField
-                  placeholder="Confirme sua senha"
-                  value={confirmPassword}
-                  onChangeText={(text) => {
-                    setConfirmPassword(text);
-                    setConfirmPasswordError(false);
-                  }}
-                  secureTextEntry={!showConfirmPassword}
-                />
-                <InputSlot
-                  onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  <InputIcon
-                    className="mr-2"
-                    as={showConfirmPassword ? EyeIcon : EyeOffIcon}
-                  />
-                </InputSlot>
-              </Input>
+              <Controller
+                name="ConfirmPassword"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-4" size="lg">
+                    <InputField
+                      id="ConfirmPassword"
+                      placeholder="Digite novamente sua senha"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      secureTextEntry={!showConfirmPassword}
+                      returnKeyType="done"
+                    />
+                    <InputSlot
+                      onPress={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="mr-2"
+                    >
+                      {showConfirmPassword ? (
+                        <InputIcon as={EyeIcon} />
+                      ) : (
+                        <InputIcon as={EyeOffIcon} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                )}
+              />
+
               <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
+                <FormControlErrorIcon as={AlertTriangle} />
                 <FormControlErrorText>
-                  As senhas não coincidem.
+                  {errors?.ConfirmPassword?.message}
                 </FormControlErrorText>
               </FormControlError>
             </FormControl>
+
             {/* Campo Imput Nome do Hospital*/}
-            <FormControl size="lg" isInvalid={nomeHospitalError}>
+            <FormControl size="lg" isInvalid={!!errors?.HospitalName}>
               <FormControlLabel>
                 <FormControlLabelText>Nome Hospital</FormControlLabelText>
               </FormControlLabel>
-              <Input size="lg">
-                <InputField
-                  placeholder="Digite o nome do hospital"
-                  value={nomeHospital}
-                  onChangeText={(text) => {
-                    setNomeHospital(text);
-                    setNomeHospitalError(false);
-                  }}
-                />
-              </Input>
+              <Controller
+                name="HospitalName"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-4" size="lg">
+                    <InputField
+                      id="HospitalName"
+                      placeholder="Digite o nome do Hospital"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      returnKeyType="done"
+                    />
+                  </Input>
+                )}
+              />
               <FormControlError>
-                <FormControlErrorIcon as={AlertCircleIcon} />
-                <FormControlErrorText>Campo obrigatório.</FormControlErrorText>
+                <FormControlErrorIcon as={AlertTriangle} />
+                <FormControlErrorText>
+                  {errors?.HospitalName?.message}
+                </FormControlErrorText>
               </FormControlError>
             </FormControl>
 
@@ -446,9 +524,13 @@ const SignupScreen = () => {
             </Modal>
 
             {/* Botão de Cadastro */}
-            <Button className="w-full" onPress={handleSignup}>
+            <Button className="w-full" onPress={handleSubmit(onSubmit)}>
               <ButtonText className="font-bold text-lg">Cadastrar</ButtonText>
             </Button>
+
+            <Text className="text-lg font-bold">
+              Já possui registro? Faça seu login
+            </Text>
             {/* Voltar para Login */}
             <Button
               variant="outline"
