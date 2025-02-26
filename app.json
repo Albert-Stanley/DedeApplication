@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo4app.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.alberttheman.DedeApplication"
     },
     "web": {
       "favicon": "./assets/logo4app.png"

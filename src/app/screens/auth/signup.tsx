@@ -37,7 +37,7 @@ import {
   RadioIcon,
 } from "@/components/ui/radio";
 import { HStack } from "@/components/ui/hstack";
-import Modal from "react-native-modal";
+import { Modal } from "react-native";
 import { Platform } from "react-native";
 import z from "zod";
 import { useForm, Controller } from "react-hook-form";
@@ -144,7 +144,6 @@ const SignupScreen = () => {
   const {
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = useForm<Signup>({
     resolver: zodResolver(SignupSchema),
@@ -163,16 +162,20 @@ const SignupScreen = () => {
   const router = useRouter();
 
   // Função de submissão do formulário
+  // const onSubmit = (data: Signup) => {
+  //   if (!isTermsAccepted) {
+  //     Alert.alert(
+  //       "Termos de Uso",
+  //       "Você precisa aceitar os Termos de Uso para continuar."
+  //     );
+  //     return;
+  //   }
+  //   console.log("Dados enviados:", data);
+  //   Alert.alert("Cadastro realizado!", "Os dados foram enviados com sucesso.");
+  // };
+
   const onSubmit = (data: Signup) => {
-    if (!isTermsAccepted) {
-      Alert.alert(
-        "Termos de Uso",
-        "Você precisa aceitar os Termos de Uso para continuar."
-      );
-      return;
-    }
-    console.log("Dados enviados:", data);
-    Alert.alert("Cadastro realizado!", "Os dados foram enviados com sucesso.");
+    Alert.alert(JSON.stringify(data));
   };
 
   useEffect(() => {
@@ -518,8 +521,8 @@ const SignupScreen = () => {
             </Box>
             {/* Modal de Termos de Uso e Política de Privacidade */}
             <Modal
-              isVisible={isModalVisible}
-              onBackdropPress={() => setIsModalVisible(false)}
+              visible={isModalVisible}
+              onRequestClose={() => setIsModalVisible(false)}
             >
               <View className="bg-white p-6 rounded-lg">
                 <Text className="text-lg font-bold">

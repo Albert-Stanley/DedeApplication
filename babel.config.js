@@ -30,6 +30,7 @@ module.exports = function (api) {
           path: ".env", // Caminho para o arquivo .env
         },
       ],
+      ["react-native-reanimated/plugin"],
     ],
   };
 };

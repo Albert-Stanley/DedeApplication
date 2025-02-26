@@ -16,7 +16,7 @@ import {
 import { HStack } from "@/components/ui/hstack";
 import { LinkText } from "@/components/ui/link";
 import z from "zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, Form } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FormControl,
@@ -61,9 +61,11 @@ const LoginScreen = () => {
     defaultValues: { CRMorEmail: "", Password: "" },
   });
 
-  // Função de submissão do formulário
   const onSubmit = async (data: Login) => {
     try {
+      // Exibe os dados no console para depuração
+      console.log("Dados do login:", data);
+
       // Primeiro, verifica se o usuário existe
       const verifyResponse = await verifyUser(data.CRMorEmail);
 

@@ -1,5 +1,5 @@
 import api from "./api"; // Instância do axios
-import { saveToken, getToken } from "./storageService"; // Serviço para guardar o token
+import { saveToken, getToken, removeToken } from "./storageService"; // Serviços para guardar e remover o token
 
 // Interface do usuário
 interface User {
@@ -35,8 +35,8 @@ export const login = async (
       };
     }
 
-    // Salva o token no storage para usar depois
-    saveToken(response.data.token);
+    // Salva o token no armazenamento adequado
+    await saveToken(response.data.token);
 
     return response.data;
   } catch (error: any) {
@@ -76,7 +76,12 @@ export const verifyUser = async (CRMorEmail: string): Promise<AuthResponse> => {
   }
 };
 
-// Função para pegar o token armazenado usando mmkv
-export const fetchToken = (): string | null => {
-  return getToken();
+// Função para pegar o token armazenado usando SecureStore ou localStorage
+export const fetchToken = async (): Promise<string | null> => {
+  return await getToken();
+};
+
+// Função para remover o token (logout)
+export const logout = async () => {
+  await removeToken();
 };

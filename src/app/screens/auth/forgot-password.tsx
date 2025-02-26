@@ -75,7 +75,7 @@ const ForgotPasswordScreen = () => {
         <Pressable
           onPress={handleBack}
           accessibilityRole="button"
-          className="w-12 h-12 p-2 items-center justify-center rounded-full bg-background-200 hover:bg-background-300 active:bg-background-400 pointer-events-auto"
+          className="w-12 h-12 p-2 items-center justify-center rounded-full bg-background-200 hover:bg-background-300 active:bg-background-400"
         >
           <Icon
             as={ArrowLeftIcon}
