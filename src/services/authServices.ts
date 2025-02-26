@@ -76,7 +76,7 @@ export const verifyUser = async (CRMorEmail: string): Promise<AuthResponse> => {
   }
 };
 
-// Função para pegar o token armazenado usando SecureStore ou localStorage
+// Função para pegar o token armazenado (web ou mobile)
 export const fetchToken = async (): Promise<string | null> => {
   return await getToken();
 };

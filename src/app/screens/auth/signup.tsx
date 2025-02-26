@@ -4,12 +4,7 @@ import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { Button, ButtonText } from "@/components/ui/button";
-import {
-  EyeIcon,
-  EyeOffIcon,
-  AlertTriangle,
-  SearchIcon,
-} from "lucide-react-native";
+import { EyeIcon, EyeOffIcon, AlertTriangle } from "lucide-react-native";
 import { CircleIcon } from "@/components/ui/icon";
 import {
   FormControl,
@@ -42,36 +37,7 @@ import { Platform } from "react-native";
 import z from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-const ufs = [
-  "AC",
-  "AL",
-  "AP",
-  "AM",
-  "BA",
-  "CE",
-  "DF",
-  "ES",
-  "GO",
-  "MA",
-  "MT",
-  "MS",
-  "MG",
-  "PA",
-  "PB",
-  "PR",
-  "PE",
-  "PI",
-  "RJ",
-  "RN",
-  "RS",
-  "RO",
-  "RR",
-  "SC",
-  "SP",
-  "SE",
-  "TO",
-];
+import SelectUF from "@/components/selectUF/SelectUF";
 
 const SignupSchema = z
   .object({
@@ -114,7 +80,7 @@ const SignupSchema = z
     UF: z
       .string()
       .length(2, "A UF deve ter exatamente 2 caracteres.")
-      .refine((uf) => ufs.includes(uf.toUpperCase()), {
+      .refine((uf) => uf.includes(uf.toUpperCase()), {
         message: "UF inválida. Escolha uma UF válida.",
       }),
   })
@@ -159,6 +125,11 @@ const SignupScreen = () => {
     },
   });
 
+  // Função para formatar o CRM
+  const formatCRM = (value: string) => {
+    return value.replace(/\D/g, "");
+  };
+
   const router = useRouter();
 
   // Função de submissão do formulário
@@ -177,10 +148,6 @@ const SignupScreen = () => {
   const onSubmit = (data: Signup) => {
     Alert.alert(JSON.stringify(data));
   };
-
-  useEffect(() => {
-    setIsTermsAccepted(false);
-  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
@@ -316,7 +283,10 @@ const SignupScreen = () => {
                       <InputSlot className="pl-3"></InputSlot>
                       <InputField
                         value={field.value || ""}
-                        onChangeText={field.onChange}
+                        onChangeText={(text) => {
+                          const formattedText = formatCRM(text); // Formata o valor
+                          field.onChange(formattedText); // Passa o valor formatado para o campo
+                        }}
                         placeholder="Digite seu CRM ou CRO"
                         keyboardType="numeric"
                       />
@@ -334,11 +304,9 @@ const SignupScreen = () => {
               </FormControl>
             )}
             {/* Campo de Senha */}
-            <FormControl isInvalid={!!errors?.Password} className="w-full">
+            <FormControl size="lg" isInvalid={!!errors?.Password}>
               <FormControlLabel>
-                <FormControlLabelText className="font-medium text-base">
-                  Senha
-                </FormControlLabelText>
+                <FormControlLabelText>Senha</FormControlLabelText>
               </FormControlLabel>
               <Controller
                 name="Password"
@@ -451,6 +419,19 @@ const SignupScreen = () => {
                 </FormControlError>
               )}
             </FormControl>
+
+            {/* Campo de UF */}
+            <Controller
+              name="UF"
+              control={control}
+              render={({ field }) => (
+                <SelectUF
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.UF?.message}
+                />
+              )}
+            />
 
             {/* Checkbox de Termos de Uso */}
             <Box className="flex-1 justify-center items-center ">
