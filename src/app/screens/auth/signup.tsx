@@ -38,6 +38,7 @@ import z from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SelectUF from "@/components/selectUF/SelectUF";
+import { registerUser } from "@/services/authServices";
 
 const SignupSchema = z
   .object({
@@ -179,16 +180,42 @@ const SignupScreen = () => {
   }, [selectedRole, setValue, trigger]);
 
   // Função para envio dos dados do formulário
-  const onSubmit = (data: Signup) => {
-    // Verifica se o CRM é válido para médicos e não é necessário para secretários
-    if (selectedRole === "Médico" && !data.CRM) {
-      Alert.alert("Erro", "CRM é necessário para médicos.");
-      return;
-    }
+  const onSubmit = async (data: Signup) => {
+    try {
+      if (selectedRole === "Médico" && !data.CRM) {
+        Alert.alert("Erro", "CRM é necessário para médicos.");
+        return;
+      }
 
-    // Exibe os dados no console e alerta de sucesso
-    console.log("Dados enviados:", data);
-    Alert.alert("Cadastro realizado!", "Os dados foram enviados com sucesso.");
+      const response = await registerUser(
+        data.Name,
+        data.Email,
+        data.Role,
+        data.CRM || "", // Garante que o CRM seja enviado como string vazia se não for preenchido
+        data.Password,
+        data.HospitalName,
+        data.UF
+      );
+
+      if (response.success) {
+        Alert.alert(
+          "Cadastro realizado!",
+          "Os dados foram enviados com sucesso."
+        );
+        router.push("/success"); // Substitua "/success" pela página desejada após o cadastro
+      } else {
+        Alert.alert(
+          "Erro",
+          response.message || "Erro desconhecido ao cadastrar usuário."
+        );
+      }
+    } catch (error: any) {
+      console.error("Erro no cadastro:", error.message);
+      Alert.alert(
+        "Erro",
+        "Ocorreu um erro ao tentar cadastrar. Tente novamente mais tarde."
+      );
+    }
   };
 
   return (

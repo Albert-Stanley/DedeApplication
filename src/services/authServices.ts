@@ -85,3 +85,41 @@ export const fetchToken = async (): Promise<string | null> => {
 export const logout = async () => {
   await removeToken();
 };
+
+// Função de Cadastro de Usuário (POST)
+export const registerUser = async (
+  Name: string,
+  Email: string,
+  Role: string,
+  CRM: string,
+  Password: string,
+  HospitalName: string,
+  UF: string
+): Promise<AuthResponse> => {
+  try {
+    const response = await api.post<AuthResponse>("/users/register", {
+      Name,
+      Email,
+      Role,
+      CRM,
+      Password,
+      HospitalName,
+      UF,
+    });
+
+    if (!response.data.success) {
+      return {
+        success: false,
+        message: response.data.message || "Erro ao cadastrar usuário.",
+      };
+    }
+
+    return response.data;
+  } catch (error: any) {
+    console.error("Erro no cadastro:", error.message);
+    return {
+      success: false,
+      message: error.message || "Erro ao conectar com a API",
+    };
+  }
+};
