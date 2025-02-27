@@ -1,43 +1,44 @@
+// Bibliotecas externas
 import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { VStack } from "@/components/ui/vstack";
-import { Text } from "@/components/ui/text";
-import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
-import { Button, ButtonText } from "@/components/ui/button";
+import { useForm, Controller } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
 import { EyeIcon, EyeOffIcon, AlertTriangle } from "lucide-react-native";
+
+// Componentes UI internos
+import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import { CircleIcon } from "@/components/ui/icon";
 import {
   FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
-  FormControlError,
-  FormControlErrorText,
-  FormControlErrorIcon,
 } from "@/components/ui/form-control";
-import {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckboxIcon,
-} from "@/components/ui/checkbox";
-import { CheckIcon } from "@/components/ui/icon";
-import { useRouter } from "expo-router";
-import { Box } from "@/components/ui/box";
-import { Alert, ScrollView, View } from "react-native";
+import { HStack } from "@/components/ui/hstack";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import {
   Radio,
   RadioGroup,
+  RadioIcon,
   RadioIndicator,
   RadioLabel,
-  RadioIcon,
 } from "@/components/ui/radio";
-import { HStack } from "@/components/ui/hstack";
-import { Modal } from "react-native";
-import { Platform } from "react-native";
-import z from "zod";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import SelectUF from "@/components/selectUF/SelectUF";
+import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+
+// Componentes específicos do signup
+import SelectUF from "@/components/signup/selectUF";
+import TermsCheckbox from "@/components/signup/termsCheckBox";
+import TermsModal from "@/components/signup/termsModal";
+
+// Serviços
 import { registerUser } from "@/services/authServices";
 
 const SignupSchema = z
@@ -122,13 +123,14 @@ const SignupScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Modal para termos de uso e política de privacidade
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState("");
+  const [modalContent, setModalContent] = useState<"termos" | "politica">(
+    "termos"
+  );
 
   // Função para abrir o modal com conteúdo dinâmico
-  const openModal = (content: string) => {
+  const openModal = (content: "termos" | "politica") => {
     setModalContent(content);
     setIsModalVisible(true);
   };
@@ -179,43 +181,41 @@ const SignupScreen = () => {
     }
   }, [selectedRole, setValue, trigger]);
 
-  // Função para envio dos dados do formulário
-  const onSubmit = async (data: Signup) => {
-    try {
-      if (selectedRole === "Médico" && !data.CRM) {
-        Alert.alert("Erro", "CRM é necessário para médicos.");
-        return;
-      }
-
-      const response = await registerUser(
+  // Mutação para cadastro do usuário
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: Signup) => {
+      return registerUser(
         data.Name,
         data.Email,
         data.Role,
-        data.CRM || "", // Garante que o CRM seja enviado como string vazia se não for preenchido
+        data.CRM || "",
         data.Password,
         data.HospitalName,
         data.UF
       );
-
+    },
+    onSuccess: (response) => {
       if (response.success) {
         Alert.alert(
           "Cadastro realizado!",
           "Os dados foram enviados com sucesso."
         );
-        router.push("/success"); // Substitua "/success" pela página desejada após o cadastro
+        router.push("/success");
       } else {
-        Alert.alert(
-          "Erro",
-          response.message || "Erro desconhecido ao cadastrar usuário."
-        );
+        Alert.alert("Erro", response.message || "Erro ao cadastrar.");
       }
-    } catch (error: any) {
-      console.error("Erro no cadastro:", error.message);
+    },
+    onError: (error) => {
       Alert.alert(
         "Erro",
         "Ocorreu um erro ao tentar cadastrar. Tente novamente mais tarde."
       );
-    }
+      console.error("Erro no cadastro:", error);
+    },
+  });
+
+  const onSubmit = (data: Signup) => {
+    mutate(data);
   };
 
   return (
@@ -508,97 +508,33 @@ const SignupScreen = () => {
             />
 
             {/* Checkbox de Termos de Uso */}
-            <Box className="flex-1 justify-center items-center ">
-              <VStack space="lg" className="w-full max-w-lg ">
-                <Checkbox
-                  size="md"
-                  value="terms"
-                  aria-label="terms"
-                  isChecked={isTermsAccepted}
-                  onChange={setIsTermsAccepted}
-                >
-                  <CheckboxIndicator>
-                    <CheckboxIcon as={CheckIcon} />
-                  </CheckboxIndicator>
-                  <CheckboxLabel className="text-md leading-tight text-typography-700 flex-row flex-wrap">
-                    {Platform.OS === "web" ? (
-                      <>
-                        Eu aceito os{" "}
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            openModal("termos");
-                          }}
-                          style={{
-                            color: "#1E90FF",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          Termos de Uso
-                        </a>{" "}
-                        &{" "}
-                        <a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            openModal("politica");
-                          }}
-                          style={{
-                            color: "#1E90FF",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          Política de Privacidade
-                        </a>
-                      </>
-                    ) : (
-                      <Text className="text-sm leading-tight text-typography-700 flex-row flex-wrap">
-                        Eu aceito os{" "}
-                        <Text
-                          className="text-sm text-primary-500 underline"
-                          onPress={() => openModal("termos")}
-                        >
-                          Termos de Uso
-                        </Text>{" "}
-                        &{" "}
-                        <Text
-                          className="text-sm text-primary-500 underline"
-                          onPress={() => openModal("politica")}
-                        >
-                          Política de Privacidade
-                        </Text>
-                      </Text>
-                    )}
-                  </CheckboxLabel>
-                </Checkbox>
-              </VStack>
-            </Box>
+            {/* Checkbox de Termos de Uso */}
+            <TermsCheckbox
+              isChecked={isTermsAccepted}
+              onChange={setIsTermsAccepted}
+              onOpenModal={openModal}
+            />
+
             {/* Modal de Termos de Uso e Política de Privacidade */}
-            <Modal
+            <TermsModal
               visible={isModalVisible}
-              onRequestClose={() => setIsModalVisible(false)}
-            >
-              <View className="bg-white p-6 rounded-lg">
-                <Text className="text-lg font-bold">
-                  {modalContent === "termos"
-                    ? "Termos de Uso"
-                    : "Política de Privacidade"}
-                </Text>
-                <Text className="mt-2">
-                  {modalContent === "termos"
-                    ? "Aqui você pode exibir os Termos de Uso completos."
-                    : "Aqui você pode exibir a Política de Privacidade completa."}
-                </Text>
-                <Button onPress={() => setIsModalVisible(false)}>
-                  <ButtonText>Fechar</ButtonText>
-                </Button>
-              </View>
-            </Modal>
+              onClose={() => setIsModalVisible(false)}
+              contentType={modalContent}
+            />
 
             {/* Botão de Cadastro */}
-            <Button className="w-full" onPress={handleSubmit(onSubmit)}>
-              <ButtonText className="font-bold text-lg">Cadastrar</ButtonText>
+            <Button
+              className="w-full"
+              onPress={handleSubmit(onSubmit)}
+              isDisabled={isPending}
+            >
+              <ButtonText className="font-bold text-lg">
+                {isPending ? (
+                  <ActivityIndicator color="#5e5e5e" />
+                ) : (
+                  "Cadastrar"
+                )}
+              </ButtonText>
             </Button>
 
             <Text className="text-lg font-bold">
