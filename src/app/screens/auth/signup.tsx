@@ -48,35 +48,48 @@ const SignupSchema = z
       .regex(
         /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/,
         "O nome não pode conter números ou caracteres especiais."
-      ),
+      )
+      .trim(),
     Email: z
       .string()
       .email("E-mail inválido.")
       .max(150, "Máximo de 150 caracteres."),
-    Role: z.string(),
+    Role: z
+      .string()
+      .refine(
+        (value) => value === "" || value === "Médico" || value === "Secretário",
+        {
+          message: "Profissão inválida.",
+        }
+      )
+      .default(""), // Permite valor inicial vazio
     CRM: z
       .string()
-      .min(1, "Por favor, insira seu CRM.")
       .max(10, "O CRM deve ter no máximo 10 caracteres.")
-      .regex(/^\d+$/, "O CRM deve conter apenas números."),
+      // .regex(/^\d+$/, "O CRM deve conter apenas números.")
+      .trim()
+      .optional(),
     Password: z
       .string()
       .min(6, "A senha deve ter pelo menos 6 caracteres.")
       .max(100, "A senha deve ter no máximo 100 caracteres.")
       .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
       .regex(/[0-9]/, "A senha deve conter ao menos um número.")
-      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial."),
+      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial.")
+      .trim(),
     ConfirmPassword: z
       .string()
       .min(6, "A senha deve ter pelo menos 6 caracteres.")
       .max(100, "A senha deve ter no máximo 100 caracteres.")
       .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
       .regex(/[0-9]/, "A senha deve conter ao menos um número.")
-      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial."),
+      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial.")
+      .trim(),
     HospitalName: z
       .string()
       .min(1, "Por favor, insira o nome do hospital.")
-      .max(100, "O nome do hospital deve ter no máximo 100 caracteres."), //
+      .max(100, "O nome do hospital deve ter no máximo 100 caracteres.")
+      .trim(),
     UF: z
       .string()
       .length(2, "A UF deve ter exatamente 2 caracteres.")
@@ -87,7 +100,19 @@ const SignupSchema = z
   .refine((data) => data.Password === data.ConfirmPassword, {
     message: "As senhas não coincidem.",
     path: ["ConfirmPassword"], // Especificamos o campo que receberá a mensagem de erro
-  });
+  })
+  .refine(
+    (data) => {
+      if (data.Role === "Médico" && !data.CRM) {
+        return false; // Validação do CRM apenas se o Role for "Médico"
+      }
+      return true;
+    },
+    {
+      message: "CRM é necessário apenas para médicos.",
+      path: ["CRM"],
+    }
+  );
 
 type Signup = z.infer<typeof SignupSchema>;
 
@@ -95,29 +120,33 @@ const SignupScreen = () => {
   // Hooks de estado para exibir ou ocultar a senha
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [profissaoSelecionada, setProfissaoSelecionada] = useState<string>("");
 
-  // Modal termos de uso e politica de privacidade
+  // Modal para termos de uso e política de privacidade
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState("");
+
+  // Função para abrir o modal com conteúdo dinâmico
   const openModal = (content: string) => {
     setModalContent(content);
     setIsModalVisible(true);
   };
 
-  // Hook do formulário
+  // Hook de formulários com validação Zod
   const {
+    watch,
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
+    trigger,
   } = useForm<Signup>({
-    resolver: zodResolver(SignupSchema),
+    resolver: zodResolver(SignupSchema), // Conectar com o schema de validação Zod
     defaultValues: {
       Name: "",
       Email: "",
-      Role: "",
       CRM: "",
+      Role: "",
       Password: "",
       ConfirmPassword: "",
       HospitalName: "",
@@ -125,28 +154,41 @@ const SignupScreen = () => {
     },
   });
 
-  // Função para formatar o CRM
-  const formatCRM = (value: string) => {
-    return value.replace(/\D/g, "");
-  };
+  // Função para formatar o CRM removendo qualquer caracter não numérico
+  const formatCRM = (value: string) => value.replace(/\D/g, "");
 
+  // Obtém o valor da 'Role' em tempo real para manipulação do formulário
+  const selectedRole = watch("Role") || "";
+
+  // Hook de roteamento para navegar entre as telas
   const router = useRouter();
 
-  // Função de submissão do formulário
-  // const onSubmit = (data: Signup) => {
-  //   if (!isTermsAccepted) {
-  //     Alert.alert(
-  //       "Termos de Uso",
-  //       "Você precisa aceitar os Termos de Uso para continuar."
-  //     );
-  //     return;
-  //   }
-  //   console.log("Dados enviados:", data);
-  //   Alert.alert("Cadastro realizado!", "Os dados foram enviados com sucesso.");
-  // };
+  // Limpa o campo CRM caso a profissão seja "Secretário"
+  useEffect(() => {
+    if (selectedRole === "Secretário") {
+      setValue("CRM", ""); // Limpa o CRM quando a profissão for "Secretário"
+    }
+  }, [selectedRole, setValue]);
 
+  // Efeito para limpar o CRM e revalidar sempre que a profissão não for "Médico"
+  useEffect(() => {
+    if (selectedRole !== "Médico") {
+      setValue("CRM", ""); // Limpa o CRM caso a profissão não seja "Médico"
+      trigger("CRM"); // Revalida o campo CRM
+    }
+  }, [selectedRole, setValue, trigger]);
+
+  // Função para envio dos dados do formulário
   const onSubmit = (data: Signup) => {
-    Alert.alert(JSON.stringify(data));
+    // Verifica se o CRM é válido para médicos e não é necessário para secretários
+    if (selectedRole === "Médico" && !data.CRM) {
+      Alert.alert("Erro", "CRM é necessário para médicos.");
+      return;
+    }
+
+    // Exibe os dados no console e alerta de sucesso
+    console.log("Dados enviados:", data);
+    Alert.alert("Cadastro realizado!", "Os dados foram enviados com sucesso.");
   };
 
   return (
@@ -236,20 +278,24 @@ const SignupScreen = () => {
                 render={({ field: { onChange, value } }) => (
                   <RadioGroup
                     className="mr-6"
-                    value={value || profissaoSelecionada} // Garantir que 'value' é string ou undefined
+                    value={value}
                     onChange={(newValue: string) => {
-                      setProfissaoSelecionada(newValue); // Atualiza o estado
-                      onChange(newValue); // Atualiza o campo do formulário
+                      onChange(newValue);
+                      // Limpa o CRM e revalida ao mudar para "Secretário"
+                      if (newValue !== "Médico") {
+                        setValue("CRM", "");
+                        trigger("CRM");
+                      }
                     }}
                   >
                     <HStack space="md">
-                      <Radio value="medico">
+                      <Radio id="Médico" value="Médico">
                         <RadioIndicator>
                           <RadioIcon as={CircleIcon} />
                         </RadioIndicator>
                         <RadioLabel>Médico(a)</RadioLabel>
                       </Radio>
-                      <Radio value="secretario">
+                      <Radio id="Secretário" value="Secretário">
                         <RadioIndicator>
                           <RadioIcon as={CircleIcon} />
                         </RadioIndicator>
@@ -269,25 +315,25 @@ const SignupScreen = () => {
               )}
             </FormControl>
 
-            {/* Exibe o campo CRM/CRO apenas se a profissão for "médico" */}
-            {profissaoSelecionada === "medico" && (
+            {/* Exibe o campo CRM apenas se a profissão for "Médico" */}
+            {selectedRole === "Médico" && (
               <FormControl size="lg" isInvalid={!!errors.CRM}>
                 <FormControlLabel>
-                  <FormControlLabelText>CRM/CRO</FormControlLabelText>
+                  <FormControlLabelText>CRM</FormControlLabelText>
                 </FormControlLabel>
                 <Controller
                   control={control}
                   name="CRM"
                   render={({ field }) => (
                     <Input>
-                      <InputSlot className="pl-3"></InputSlot>
+                      <InputSlot></InputSlot>
                       <InputField
                         value={field.value || ""}
                         onChangeText={(text) => {
-                          const formattedText = formatCRM(text); // Formata o valor
-                          field.onChange(formattedText); // Passa o valor formatado para o campo
+                          const formattedText = formatCRM(text);
+                          field.onChange(formattedText); // Formata e atualiza o CRM
                         }}
-                        placeholder="Digite seu CRM ou CRO"
+                        placeholder="Digite seu CRM"
                         keyboardType="numeric"
                       />
                     </Input>
@@ -303,6 +349,7 @@ const SignupScreen = () => {
                 )}
               </FormControl>
             )}
+
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={!!errors?.Password}>
               <FormControlLabel>

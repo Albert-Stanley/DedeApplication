@@ -33,14 +33,16 @@ const LoginSchema = z.object({
   CRMorEmail: z
     .string()
     .min(1, "Por favor, insira um e-mail.")
-    .max(100, "O e-mail ou CRM deve ter no máximo 100 caracteres."),
+    .max(100, "O e-mail ou CRM deve ter no máximo 100 caracteres.")
+    .trim(),
   // .email("E-mail inválido, tente novamente."),
   Password: z
     .string()
     .min(6, "A senha deve ter pelo menos 6 caracteres.")
     .max(100, "A senha deve ter no máximo 100 caracteres.")
     .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
-    .regex(/[0-9]/, "A senha deve conter ao menos um número."),
+    .regex(/[0-9]/, "A senha deve conter ao menos um número.")
+    .trim(),
 });
 
 type Login = z.infer<typeof LoginSchema>;
