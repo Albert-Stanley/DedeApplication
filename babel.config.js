@@ -30,7 +30,8 @@ module.exports = function (api) {
           path: ".env", // Caminho para o arquivo .env
         },
       ],
-      ["react-native-reanimated/plugin"],
+      "@babel/plugin-proposal-export-namespace-from",
+      "react-native-reanimated/plugin",
     ],
   };
 };

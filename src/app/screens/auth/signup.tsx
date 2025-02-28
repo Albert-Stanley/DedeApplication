@@ -32,7 +32,8 @@ import {
 } from "@/components/ui/radio";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-
+import { Spinner } from "@/components/ui/spinner";
+import colors from "tailwindcss/colors";
 // Componentes específicos do signup
 import SelectUF from "@/components/signup/selectUF";
 import TermsCheckbox from "@/components/signup/termsCheckBox";
@@ -111,7 +112,7 @@ const SignupSchema = z
       return true;
     },
     {
-      message: "CRM é necessário apenas para médicos.",
+      message: "CRM é necessário para médicos.",
       path: ["CRM"],
     }
   );
@@ -195,6 +196,8 @@ const SignupScreen = () => {
       );
     },
     onSuccess: (response) => {
+      // Exibir a resposta completa no console para depuração
+      console.log("Resposta do backend:", response);
       if (response.success) {
         Alert.alert(
           "Cadastro realizado!",
@@ -206,6 +209,9 @@ const SignupScreen = () => {
       }
     },
     onError: (error) => {
+      // Exibir erro completo no console
+      console.log("Erro ao tentar cadastrar:", error);
+
       Alert.alert(
         "Erro",
         "Ocorreu um erro ao tentar cadastrar. Tente novamente mais tarde."
@@ -215,6 +221,8 @@ const SignupScreen = () => {
   });
 
   const onSubmit = (data: Signup) => {
+    console.log("Dados do formulário:", data);
+
     mutate(data);
   };
 
@@ -508,7 +516,6 @@ const SignupScreen = () => {
             />
 
             {/* Checkbox de Termos de Uso */}
-            {/* Checkbox de Termos de Uso */}
             <TermsCheckbox
               isChecked={isTermsAccepted}
               onChange={setIsTermsAccepted}
@@ -530,7 +537,7 @@ const SignupScreen = () => {
             >
               <ButtonText className="font-bold text-lg">
                 {isPending ? (
-                  <ActivityIndicator color="#5e5e5e" />
+                  <Spinner size="small" color={colors.gray[500]} />
                 ) : (
                   "Cadastrar"
                 )}
