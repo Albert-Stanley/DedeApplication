@@ -74,8 +74,8 @@ const TermsModal: React.FC<TermsModalProps> = ({
                 {contentType === "termos" ? TERMS_TEXT : POLICY_TEXT}
               </Text>
             </ScrollView>
-            <Button onPress={onClose} className="mt-4 bg-primary w-full">
-              <ButtonText className="text-white">Fechar</ButtonText>
+            <Button onPress={onClose} className="mt-4  w-full">
+              <ButtonText className="text-black">Fechar</ButtonText>
             </Button>
           </VStack>
         </SafeAreaView>

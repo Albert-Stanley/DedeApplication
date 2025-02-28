@@ -1,6 +1,6 @@
 // Bibliotecas externas
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, ScrollView, View } from "react-native";
+import { Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -503,6 +503,9 @@ const SignupScreen = () => {
             </FormControl>
 
             {/* Campo de UF */}
+            <Text className="text-lg font-bold font-medium text-typography-900">
+              Selecione sua UF
+            </Text>
             <Controller
               name="UF"
               control={control}
