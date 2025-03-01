@@ -346,7 +346,7 @@ const SignupScreen = () => {
                 )}
               />
               {errors?.Role && (
-                <FormControlError>
+                <FormControlError className="mt-1">
                   <FormControlErrorIcon as={AlertTriangle} />
                   <FormControlErrorText>
                     {errors.Role.message}
@@ -529,6 +529,7 @@ const SignupScreen = () => {
                 isChecked={watch("isTermsAccepted")}
                 onChange={(checked) => setValue("isTermsAccepted", checked)}
                 onOpenModal={openModal}
+                error={errors.isTermsAccepted?.message ?? ""}
               />
             </View>
 

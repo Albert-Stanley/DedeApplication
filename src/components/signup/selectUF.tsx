@@ -72,7 +72,12 @@ const SelectUF: React.FC<SelectUFProps> = ({ value, onChange, error }) => {
           <Icon name="keyboard-arrow-down" size={25} color="white" />
         </Button>
 
-        {error && <Text className="text-error-700 ">{error}</Text>}
+        {error && (
+          <View className="flex flex-row justify-start items-center mt-1 gap-1">
+            <AlertTriangle className="text-error-700 fill-none h-5 w-5" />
+            <Text className="text-error-700 text-lg">{error}</Text>
+          </View>
+        )}
         <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
           <ActionsheetBackdrop />
           <ActionsheetContent>
