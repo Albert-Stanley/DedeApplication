@@ -1,6 +1,6 @@
 // Bibliotecas externas
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView } from "react-native";
+import { View, Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -59,6 +59,7 @@ const SignupSchema = z
       .max(150, "Máximo de 150 caracteres."),
     Role: z
       .string()
+      .min(1, "Por favor, selecione sua profissão.")
       .refine(
         (value) => value === "" || value === "Médico" || value === "Secretário",
         {
@@ -95,10 +96,13 @@ const SignupSchema = z
       .trim(),
     UF: z
       .string()
-      .length(2, "A UF deve ter exatamente 2 caracteres.")
+      .length(2, "Por favor, selecione sua uf.")
       .refine((uf) => uf.includes(uf.toUpperCase()), {
         message: "UF inválida. Escolha uma UF válida.",
       }),
+    isTermsAccepted: z.boolean().refine((val) => val === true, {
+      message: "Você deve aceitar os termos de uso.",
+    }),
   })
   .refine((data) => data.Password === data.ConfirmPassword, {
     message: "As senhas não coincidem.",
@@ -155,6 +159,7 @@ const SignupScreen = () => {
       ConfirmPassword: "",
       HospitalName: "",
       UF: "",
+      isTermsAccepted: false,
     },
   });
 
@@ -229,8 +234,8 @@ const SignupScreen = () => {
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Box className="flex-1 justify-center items-center px-4 space-y-2">
-          <VStack space="lg" className="w-full max-w-lg p-6">
+        <Box className="flex-1 justify-center items-center px-4 space-y-1">
+          <VStack space="sm" className="w-full max-w-lg p-6">
             {/* Cabeçalho */}
             <Text
               size="2xl"
@@ -303,7 +308,7 @@ const SignupScreen = () => {
             </FormControl>
 
             {/* Campo de Profissão */}
-            <FormControl size="lg" isInvalid={!!errors.Role}>
+            <FormControl className="mb-3" size="lg" isInvalid={!!errors.Role}>
               <FormControlLabel>
                 <FormControlLabelText>Profissão</FormControlLabelText>
               </FormControlLabel>
@@ -519,11 +524,13 @@ const SignupScreen = () => {
             />
 
             {/* Checkbox de Termos de Uso */}
-            <TermsCheckbox
-              isChecked={isTermsAccepted}
-              onChange={setIsTermsAccepted}
-              onOpenModal={openModal}
-            />
+            <View className="mt-4">
+              <TermsCheckbox
+                isChecked={watch("isTermsAccepted")}
+                onChange={(checked) => setValue("isTermsAccepted", checked)}
+                onOpenModal={openModal}
+              />
+            </View>
 
             {/* Modal de Termos de Uso e Política de Privacidade */}
             <TermsModal

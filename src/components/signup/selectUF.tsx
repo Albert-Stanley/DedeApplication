@@ -12,6 +12,13 @@ import {
   ActionsheetScrollView,
 } from "../ui/actionsheet"; // Certifique-se de que o caminho está correto
 import { Button, ButtonText } from "../ui/button";
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
+} from "../ui/form-control";
+import { AlertTriangle } from "lucide-react-native";
 
 const ufs = [
   { title: "Acre", sigla: "AC" },
@@ -54,45 +61,52 @@ const SelectUF: React.FC<SelectUFProps> = ({ value, onChange, error }) => {
   const handleClose = () => setShowActionsheet(false);
 
   return (
-    <View>
-      <Button
-        onPress={() => setShowActionsheet(true)}
-        variant="outline"
-        size="md"
-      >
-        <ButtonText>{value || "Selecione..."}</ButtonText>
-        <Icon name="keyboard-arrow-down" size={25} color="white" />
-      </Button>
+    <FormControl>
+      <View>
+        <Button
+          onPress={() => setShowActionsheet(true)}
+          variant="outline"
+          size="md"
+        >
+          <ButtonText>{value || "Selecione..."}</ButtonText>
+          <Icon name="keyboard-arrow-down" size={25} color="white" />
+        </Button>
 
-      {error && <Text style={{ color: "red", marginTop: 4 }}>{error}</Text>}
+        {error && <Text className="text-error-700 ">{error}</Text>}
+        <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
+          <ActionsheetBackdrop />
+          <ActionsheetContent>
+            <ActionsheetDragIndicatorWrapper>
+              <ActionsheetDragIndicator />
+            </ActionsheetDragIndicatorWrapper>
 
-      <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
-        <ActionsheetBackdrop />
-        <ActionsheetContent>
-          <ActionsheetDragIndicatorWrapper>
-            <ActionsheetDragIndicator />
-          </ActionsheetDragIndicatorWrapper>
-
-          {/* Adicionando scroll para permitir visualizar todas as UFs */}
-          <ActionsheetScrollView style={{ maxHeight: 300 }}>
-            {ufs.map((uf, index) => (
-              <ActionsheetItem
-                key={index}
-                onPress={() => {
-                  onChange(uf.sigla);
-                  handleClose();
-                }}
-                className="items-center"
-              >
-                <ActionsheetItemText className="text-center">
-                  {uf.title} - {uf.sigla}
-                </ActionsheetItemText>
-              </ActionsheetItem>
-            ))}
-          </ActionsheetScrollView>
-        </ActionsheetContent>
-      </Actionsheet>
-    </View>
+            {/* Adicionando scroll para permitir visualizar todas as UFs */}
+            <ActionsheetScrollView style={{ maxHeight: 300 }}>
+              {ufs.map((uf, index) => (
+                <ActionsheetItem
+                  key={index}
+                  onPress={() => {
+                    onChange(uf.sigla);
+                    handleClose();
+                  }}
+                  className="items-center"
+                >
+                  <ActionsheetItemText className="text-center text-lg">
+                    {uf.title} - {uf.sigla}
+                  </ActionsheetItemText>
+                </ActionsheetItem>
+              ))}
+            </ActionsheetScrollView>
+          </ActionsheetContent>
+        </Actionsheet>
+      </View>
+      {error && (
+        <FormControlError>
+          <FormControlErrorIcon as={AlertTriangle} />
+          <FormControlErrorText>{error}</FormControlErrorText>
+        </FormControlError>
+      )}
+    </FormControl>
   );
 };
 
