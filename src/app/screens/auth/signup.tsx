@@ -7,12 +7,17 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { EyeIcon, EyeOffIcon, AlertTriangle } from "lucide-react-native";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  AlertTriangle,
+  ArrowLeftIcon,
+} from "lucide-react-native";
 
 // Componentes UI internos
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
-import { CircleIcon } from "@/components/ui/icon";
+import { CircleIcon, Icon } from "@/components/ui/icon";
 import {
   FormControl,
   FormControlError,
@@ -34,6 +39,8 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
+import GoBackArrow from "@/components/goBack/goBackArrow";
+
 // Componentes específicos do signup
 import SelectUF from "@/components/signup/selectUF";
 import TermsCheckbox from "@/components/signup/termsCheckBox";
@@ -233,6 +240,7 @@ const SignupScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
+      <GoBackArrow />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">

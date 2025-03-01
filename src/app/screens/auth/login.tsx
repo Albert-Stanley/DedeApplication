@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form-control";
 import { Alert } from "react-native";
 import { login, verifyUser } from "../../../services/authServices";
+import GoBackArrow from "@/components/goBack/goBackArrow";
 
 const LoginSchema = z.object({
   CRMorEmail: z
@@ -107,6 +108,7 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
+      <GoBackArrow />
       {errorMessage && (
         <Text className="text-red-500 text-center mt-2">{errorMessage}</Text>
       )}
