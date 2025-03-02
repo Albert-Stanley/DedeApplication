@@ -114,8 +114,8 @@ const LoginScreen = () => {
       )}
       <Box className="flex-1 justify-center items-center px-4">
         <VStack space="lg" className="w-full max-w-lg p-6">
-          <Text size="2xl" className="text-left mb-4 font-bold">
-            Entre com seu CRM ou e-mail e senha.
+          <Text size="2xl" className="text-left text-center mb-4 font-bold">
+            Olá, seja bem-vindo(a) novamente!
           </Text>
 
           {/* Campo de CRM ou Email */}
