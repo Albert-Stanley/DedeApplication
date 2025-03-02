@@ -1,9 +1,17 @@
 import React from "react";
-import { Modal, View, ScrollView } from "react-native";
+import {
+  Modal,
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, ButtonText } from "../ui/button";
+import { Button, ButtonIcon, ButtonText } from "../ui/button";
 import { VStack } from "../ui/vstack";
-import { Text } from "../ui/text";
+import { CircleX } from "lucide-react-native";
+import { Box } from "../ui/box";
 
 interface TermsModalProps {
   visible: boolean;
@@ -59,26 +67,57 @@ const TermsModal: React.FC<TermsModalProps> = ({
   onClose,
   contentType,
 }) => {
+  const content = contentType === "termos" ? TERMS_TEXT : POLICY_TEXT;
+
   return (
-    <Modal visible={visible} onRequestClose={onClose} animationType="fade">
-      <View className="flex-1 bg-black justify-center items-center">
-        <SafeAreaView className="w-11/12 max-h-[80%] bg-background p-6 rounded-2xl shadow-lg">
-          <VStack className="space-y-4 items-center">
-            <Text className="text-xl font-bold text-white text-center">
-              {contentType === "termos"
-                ? "Termos de Uso"
-                : "Política de Privacidade"}
-            </Text>
-            <ScrollView className="max-h-[60vh]">
-              <Text className="text-base text-white text-center">
-                {contentType === "termos" ? TERMS_TEXT : POLICY_TEXT}
+    <Modal
+      visible={visible}
+      onRequestClose={onClose}
+      animationType="fade"
+      transparent
+    >
+      <View className="flex-1 justify-center items-center bg-black/80 p-4">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="w-full max-w-lg"
+        >
+          <SafeAreaView className="w-full max-h-[80%] bg-gray-900 p-6 rounded-2xl shadow-xl border border-gray-700">
+            <VStack className="space-y-4 items-center ">
+              <Text className="text-xl font-bold text-center text-white">
+                {contentType === "termos"
+                  ? "Termos de Uso"
+                  : "Política de Privacidade"}
               </Text>
-            </ScrollView>
-            <Button onPress={onClose} className="mt-4  w-full">
-              <ButtonText className="text-black">Fechar</ButtonText>
-            </Button>
-          </VStack>
-        </SafeAreaView>
+              <View className="h-64 w-full border border-gray-600 rounded-lg overflow-hidden bg-gray-800 p-2">
+                <ScrollView
+                  className="h-full w-full"
+                  showsVerticalScrollIndicator={true}
+                  contentContainerStyle={{ paddingBottom: 20 }}
+                  scrollIndicatorInsets={{ right: 1 }}
+                  persistentScrollbar={true}
+                >
+                  <Text className="text-base text-gray-300 p-1 -mt-3 leading-6">
+                    {content}
+                  </Text>
+                </ScrollView>
+              </View>
+              <Box>
+                <Button
+                  variant="solid"
+                  action="secondary"
+                  size="md"
+                  onPress={onClose}
+                  className="mt-4 bg-gray-700 rounded-lg "
+                >
+                  <ButtonText className="text-white text-lg font-semibold">
+                    Fechar
+                  </ButtonText>
+                  <ButtonIcon as={CircleX} className="ml-2 text-white" />
+                </Button>
+              </Box>
+            </VStack>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );

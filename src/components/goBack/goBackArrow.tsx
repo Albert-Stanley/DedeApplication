@@ -18,7 +18,7 @@ const GoBackArrow = () => {
   };
 
   return (
-    <VStack className="absolute top-0 left-0 right-0 px-4 pt-12 z-10">
+    <VStack className="absolute top-0 -left-2 right-0 px-4 pt-12 z-10">
       <Pressable
         onPress={handleBack}
         accessibilityRole="button"
