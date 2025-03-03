@@ -573,15 +573,15 @@ Data Nascimento - Format => 03/07/2022
             <Text className="text-lg font-bold">
               Já possui registro? Faça seu login
             </Text>
-            {/* Voltar para Login */}
+            {/* Ir para o Login */}
             <Button
               variant="outline"
               action="secondary"
               className="rounded-lg border-primary-200"
-              onPress={() => router.push("/")}
+              onPress={() => router.push("/screens/auth/login")}
             >
               <ButtonText className="font-bold text-primary-500 text-lg">
-                Voltar para Login
+                Ir para o Login
               </ButtonText>
             </Button>
           </VStack>

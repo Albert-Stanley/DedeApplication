@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
@@ -22,76 +21,60 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, LogInIcon } from "lucide-react-native";
 import GoBackArrow from "@/components/goBack/goBackArrow";
+import { validateAccessKey } from "@/services/secretaryServices"; // Atualizando para a nova função de validação de chave
 
 // Schema de validação com Zod
-const forgotPasswordSchema = z.object({
+const loginSecretarySchema = z.object({
   chave: z
     .string()
     .min(1, "Por favor, insira uma chave de acesso.")
     .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "Apenas letras são permitidas."),
 });
 
-type ForgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
+type LoginSecretarySchemaType = z.infer<typeof loginSecretarySchema>;
 
-const ForgotPasswordScreen = () => {
-  // React Hook Form: configuração do formulário
+const LoginSecretaryScreen = () => {
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ForgotPasswordSchemaType>({
-    resolver: zodResolver(forgotPasswordSchema),
+  } = useForm<LoginSecretarySchemaType>({
+    resolver: zodResolver(loginSecretarySchema),
   });
 
-  const toast = useToast();
-  const router = useRouter();
+  const { mutate: validateKey, isPending } = useMutation({
+    mutationFn: async (data: LoginSecretarySchemaType) => {
+      const { chave } = data;
 
-  // Mutação para enviar a chave e realizar a ação de login
-  const sendKeyMutation = useMutation({
-    mutationFn: async (data: ForgotPasswordSchemaType) => {
-      console.log("Enviando email para:", data.chave);
+      // Valida a chave de acesso
+      const response = await validateAccessKey(chave);
 
-      // Substitua por requisição real para enviar o email
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (!response?.isValid) {
+        throw new Error("Chave de acesso inválida.");
+      }
 
-      return { message: "Email enviado com sucesso!" };
+      return response;
     },
     onSuccess: () => {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} action="success">
-            <ToastTitle>Entrando...</ToastTitle>
-          </Toast>
-        ),
-      });
-
+      // Redireciona para o dashboard após sucesso
+      router.push("screens/secretary/SecretaryDashboard");
       reset(); // Limpa o formulário após o sucesso
     },
     onError: (error) => {
-      toast.show({
-        placement: "bottom right",
-        render: ({ id }) => (
-          <Toast nativeID={id} action="error">
-            <ToastTitle>Chave Incorreta</ToastTitle>
-            <Text>{error.message}</Text>
-          </Toast>
-        ),
-      });
+      alert(error.message); // Exibe erro caso a validação falhe
     },
   });
 
-  // Função de envio do formulário
-  const onSubmit = (data: ForgotPasswordSchemaType) => {
-    sendKeyMutation.mutate(data);
+  const onSubmit = (data: LoginSecretarySchemaType) => {
+    validateKey(data); // Chama a mutação para validar a chave
   };
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      {/* Header com botão de voltar */}
       <GoBackArrow />
-      {/* Conteúdo Principal */}
       <VStack className="flex-1 items-center justify-center px-4">
         <VStack className="max-w-[440px] w-full space-y-6">
           <VStack space="sm">
@@ -114,7 +97,7 @@ const ForgotPasswordScreen = () => {
               <Controller
                 name="chave"
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({ field: { onChange, onBlur, value = "" } }) => (
                   <Input className="mb-4" size="lg">
                     <InputField
                       placeholder="Digite a chave de acesso"
@@ -143,9 +126,9 @@ const ForgotPasswordScreen = () => {
               action="primary"
               className="rounded-lg mb-6 flex-row items-center justify-center"
               onPress={handleSubmit(onSubmit)}
-              disabled={sendKeyMutation.isPending}
+              disabled={isPending}
             >
-              {sendKeyMutation.isPending ? (
+              {isPending ? (
                 <>
                   <Spinner size="small" />
                   <ButtonText>Entrando...</ButtonText>
@@ -164,4 +147,4 @@ const ForgotPasswordScreen = () => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default LoginSecretaryScreen;

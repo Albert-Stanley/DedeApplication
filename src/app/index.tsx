@@ -60,16 +60,16 @@ const AnimatedButton = ({
         onPressOut={handlePressOut}
         onPress={onPress}
         variant="outline"
-        className="hover:scale-105 transition-transform duration-200 bg-gray-600 py-3 px-5 rounded-xl flex-row items-center"
+        className="hover:scale-105 transition-transform duration-200 py-3 px-5 rounded-xl flex-row items-center"
       >
         {isLoading ? (
           <ActivityIndicator color={spinnerColor} />
         ) : (
           <>
-            <Text className="text-white text-lg leading-tight font-semibold text-center">
+            <Text className="text-lg leading-tight  font-semibold text-center">
               {text}
             </Text>
-            <ButtonIcon as={icon} className="ml-3 text-white" />
+            <ButtonIcon as={icon} className="ml-3" />
           </>
         )}
       </Button>
