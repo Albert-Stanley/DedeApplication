@@ -1,4 +1,10 @@
 import React from "react";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useMutation } from "@tanstack/react-query";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -6,24 +12,18 @@ import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
-  FormControlErrorIcon,
-  FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
+  FormControlErrorText,
+  FormControlErrorIcon,
 } from "@/components/ui/form-control";
-import { Pressable } from "@/components/ui/pressable";
 import { Input, InputField } from "@/components/ui/input";
-import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, SendIcon } from "lucide-react-native";
-import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
+import { AlertTriangle, LogInIcon } from "lucide-react-native";
+import GoBackArrow from "@/components/goBack/goBackArrow";
 
+// Schema de validação com Zod
 const forgotPasswordSchema = z.object({
   chave: z
     .string()
@@ -31,25 +31,28 @@ const forgotPasswordSchema = z.object({
     .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "Apenas letras são permitidas."),
 });
 
-type forgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
+type ForgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPasswordScreen = () => {
+  // React Hook Form: configuração do formulário
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<forgotPasswordSchemaType>({
+  } = useForm<ForgotPasswordSchemaType>({
     resolver: zodResolver(forgotPasswordSchema),
   });
+
   const toast = useToast();
   const router = useRouter();
 
-  const sendEmailMutation = useMutation({
-    mutationFn: async (data: forgotPasswordSchemaType) => {
+  // Mutação para enviar a chave e realizar a ação de login
+  const sendKeyMutation = useMutation({
+    mutationFn: async (data: ForgotPasswordSchemaType) => {
       console.log("Enviando email para:", data.chave);
 
-      // Simula um delay para a requisição (substitir pelo fetch real)
+      // Substitua por requisição real para enviar o email
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       return { message: "Email enviado com sucesso!" };
@@ -79,37 +82,20 @@ const ForgotPasswordScreen = () => {
     },
   });
 
-  const onSubmit = (data: forgotPasswordSchemaType) => {
-    sendEmailMutation.mutate(data);
-  };
-
-  const handleBack = () => {
-    // SUBSTITUIR PELO GOBACK COMPONENT
-    router.replace("/");
+  // Função de envio do formulário
+  const onSubmit = (data: ForgotPasswordSchemaType) => {
+    sendKeyMutation.mutate(data);
   };
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      {/* Header with Back Button */}
-      <VStack className="absolute top-0 left-0 right-0 px-4 pt-12 z-10">
-        <Pressable
-          onPress={handleBack}
-          accessibilityRole="button"
-          className="w-12 h-12 p-2 items-center justify-center rounded-full bg-background-200 hover:bg-background-300 active:bg-background-400"
-        >
-          <Icon
-            as={ArrowLeftIcon}
-            className="stroke-background-800"
-            size="xl"
-          />
-        </Pressable>
-      </VStack>
-
-      {/* Main Content */}
+      {/* Header com botão de voltar */}
+      <GoBackArrow />
+      {/* Conteúdo Principal */}
       <VStack className="flex-1 items-center justify-center px-4">
         <VStack className="max-w-[440px] w-full space-y-6">
           <VStack space="sm">
-            <Heading className="text-center " size="2xl">
+            <Heading className="text-center" size="2xl">
               Enfermeiro(a) ou Secretário(a)?
             </Heading>
             <Text className="text-center mb-2 text-lg">
@@ -117,7 +103,7 @@ const ForgotPasswordScreen = () => {
             </Text>
           </VStack>
 
-          {/* Form */}
+          {/* Formulário de Chave de Acesso */}
           <VStack space="xl" className="w-full">
             <FormControl isInvalid={!!errors?.chave} className="w-full">
               <FormControlLabel>
@@ -126,7 +112,6 @@ const ForgotPasswordScreen = () => {
                 </FormControlLabelText>
               </FormControlLabel>
               <Controller
-                defaultValue=""
                 name="chave"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -151,25 +136,24 @@ const ForgotPasswordScreen = () => {
               </FormControlError>
             </FormControl>
 
+            {/* Botão de Enviar */}
             <Button
               size="lg"
               variant="solid"
               action="primary"
-              className="rounded-lg"
+              className="rounded-lg mb-6 flex-row items-center justify-center"
               onPress={handleSubmit(onSubmit)}
-              disabled={sendEmailMutation.isPending}
+              disabled={sendKeyMutation.isPending}
             >
-              {sendEmailMutation.isPending ? (
+              {sendKeyMutation.isPending ? (
                 <>
                   <Spinner size="small" />
-                  <ButtonText>Enviando...</ButtonText>
+                  <ButtonText>Entrando...</ButtonText>
                 </>
               ) : (
                 <>
-                  <ButtonText className="font-bold text-lg">
-                    Enviar Link
-                  </ButtonText>
-                  <ButtonIcon as={SendIcon} />
+                  <ButtonText className="font-bold text-lg">Entrar</ButtonText>
+                  <ButtonIcon as={LogInIcon} className="ml-2" />
                 </>
               )}
             </Button>

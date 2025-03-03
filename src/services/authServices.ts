@@ -40,10 +40,16 @@ export const login = async (
 
     return response.data;
   } catch (error: any) {
-    console.error("Erro no login:", error.message);
+    console.error(
+      "Erro no login:",
+      error?.response?.data?.message || error.message
+    );
     return {
       success: false,
-      message: error.message || "Erro ao conectar com a API",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "Erro ao conectar com a API",
     };
   }
 };
@@ -68,10 +74,16 @@ export const verifyUser = async (CRMorEmail: string): Promise<AuthResponse> => {
       user,
     };
   } catch (error: any) {
-    console.error("Erro ao verificar usuário:", error.message);
+    console.error(
+      "Erro ao verificar usuário:",
+      error?.response?.data?.message || error.message
+    );
     return {
       success: false,
-      message: error.message || "Erro ao conectar com a API",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "Erro ao conectar com a API",
     };
   }
 };
@@ -116,10 +128,16 @@ export const registerUser = async (
 
     return response.data;
   } catch (error: any) {
-    console.error("Erro no cadastro:", error.message);
+    console.error(
+      "Erro no cadastro:",
+      error?.response?.data?.message || error.message
+    );
     return {
       success: false,
-      message: error.message || "Erro ao conectar com a API",
+      message:
+        error?.response?.data?.message ||
+        error.message ||
+        "Erro ao conectar com a API",
     };
   }
 };

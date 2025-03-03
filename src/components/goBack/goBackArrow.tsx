@@ -1,20 +1,25 @@
 import React from "react";
 import { Pressable } from "../ui/pressable";
 import { VStack } from "../ui/vstack";
-import { useRouter } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
 import { Icon } from "../ui/icon";
 import { ArrowLeftIcon } from "lucide-react-native";
 
 const GoBackArrow = () => {
   const router = useRouter();
+  const pathname = usePathname(); // Obtém o caminho atual da rota
 
   const handleBack = () => {
-    try {
-      router.back();
-    } catch (error) {
-      // Se não houver histórico de navegação, redireciona para a Home
-      router.push("/");
-    }
+    // Tenta voltar para a página anterior
+    router.back();
+
+    // Se não funcionar, redireciona para a página inicial
+    setTimeout(() => {
+      // Verifica se o caminho atual é a página inicial
+      if (pathname === "/") {
+        router.push("/"); // Redireciona para a página inicial
+      }
+    }, 500); // Um pequeno delay para garantir que a navegação foi tentada
   };
 
   return (
@@ -24,11 +29,7 @@ const GoBackArrow = () => {
         accessibilityRole="button"
         className="w-12 h-12 p-2 items-center justify-center rounded-full bg-background-200 hover:bg-background-300 active:bg-background-400"
       >
-        <Icon
-          as={ArrowLeftIcon}
-          className="stroke-background-800"
-          size={"lg"}
-        />
+        <Icon as={ArrowLeftIcon} className="stroke-background-800" size="lg" />
       </Pressable>
     </VStack>
   );
