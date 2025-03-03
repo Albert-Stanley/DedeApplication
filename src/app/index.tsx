@@ -127,7 +127,7 @@ const App = () => {
               icon={LogInIcon}
             />
             <AnimatedButton
-              text="Cadastrar Médico"
+              text="Cadastrar-se Médico"
               onPress={() => registerMutation.mutate()}
               isLoading={registerMutation.isPending}
               darkColor="#4A5568"

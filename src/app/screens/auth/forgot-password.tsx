@@ -1,3 +1,4 @@
+import React from "react";
 import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
@@ -10,6 +11,7 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
+import { Pressable } from "@/components/ui/pressable";
 import { Input, InputField } from "@/components/ui/input";
 import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
@@ -17,10 +19,10 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, SendIcon } from "lucide-react-native";
-import { Pressable } from "@/components/ui/pressable";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Spinner } from "@/components/ui/spinner";
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -43,28 +45,46 @@ const ForgotPasswordScreen = () => {
   const toast = useToast();
   const router = useRouter();
 
-  const onSubmit = (_data: forgotPasswordSchemaType) => {
-    toast.show({
-      placement: "bottom right",
-      render: ({ id }) => {
-        return (
+  const sendEmailMutation = useMutation({
+    mutationFn: async (data: forgotPasswordSchemaType) => {
+      console.log("Enviando email para:", data.email);
+
+      // Simula um delay para a requisição (substitir pelo fetch real)
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      return { message: "Email enviado com sucesso!" };
+    },
+    onSuccess: () => {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
           <Toast nativeID={id} action="success">
             <ToastTitle>Link Enviado</ToastTitle>
           </Toast>
-        );
-      },
-    });
-    console.log("Dados enviados:", _data);
+        ),
+      });
 
-    reset();
+      reset(); // Limpa o formulário após o sucesso
+    },
+    onError: (error) => {
+      toast.show({
+        placement: "bottom right",
+        render: ({ id }) => (
+          <Toast nativeID={id} action="error">
+            <ToastTitle>Erro ao enviar email</ToastTitle>
+            <Text>{error.message}</Text>
+          </Toast>
+        ),
+      });
+    },
+  });
+
+  const onSubmit = (data: forgotPasswordSchemaType) => {
+    sendEmailMutation.mutate(data);
   };
 
-  // const handleKeyPress = () => {
-  //   Keyboard.dismiss();
-  //   handleSubmit(onSubmit)();
-  // };
-
   const handleBack = () => {
+    // SUBSTITUIR PELO GOBACK COMPONENT
     router.replace("/");
   };
 
@@ -137,9 +157,21 @@ const ForgotPasswordScreen = () => {
               action="primary"
               className="rounded-lg"
               onPress={handleSubmit(onSubmit)}
+              disabled={sendEmailMutation.isPending}
             >
-              <ButtonText className="font-bold text-lg">Enviar Link</ButtonText>
-              <ButtonIcon as={SendIcon} />
+              {sendEmailMutation.isPending ? (
+                <>
+                  <Spinner size="small" />
+                  <ButtonText>Enviando...</ButtonText>
+                </>
+              ) : (
+                <>
+                  <ButtonText className="font-bold text-lg">
+                    Enviar Link
+                  </ButtonText>
+                  <ButtonIcon as={SendIcon} />
+                </>
+              )}
             </Button>
           </VStack>
         </VStack>
