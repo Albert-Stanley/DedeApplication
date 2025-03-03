@@ -135,7 +135,6 @@ const SignupScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState<"termos" | "politica">(
     "termos"
@@ -314,6 +313,14 @@ const SignupScreen = () => {
                 </FormControlError>
               )}
             </FormControl>
+
+            {/* acicionar 3 campos 
+
+Cpf
+Cnpf
+Data Nascimento - Format => 03/07/2022
+
+*/}
 
             {/* Campo de Profissão */}
             <FormControl className="mb-3" size="lg" isInvalid={!!errors.Role}>

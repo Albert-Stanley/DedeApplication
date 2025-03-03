@@ -1,118 +1,148 @@
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native";
-import React from "react";
+import { SafeAreaView, ActivityIndicator, ScrollView } from "react-native";
+import React, { useCallback } from "react";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { LogInIcon } from "lucide-react-native";
+import { Button, ButtonIcon } from "@/components/ui/button";
+import { LogInIcon, UserPlusIcon, StethoscopeIcon } from "lucide-react-native";
 import Animated, {
   withSpring,
   useSharedValue,
   useAnimatedStyle,
+  FadeIn,
 } from "react-native-reanimated";
 import { Text } from "@/components/ui/text";
+import { useMutation } from "@tanstack/react-query";
+
+// Definição do componente AnimatedButton com suporte para hover
+interface AnimatedButtonProps {
+  text: string;
+  onPress: () => void;
+  isLoading: boolean;
+  darkColor: string;
+  icon: any;
+}
+
+const AnimatedButton = ({
+  text,
+  onPress,
+  isLoading,
+  darkColor,
+  icon,
+}: AnimatedButtonProps) => {
+  const scale = useSharedValue(1); // Valor compartilhado para escalar o botão
+  const spinnerColor = "white"; // Cor do spinner
+
+  // Estilos animados para aumentar o botão no hover ou pressionamento
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: withSpring(scale.value, { damping: 5, stiffness: 100 }) },
+    ],
+  }));
+
+  // Detectar pressionamento do botão (para simular hover em dispositivos móveis)
+  const handlePressIn = useCallback(() => {
+    scale.value = 0.9; // Diminui a escala quando o botão é pressionado
+  }, []);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = 1; // Restaura a escala quando o toque é liberado
+  }, []);
+
+  return (
+    <Animated.View
+      style={animatedStyle}
+      entering={FadeIn.duration(500).springify()}
+    >
+      <Button
+        size="xl"
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}
+        variant="outline"
+        className="hover:scale-105 transition-transform duration-200 bg-gray-600 py-3 px-5 rounded-xl flex-row items-center"
+      >
+        {isLoading ? (
+          <ActivityIndicator color={spinnerColor} />
+        ) : (
+          <>
+            <Text className="text-white text-lg leading-tight font-semibold text-center">
+              {text}
+            </Text>
+            <ButtonIcon as={icon} className="ml-3 text-white" />
+          </>
+        )}
+      </Button>
+    </Animated.View>
+  );
+};
 
 const App = () => {
   const router = useRouter();
 
-  // Valor compartilhado para animar a escala do botão
-  const scaleLogin = useSharedValue(1);
-  const scaleRegister = useSharedValue(1);
-  const scaleNurse = useSharedValue(1);
-
-  // Estilo animado de cada botão
-  const animatedStyleLogin = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withSpring(scaleLogin.value, { damping: 5, stiffness: 100 }) },
-    ],
-  }));
-
-  const animatedStyleRegister = useAnimatedStyle(() => ({
-    transform: [
-      {
-        scale: withSpring(scaleRegister.value, { damping: 5, stiffness: 100 }),
-      },
-    ],
-  }));
-
-  const animatedStyleNurse = useAnimatedStyle(() => ({
-    transform: [
-      { scale: withSpring(scaleNurse.value, { damping: 5, stiffness: 100 }) },
-    ],
-  }));
-
-  // Função de manipulação do clique para Login
-  const handleGoToLogin = () => {
-    scaleLogin.value = 0.9; // Encolhe o botão ao ser pressionado
-    setTimeout(() => {
-      scaleLogin.value = 1; // Restaura o tamanho após 200ms
+  // Mutations para gerenciar o carregamento
+  const loginMutation = useMutation({
+    mutationFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/screens/auth/login");
-    }, 200);
-  };
+    },
+  });
 
-  // Função de manipulação do clique para Registro
-  const handleGoToRegister = () => {
-    scaleRegister.value = 0.9; // Encolhe o botão ao ser pressionado
-    setTimeout(() => {
-      scaleRegister.value = 1; // Restaura o tamanho após 200ms
+  const registerMutation = useMutation({
+    mutationFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/screens/auth/signup");
-    }, 200);
-  };
+    },
+  });
 
-  // Função de manipulação do clique para Enfermeiro(a)
-  const handleGoToNurse = () => {
-    scaleNurse.value = 0.9; // Encolhe o botão ao ser pressionado
-    setTimeout(() => {
-      scaleNurse.value = 1; // Restaura o tamanho após 200ms
+  const nurseMutation = useMutation({
+    mutationFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       router.push("/screens/auth/login-secretary");
-    }, 200);
-  };
+    },
+  });
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      <Text className="text-center mt-6 text-3xl font-bold">Bem Vindo(a)</Text>
-      <Box className="flex-1 justify-center items-center px-4">
-        <VStack space="lg" className="w-full max-w-lg p-6">
-          {/* Direciona Para a Página de Login */}
-          <Animated.View style={animatedStyleLogin}>
-            <Button
-              size="xl"
-              onPress={handleGoToLogin}
-              variant="solid"
-              className="mt-2 rounded-xl"
-            >
-              <ButtonText>Fazer Login Como Médico</ButtonText>
-              <ButtonIcon as={LogInIcon} className="ml-2" />
-            </Button>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Box className="flex-1 justify-center items-center px-6 space-y-8">
+          <Animated.View
+            entering={FadeIn.duration(700).springify()}
+            className="w-full max-w-lg"
+          >
+            <Text className="text-center mt-12 text-3xl font-bold">
+              Bem-vindo(a) ao App Médico
+            </Text>
+            <Text className="text-center mt-4 text-lg">
+              Escolha uma opção para acessar sua conta
+            </Text>
           </Animated.View>
 
-          {/* Direciona Para a Página de Cadastro de Médicos */}
-          <Animated.View style={animatedStyleRegister}>
-            <Button
-              size="xl"
-              onPress={handleGoToRegister}
-              variant="solid"
-              className="mt-2 rounded-xl"
-            >
-              <ButtonText>Fazer Cadastro Como Médico</ButtonText>
-              <ButtonIcon as={LogInIcon} className="ml-2" />
-            </Button>
-          </Animated.View>
-
-          {/* Direciona Para a Página de Entrar como enfermeiro(a) ou secretario(a)  */}
-          <Animated.View style={animatedStyleNurse}>
-            <Button
-              size="xl"
-              onPress={handleGoToNurse}
-              variant="solid"
-              className="mt-2 rounded-xl"
-            >
-              <ButtonText>Fazer Login Como Médico</ButtonText>
-              <ButtonIcon as={LogInIcon} className="ml-2" />
-            </Button>
-          </Animated.View>
-        </VStack>
-      </Box>
+          <VStack space="xl" className="w-full max-w-lg p-6 mt-8">
+            <AnimatedButton
+              text="Entrar como Médico"
+              onPress={() => loginMutation.mutate()}
+              isLoading={loginMutation.isPending}
+              darkColor="#4A5568"
+              icon={LogInIcon}
+            />
+            <AnimatedButton
+              text="Cadastrar Médico"
+              onPress={() => registerMutation.mutate()}
+              isLoading={registerMutation.isPending}
+              darkColor="#4A5568"
+              icon={UserPlusIcon}
+            />
+            <AnimatedButton
+              text="Entrar como Enfermeiro(a)"
+              onPress={() => nurseMutation.mutate()}
+              isLoading={nurseMutation.isPending}
+              darkColor="#4A5568"
+              icon={StethoscopeIcon}
+            />
+          </VStack>
+        </Box>
+      </ScrollView>
     </SafeAreaView>
   );
 };
