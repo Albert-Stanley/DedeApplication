@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native";
 import React from "react";
-import GoBackArrow from "@/utils/goBack/goBackArrow";
+import GoBackArrow from "@/utils/goBackArrow";
 import { VStack } from "@/components/ui/vstack";
 import { Text } from "@/components/ui/text";
 

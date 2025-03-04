@@ -30,7 +30,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
-import GoBackArrow from "@/utils/goBack/goBackArrow";
+import GoBackArrow from "@/utils/goBackArrow";
 
 // Componentes específicos do signup
 import SelectUF from "@/components/signup/selectUF";
@@ -42,15 +42,21 @@ import {
   formatCNPJ,
   formatDataNascimento,
 } from "@/utils/fieldFormatters";
+import {
+  isValidCPF,
+  isValidCNPJ,
+  isValidDataNascimento,
+} from "@/utils/validations";
 
 // Serviços
 import { registerUser } from "@/services/authServices";
 
+//
 const SignupSchema = z
   .object({
     Name: z
       .string()
-      .min(1, "Por favor, insira seu nome.")
+      .min(1, "O nome é obrigatório.")
       .max(100, "O nome deve ter no máximo 100 caracteres.")
       .regex(
         /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/,
@@ -60,36 +66,63 @@ const SignupSchema = z
 
     CPF: z
       .string()
-      .min(11, "O CPF deve ter 11 dígitos.") // Verifica os 11 números antes da formatação
-      .max(11, "O CPF deve ter 11 dígitos.")
-      .regex(/^\d{11}$/, "CPF inválido. Formato esperado: 99999999999.")
-      .transform((val) => formatCPF(val)), // Aplica a formatação do CPF
+      .refine(
+        (val) => {
+          const cleaned = val.replace(/\D/g, ""); // Limpeza para remover qualquer caractere não numérico
+          return cleaned.length === 11 && isValidCPF(cleaned); // Verifica a validade do CPF
+        },
+        {
+          message: "CPF inválido. Formato esperado: 111.111.111-11.",
+        }
+      )
+      .transform((val) => {
+        const cleaned = val.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
+        return formatCPF(cleaned); // Formata o CPF após a validação
+      }),
 
     CNPJ: z
       .string()
-      .min(14, "O CNPJ deve ter 14 dígitos.")
-      .max(14, "O CNPJ deve ter 14 dígitos.")
-      .regex(/^\d{14}$/, "CNPJ inválido. Formato esperado: 99999999999999.") // Verifica apenas números
-      .transform((val) => formatCNPJ(val)), // Aplica a formatação do CNPJ
+      .refine(
+        (val) => {
+          const cleaned = val.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
+          return cleaned.length === 14 && isValidCNPJ(cleaned); // Verifica a validade do CNPJ
+        },
+        {
+          message: "CNPJ inválido. Formato esperado: 11.111.111/1111-11.",
+        }
+      )
+      .transform((val) => {
+        const cleaned = val.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
+        return formatCNPJ(cleaned); // Formata o CNPJ após a validação
+      }),
 
     DataNascimento: z
       .string()
-      .length(10, "Data de Nascimento inválida.")
-      .regex(
-        /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-        "Data de nascimento inválida. Formato esperado: dd/mm/aaaa."
+      .refine(
+        (val) => {
+          const cleaned = val.replace(/\D/g, ""); // Remove os caracteres não numéricos
+          return cleaned.length === 8 && isValidDataNascimento(cleaned); // Verifica a validade da Data de Nascimento
+        },
+        {
+          message: "Data de nascimento inválida. Formato esperado: dd/mm/aaaa.",
+        }
       )
-      .trim(),
+      .transform((val) => {
+        const cleaned = val.replace(/\D/g, ""); // Limpeza do valor
+        return formatDataNascimento(cleaned); // Formata a Data de Nascimento após a validação
+      }),
 
     CRM: z
       .string()
+      .min(1, "O CRM é obrigatório.")
       .max(10, "O CRM deve ter no máximo 10 caracteres.")
       .regex(/^\d+$/, "O CRM deve conter apenas números.")
+      .length(10, "O CRM deve ter exatamente 10 caracteres.") // Valida tamanho exato
       .trim(),
 
     HospitalName: z
       .string()
-      .min(1, "Por favor, insira o nome do hospital.")
+      .min(1, "O nome do hospital é obrigatório.")
       .max(100, "O nome do hospital deve ter no máximo 100 caracteres.")
       .trim(),
 
@@ -103,6 +136,7 @@ const SignupSchema = z
     Email: z
       .string()
       .email("E-mail inválido.")
+      .min(5, "O E-mail é obrigatório.")
       .max(150, "Máximo de 150 caracteres."),
 
     Password: z
@@ -132,13 +166,16 @@ const SignupSchema = z
     path: ["ConfirmPassword"], // Campo que receberá a mensagem de erro
   });
 
+// Tipo inferido do schema Zod
 type Signup = z.infer<typeof SignupSchema>;
 
+// Componente de tela para o cadastro
 const SignupScreen = () => {
   // Hooks de estado para exibir ou ocultar a senha
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // Estado do modal (para termos de uso ou política)
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState<"termos" | "politica">(
     "termos"
@@ -174,7 +211,7 @@ const SignupScreen = () => {
     },
   });
 
-  // Hook de roteamento para navegar entre as telas
+  // Hook de roteamento para navegação entre as telas
   const router = useRouter();
 
   // Mutação para cadastro do usuário
@@ -193,7 +230,7 @@ const SignupScreen = () => {
       );
     },
     onSuccess: (response) => {
-      // Exibir a resposta completa no console para depuração
+      // Exibe a resposta do backend para depuração
       console.log("Resposta do backend:", response);
       if (response.success) {
         Alert.alert(
@@ -206,9 +243,8 @@ const SignupScreen = () => {
       }
     },
     onError: (error) => {
-      // Exibir erro completo no console
+      // Exibe o erro completo no console para depuração
       console.log("Erro ao tentar cadastrar:", error);
-
       Alert.alert(
         "Erro",
         "Ocorreu um erro ao tentar cadastrar. Tente novamente mais tarde."
@@ -217,9 +253,10 @@ const SignupScreen = () => {
     },
   });
 
+  // Função chamada ao submeter o formulário
   const onSubmit = (data: Signup) => {
     console.log("Dados do formulário:", data);
-    mutate(data);
+    mutate(data); // Inicia a mutação para cadastro
   };
 
   return (
@@ -275,17 +312,20 @@ const SignupScreen = () => {
               <Controller
                 control={control}
                 name="CPF"
-                render={({ field }) => (
-                  <Input className="mb-1" size="lg">
-                    <InputSlot></InputSlot>
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    className={`mb-1 ${
+                      value && !errors.CPF ? "border-gray-300" : ""
+                    }`}
+                    size="lg"
+                  >
                     <InputField
-                      value={field.value || ""}
-                      onChangeText={(text) => {
-                        const formattedText = formatCPF(text);
-                        field.onChange(formattedText); // Formata e atualiza o CPF
-                      }}
+                      value={value}
+                      onChangeText={(text) => onChange(formatCPF(text))}
+                      onBlur={onBlur}
                       placeholder="Digite seu CPF"
                       keyboardType="numeric"
+                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -308,17 +348,20 @@ const SignupScreen = () => {
               <Controller
                 control={control}
                 name="CNPJ"
-                render={({ field }) => (
-                  <Input className="mb-1" size="lg">
-                    <InputSlot></InputSlot>
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    className={`mb-1 ${
+                      value && !errors.CNPJ ? "border-gray-300" : ""
+                    }`}
+                    size="lg"
+                  >
                     <InputField
-                      value={field.value || ""}
-                      onChangeText={(text) => {
-                        const formattedText = formatCNPJ(text);
-                        field.onChange(formattedText); // Formata e atualiza o CNPJ
-                      }}
+                      value={value}
+                      onChangeText={(text) => onChange(formatCNPJ(text))}
+                      onBlur={onBlur}
                       placeholder="Digite seu CNPJ"
                       keyboardType="numeric"
+                      returnKeyType="done"
                     />
                   </Input>
                 )}
@@ -341,14 +384,13 @@ const SignupScreen = () => {
               <Controller
                 control={control}
                 name="DataNascimento"
-                render={({ field }) => (
-                  <Input className="mb-1" size="lg">
-                    <InputSlot></InputSlot>
+                render={({ field: { onChange, value } }) => (
+                  <Input size="lg">
                     <InputField
-                      value={field.value || ""}
+                      value={value || ""}
                       onChangeText={(text) => {
-                        const formattedText = formatDataNascimento(text);
-                        field.onChange(formattedText); // Formata e atualiza a Data de Nascimento
+                        const formattedValue = formatDataNascimento(text); // Formata enquanto digita
+                        onChange(formattedValue); // Envia o valor formatado
                       }}
                       placeholder="Digite sua Data de Nascimento"
                       keyboardType="numeric"
@@ -366,7 +408,7 @@ const SignupScreen = () => {
               )}
             </FormControl>
 
-            {/* Campo CRM para Médico */}
+            {/* Campo CRM */}
             <FormControl size="lg" isInvalid={!!errors.CRM}>
               <FormControlLabel>
                 <FormControlLabelText>CRM</FormControlLabelText>
@@ -374,15 +416,16 @@ const SignupScreen = () => {
               <Controller
                 control={control}
                 name="CRM"
-                render={({ field }) => (
-                  <Input className="mb-1" size="lg">
-                    <InputSlot></InputSlot>
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    className={`mb-1 ${
+                      value && !errors.CRM ? "border-gray-300" : ""
+                    }`}
+                    size="lg"
+                  >
                     <InputField
-                      value={field.value || ""}
-                      onChangeText={(text) => {
-                        const formattedText = formatCRM(text);
-                        field.onChange(formattedText); // Formata e atualiza o CRM
-                      }}
+                      value={value || ""}
+                      onChangeText={(text) => onChange(formatCRM(text))}
                       placeholder="Digite seu CRM"
                       keyboardType="numeric"
                     />
@@ -529,7 +572,7 @@ const SignupScreen = () => {
                 name="ConfirmPassword"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input variant="rounded" className="mb-1" size="lg">
                     <InputField
                       id="ConfirmPassword"
                       placeholder="Digite novamente sua senha"
