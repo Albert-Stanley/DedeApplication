@@ -1,5 +1,5 @@
 // Bibliotecas externas
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
@@ -17,7 +17,6 @@ import {
 // Componentes UI internos
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
-import { CircleIcon, Icon } from "@/components/ui/icon";
 import {
   FormControl,
   FormControlError,
@@ -26,15 +25,7 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import {
-  Radio,
-  RadioGroup,
-  RadioIcon,
-  RadioIndicator,
-  RadioLabel,
-} from "@/components/ui/radio";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Spinner } from "@/components/ui/spinner";
@@ -45,6 +36,12 @@ import GoBackArrow from "@/components/goBack/goBackArrow";
 import SelectUF from "@/components/signup/selectUF";
 import TermsCheckbox from "@/components/signup/termsCheckBox";
 import TermsModal from "@/components/signup/termsModal";
+import {
+  formatCPF,
+  formatCRM,
+  formatCNPJ,
+  formatDataNascimento,
+} from "@/utils/fieldFormatters";
 
 // Serviços
 import { registerUser } from "@/services/authServices";
@@ -60,26 +57,54 @@ const SignupSchema = z
         "O nome não pode conter números ou caracteres especiais."
       )
       .trim(),
+
+    CPF: z
+      .string()
+      .min(11, "O CPF deve ter 11 dígitos.") // Verifica os 11 números antes da formatação
+      .max(11, "O CPF deve ter 11 dígitos.")
+      .regex(/^\d{11}$/, "CPF inválido. Formato esperado: 99999999999.")
+      .transform((val) => formatCPF(val)), // Aplica a formatação do CPF
+
+    CNPJ: z
+      .string()
+      .min(14, "O CNPJ deve ter 14 dígitos.")
+      .max(14, "O CNPJ deve ter 14 dígitos.")
+      .regex(/^\d{14}$/, "CNPJ inválido. Formato esperado: 99999999999999.") // Verifica apenas números
+      .transform((val) => formatCNPJ(val)), // Aplica a formatação do CNPJ
+
+    DataNascimento: z
+      .string()
+      .length(10, "Data de Nascimento inválida.")
+      .regex(
+        /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+        "Data de nascimento inválida. Formato esperado: dd/mm/aaaa."
+      )
+      .trim(),
+
+    CRM: z
+      .string()
+      .max(10, "O CRM deve ter no máximo 10 caracteres.")
+      .regex(/^\d+$/, "O CRM deve conter apenas números.")
+      .trim(),
+
+    HospitalName: z
+      .string()
+      .min(1, "Por favor, insira o nome do hospital.")
+      .max(100, "O nome do hospital deve ter no máximo 100 caracteres.")
+      .trim(),
+
+    UF: z
+      .string()
+      .length(2, "Por favor, selecione sua UF.")
+      .refine((uf) => uf.includes(uf.toUpperCase()), {
+        message: "UF inválida. Escolha uma UF válida.",
+      }),
+
     Email: z
       .string()
       .email("E-mail inválido.")
       .max(150, "Máximo de 150 caracteres."),
-    Role: z
-      .string()
-      .min(1, "Por favor, selecione sua profissão.")
-      .refine(
-        (value) => value === "" || value === "Médico" || value === "Secretário",
-        {
-          message: "Profissão inválida.",
-        }
-      )
-      .default(""), // Permite valor inicial vazio
-    CRM: z
-      .string()
-      .max(10, "O CRM deve ter no máximo 10 caracteres.")
-      // .regex(/^\d+$/, "O CRM deve conter apenas números.")
-      .trim()
-      .optional(),
+
     Password: z
       .string()
       .min(6, "A senha deve ter pelo menos 6 caracteres.")
@@ -88,6 +113,7 @@ const SignupSchema = z
       .regex(/[0-9]/, "A senha deve conter ao menos um número.")
       .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial.")
       .trim(),
+
     ConfirmPassword: z
       .string()
       .min(6, "A senha deve ter pelo menos 6 caracteres.")
@@ -96,37 +122,15 @@ const SignupSchema = z
       .regex(/[0-9]/, "A senha deve conter ao menos um número.")
       .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial.")
       .trim(),
-    HospitalName: z
-      .string()
-      .min(1, "Por favor, insira o nome do hospital.")
-      .max(100, "O nome do hospital deve ter no máximo 100 caracteres.")
-      .trim(),
-    UF: z
-      .string()
-      .length(2, "Por favor, selecione sua uf.")
-      .refine((uf) => uf.includes(uf.toUpperCase()), {
-        message: "UF inválida. Escolha uma UF válida.",
-      }),
+
     isTermsAccepted: z.boolean().refine((val) => val === true, {
       message: "Você deve aceitar os termos de uso.",
     }),
   })
   .refine((data) => data.Password === data.ConfirmPassword, {
     message: "As senhas não coincidem.",
-    path: ["ConfirmPassword"], // Especificamos o campo que receberá a mensagem de erro
-  })
-  .refine(
-    (data) => {
-      if (data.Role === "Médico" && !data.CRM) {
-        return false; // Validação do CRM apenas se o Role for "Médico"
-      }
-      return true;
-    },
-    {
-      message: "CRM é necessário para médicos.",
-      path: ["CRM"],
-    }
-  );
+    path: ["ConfirmPassword"], // Campo que receberá a mensagem de erro
+  });
 
 type Signup = z.infer<typeof SignupSchema>;
 
@@ -153,53 +157,35 @@ const SignupScreen = () => {
     control,
     formState: { errors },
     setValue,
-    trigger,
   } = useForm<Signup>({
     resolver: zodResolver(SignupSchema), // Conectar com o schema de validação Zod
     defaultValues: {
       Name: "",
-      Email: "",
+      CPF: "",
+      CNPJ: "",
+      DataNascimento: "",
       CRM: "",
-      Role: "",
-      Password: "",
-      ConfirmPassword: "",
       HospitalName: "",
       UF: "",
+      Email: "",
+      Password: "",
+      ConfirmPassword: "",
       isTermsAccepted: false,
     },
   });
 
-  // Função para formatar o CRM removendo qualquer caracter não numérico
-  const formatCRM = (value: string) => value.replace(/\D/g, "");
-
-  // Obtém o valor da 'Role' em tempo real para manipulação do formulário
-  const selectedRole = watch("Role") || "";
-
   // Hook de roteamento para navegar entre as telas
   const router = useRouter();
-
-  // Limpa o campo CRM caso a profissão seja "Secretário"
-  useEffect(() => {
-    if (selectedRole === "Secretário") {
-      setValue("CRM", ""); // Limpa o CRM quando a profissão for "Secretário"
-    }
-  }, [selectedRole, setValue]);
-
-  // Efeito para limpar o CRM e revalidar sempre que a profissão não for "Médico"
-  useEffect(() => {
-    if (selectedRole !== "Médico") {
-      setValue("CRM", ""); // Limpa o CRM caso a profissão não seja "Médico"
-      trigger("CRM"); // Revalida o campo CRM
-    }
-  }, [selectedRole, setValue, trigger]);
 
   // Mutação para cadastro do usuário
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: Signup) => {
       return registerUser(
         data.Name,
+        data.CPF,
+        data.CNPJ || "",
+        data.DataNascimento,
         data.Email,
-        data.Role,
         data.CRM || "",
         data.Password,
         data.HospitalName,
@@ -233,7 +219,6 @@ const SignupScreen = () => {
 
   const onSubmit = (data: Signup) => {
     console.log("Dados do formulário:", data);
-
     mutate(data);
   };
 
@@ -260,7 +245,7 @@ const SignupScreen = () => {
                 name="Name"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-4" size="lg">
+                  <Input className="mb-1" size="lg">
                     <InputField
                       id="Name"
                       placeholder="Digite seu Nome"
@@ -282,6 +267,185 @@ const SignupScreen = () => {
               )}
             </FormControl>
 
+            {/* Campo CPF */}
+            <FormControl size="lg" isInvalid={!!errors.CPF}>
+              <FormControlLabel>
+                <FormControlLabelText>CPF</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                control={control}
+                name="CPF"
+                render={({ field }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputSlot></InputSlot>
+                    <InputField
+                      value={field.value || ""}
+                      onChangeText={(text) => {
+                        const formattedText = formatCPF(text);
+                        field.onChange(formattedText); // Formata e atualiza o CPF
+                      }}
+                      placeholder="Digite seu CPF"
+                      keyboardType="numeric"
+                    />
+                  </Input>
+                )}
+              />
+              {errors?.CPF && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.CPF.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
+            </FormControl>
+
+            {/* Campo CNPJ */}
+            <FormControl size="lg" isInvalid={!!errors.CNPJ}>
+              <FormControlLabel>
+                <FormControlLabelText>CNPJ</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                control={control}
+                name="CNPJ"
+                render={({ field }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputSlot></InputSlot>
+                    <InputField
+                      value={field.value || ""}
+                      onChangeText={(text) => {
+                        const formattedText = formatCNPJ(text);
+                        field.onChange(formattedText); // Formata e atualiza o CNPJ
+                      }}
+                      placeholder="Digite seu CNPJ"
+                      keyboardType="numeric"
+                    />
+                  </Input>
+                )}
+              />
+              {errors?.CNPJ && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.CNPJ.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
+            </FormControl>
+
+            {/* Campo Data de Nascimento */}
+            <FormControl size="lg" isInvalid={!!errors.DataNascimento}>
+              <FormControlLabel>
+                <FormControlLabelText>Data de Nascimento</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                control={control}
+                name="DataNascimento"
+                render={({ field }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputSlot></InputSlot>
+                    <InputField
+                      value={field.value || ""}
+                      onChangeText={(text) => {
+                        const formattedText = formatDataNascimento(text);
+                        field.onChange(formattedText); // Formata e atualiza a Data de Nascimento
+                      }}
+                      placeholder="Digite sua Data de Nascimento"
+                      keyboardType="numeric"
+                    />
+                  </Input>
+                )}
+              />
+              {errors?.DataNascimento && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.DataNascimento.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
+            </FormControl>
+
+            {/* Campo CRM para Médico */}
+            <FormControl size="lg" isInvalid={!!errors.CRM}>
+              <FormControlLabel>
+                <FormControlLabelText>CRM</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                control={control}
+                name="CRM"
+                render={({ field }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputSlot></InputSlot>
+                    <InputField
+                      value={field.value || ""}
+                      onChangeText={(text) => {
+                        const formattedText = formatCRM(text);
+                        field.onChange(formattedText); // Formata e atualiza o CRM
+                      }}
+                      placeholder="Digite seu CRM"
+                      keyboardType="numeric"
+                    />
+                  </Input>
+                )}
+              />
+              {errors?.CRM && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.CRM.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
+            </FormControl>
+
+            {/* Campo Imput Nome do Hospital*/}
+            <FormControl size="lg" isInvalid={!!errors?.HospitalName}>
+              <FormControlLabel>
+                <FormControlLabelText>Nome Hospital</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                name="HospitalName"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputField
+                      id="HospitalName"
+                      placeholder="Digite o nome do Hospital"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      returnKeyType="done"
+                    />
+                  </Input>
+                )}
+              />
+              {errors?.HospitalName && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.HospitalName.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
+            </FormControl>
+
+            {/* Campo de UF */}
+            <Text className="text-lg font-bold font-medium text-typography-900">
+              Selecione sua UF
+            </Text>
+            <Controller
+              name="UF"
+              control={control}
+              render={({ field }) => (
+                <SelectUF
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.UF?.message}
+                />
+              )}
+            />
+
             {/* Campo de Email */}
             <FormControl size="lg" isInvalid={!!errors?.Email}>
               <FormControlLabel>
@@ -291,7 +455,7 @@ const SignupScreen = () => {
                 name="Email"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-4" size="lg">
+                  <Input className="mb-1" size="lg">
                     <InputField
                       id="Email"
                       placeholder="Digite seu e-mail"
@@ -314,97 +478,6 @@ const SignupScreen = () => {
               )}
             </FormControl>
 
-            {/* acicionar 3 campos 
-
-Cpf
-Cnpf
-Data Nascimento - Format => 03/07/2022
-
-*/}
-
-            {/* Campo de Profissão */}
-            <FormControl className="mb-3" size="lg" isInvalid={!!errors.Role}>
-              <FormControlLabel>
-                <FormControlLabelText>Profissão</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                control={control}
-                name="Role"
-                render={({ field: { onChange, value } }) => (
-                  <RadioGroup
-                    className="mr-6"
-                    value={value}
-                    onChange={(newValue: string) => {
-                      onChange(newValue);
-                      // Limpa o CRM e revalida ao mudar para "Secretário"
-                      if (newValue !== "Médico") {
-                        setValue("CRM", "");
-                        trigger("CRM");
-                      }
-                    }}
-                  >
-                    <HStack space="md">
-                      <Radio id="Médico" value="Médico">
-                        <RadioIndicator>
-                          <RadioIcon as={CircleIcon} />
-                        </RadioIndicator>
-                        <RadioLabel>Médico(a)</RadioLabel>
-                      </Radio>
-                      <Radio id="Secretário" value="Secretário">
-                        <RadioIndicator>
-                          <RadioIcon as={CircleIcon} />
-                        </RadioIndicator>
-                        <RadioLabel>Secretário(a)</RadioLabel>
-                      </Radio>
-                    </HStack>
-                  </RadioGroup>
-                )}
-              />
-              {errors?.Role && (
-                <FormControlError className="mt-1">
-                  <FormControlErrorIcon as={AlertTriangle} />
-                  <FormControlErrorText>
-                    {errors.Role.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              )}
-            </FormControl>
-
-            {/* Exibe o campo CRM apenas se a profissão for "Médico" */}
-            {selectedRole === "Médico" && (
-              <FormControl size="lg" isInvalid={!!errors.CRM}>
-                <FormControlLabel>
-                  <FormControlLabelText>CRM</FormControlLabelText>
-                </FormControlLabel>
-                <Controller
-                  control={control}
-                  name="CRM"
-                  render={({ field }) => (
-                    <Input>
-                      <InputSlot></InputSlot>
-                      <InputField
-                        value={field.value || ""}
-                        onChangeText={(text) => {
-                          const formattedText = formatCRM(text);
-                          field.onChange(formattedText); // Formata e atualiza o CRM
-                        }}
-                        placeholder="Digite seu CRM"
-                        keyboardType="numeric"
-                      />
-                    </Input>
-                  )}
-                />
-                {errors?.CRM && (
-                  <FormControlError>
-                    <FormControlErrorIcon as={AlertTriangle} />
-                    <FormControlErrorText>
-                      {errors.CRM.message}
-                    </FormControlErrorText>
-                  </FormControlError>
-                )}
-              </FormControl>
-            )}
-
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={!!errors?.Password}>
               <FormControlLabel>
@@ -414,7 +487,7 @@ Data Nascimento - Format => 03/07/2022
                 name="Password"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-4" size="lg">
+                  <Input className="mb-1" size="lg">
                     <InputField
                       id="Password"
                       placeholder="Digite sua senha"
@@ -456,7 +529,7 @@ Data Nascimento - Format => 03/07/2022
                 name="ConfirmPassword"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-4" size="lg">
+                  <Input className="mb-1" size="lg">
                     <InputField
                       id="ConfirmPassword"
                       placeholder="Digite novamente sua senha"
@@ -490,53 +563,6 @@ Data Nascimento - Format => 03/07/2022
                 </FormControlError>
               )}
             </FormControl>
-
-            {/* Campo Imput Nome do Hospital*/}
-            <FormControl size="lg" isInvalid={!!errors?.HospitalName}>
-              <FormControlLabel>
-                <FormControlLabelText>Nome Hospital</FormControlLabelText>
-              </FormControlLabel>
-              <Controller
-                name="HospitalName"
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-4" size="lg">
-                    <InputField
-                      id="HospitalName"
-                      placeholder="Digite o nome do Hospital"
-                      value={value}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      returnKeyType="done"
-                    />
-                  </Input>
-                )}
-              />
-              {errors?.HospitalName && (
-                <FormControlError>
-                  <FormControlErrorIcon as={AlertTriangle} />
-                  <FormControlErrorText>
-                    {errors.HospitalName.message}
-                  </FormControlErrorText>
-                </FormControlError>
-              )}
-            </FormControl>
-
-            {/* Campo de UF */}
-            <Text className="text-lg font-bold font-medium text-typography-900">
-              Selecione sua UF
-            </Text>
-            <Controller
-              name="UF"
-              control={control}
-              render={({ field }) => (
-                <SelectUF
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={errors.UF?.message}
-                />
-              )}
-            />
 
             {/* Checkbox de Termos de Uso */}
             <View className="mt-4">

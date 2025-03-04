@@ -6,7 +6,6 @@ interface User {
   id: string;
   CRMorEmail: string;
   name: string;
-  role: string;
 }
 
 // Interface da resposta do login
@@ -101,22 +100,26 @@ export const logout = async () => {
 // Função de Cadastro de Usuário (POST)
 export const registerUser = async (
   Name: string,
-  Email: string,
-  Role: string,
+  CPF: string,
+  CNPJ: string,
+  DataNascimento: string,
   CRM: string,
-  Password: string,
   HospitalName: string,
-  UF: string
+  UF: string,
+  Email: string,
+  Password: string
 ): Promise<AuthResponse> => {
   try {
     const response = await api.post<AuthResponse>("/users/register", {
       Name,
-      Email,
-      Role,
       CRM,
-      Password,
+      CPF,
+      CNPJ,
+      DataNascimento,
       HospitalName,
       UF,
+      Email,
+      Password,
     });
 
     if (!response.data.success) {
