@@ -30,6 +30,7 @@ import {
 } from "lucide-react-native";
 import { login, verifyUser } from "../../../services/authServices";
 import GoBackArrow from "@/utils/goBackArrow";
+import { useAuth } from "@/hooks/useAuth";
 
 // Esquema de validação com Zod
 const LoginSchema = z.object({
@@ -48,6 +49,8 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
+  const { login } = useAuth();
+
   const {
     handleSubmit,
     formState: { errors },
@@ -57,20 +60,16 @@ const LoginScreen = () => {
     defaultValues: { CRMorEmail: "", Password: "" },
   });
 
-  // Mutação para login
   const loginMutation = useMutation({
-    mutationFn: async (data: Login) => {
-      const verifyResponse = await verifyUser(data.CRMorEmail);
-      if (!verifyResponse.success) throw new Error(verifyResponse.message);
-
-      const loginResponse = await login(data.CRMorEmail, data.Password);
-      if (!loginResponse.success) throw new Error(loginResponse.message);
-
-      return loginResponse;
+    mutationFn: async (data: { CRMorEmail: string; Password: string }) => {
+      const success = await login(data.CRMorEmail, data.Password);
+      if (!success) throw new Error("Erro ao fazer login.");
+      return success;
     },
-    onSuccess: () => router.push("/screens/doctor/DoctorHome"),
+    onSuccess: () => {
+      router.push("/screens/doctor/DoctorHome"); // Redireciona para a home do médico
+    },
     onError: (error: Error) => {
-      // Exibindo a mensagem de erro conforme a resposta do backend
       Alert.alert("Erro no Login", error.message || "Erro inesperado");
     },
   });
@@ -148,7 +147,7 @@ const LoginScreen = () => {
 
           {/* Esqueceu a senha */}
           <HStack className="w-full justify-between">
-            <Link href="/screens/auth/forgot-password">
+            <Link href="/screens/auth/ForgotPassword">
               <LinkText className="text-primary-700">
                 Esqueceu sua Senha?
               </LinkText>
