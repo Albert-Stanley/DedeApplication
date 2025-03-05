@@ -84,21 +84,21 @@ const App = () => {
   const loginMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/login");
+      router.push("/screens/auth/Login");
     },
   });
 
   const registerMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/signup");
+      router.push("/screens/auth/Signup");
     },
   });
 
   const nurseMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/login-secretary");
+      router.push("/screens/auth/LoginSecretary");
     },
   });
 

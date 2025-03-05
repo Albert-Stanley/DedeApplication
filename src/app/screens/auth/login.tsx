@@ -68,7 +68,7 @@ const LoginScreen = () => {
 
       return loginResponse;
     },
-    onSuccess: () => router.push("/screens/home"),
+    onSuccess: () => router.push("/screens/doctor/DoctorHome"),
     onError: (error: Error) => {
       // Exibindo a mensagem de erro conforme a resposta do backend
       Alert.alert("Erro no Login", error.message || "Erro inesperado");
@@ -188,7 +188,7 @@ const LoginScreen = () => {
             variant="outline"
             action="secondary"
             className="rounded-lg border-primary-200"
-            onPress={() => router.push("/screens/auth/signup")}
+            onPress={() => router.push("/screens/auth/Signup")}
           >
             <ButtonText className="font-bold text-primary-500 text-lg">
               Cadastre-se agora

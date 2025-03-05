@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+
+// Componentes personalizados
 import {
   Actionsheet,
   ActionsheetContent,
@@ -10,7 +11,7 @@ import {
   ActionsheetBackdrop,
   ActionsheetDragIndicator,
   ActionsheetScrollView,
-} from "../ui/actionsheet"; // Certifique-se de que o caminho está correto
+} from "../ui/actionsheet";
 import { Button, ButtonText } from "../ui/button";
 import {
   FormControl,
@@ -18,8 +19,10 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "../ui/form-control";
-import { AlertTriangle } from "lucide-react-native";
+import { Icon } from "../ui/icon";
+import { AlertTriangle, ArrowDown } from "lucide-react-native";
 
+// Lista de estados(unidades federativas) do Brasil
 const ufs = [
   { title: "Acre", sigla: "AC" },
   { title: "Alagoas", sigla: "AL" },
@@ -50,34 +53,42 @@ const ufs = [
   { title: "Tocantins", sigla: "TO" },
 ];
 
+// Definição dos tipos das props do componente
 interface SelectUFProps {
   value: string;
   onChange: (uf: string) => void;
-  error?: string;
+  error?: string | null;
 }
 
-const SelectUF: React.FC<SelectUFProps> = ({ value, onChange, error }) => {
-  const [showActionsheet, setShowActionsheet] = React.useState(false);
+// Componente para selecionar um estado brasileiro
+function SelectUF({ value, onChange, error }: SelectUFProps) {
+  const [showActionsheet, setShowActionsheet] = useState(false);
+
+  // Fecha o Actionsheet
   const handleClose = () => setShowActionsheet(false);
 
   return (
     <FormControl>
       <View>
+        {/* Botão para abrir a lista de estados */}
         <Button
           onPress={() => setShowActionsheet(true)}
           variant="outline"
           size="md"
         >
           <ButtonText>{value || "Selecione..."}</ButtonText>
-          <Icon name="keyboard-arrow-down" size={25} color="white" />
+          <Icon as={ArrowDown} />
         </Button>
 
+        {/* Exibe erro, se houver */}
         {error && (
           <View className="flex flex-row justify-start items-center mt-1 gap-1">
             <AlertTriangle className="text-error-700 fill-none h-5 w-5" />
             <Text className="text-error-700 text-lg">{error}</Text>
           </View>
         )}
+
+        {/* Actionsheet para exibir a lista de estados */}
         <Actionsheet isOpen={showActionsheet} onClose={handleClose}>
           <ActionsheetBackdrop />
           <ActionsheetContent>
@@ -85,7 +96,6 @@ const SelectUF: React.FC<SelectUFProps> = ({ value, onChange, error }) => {
               <ActionsheetDragIndicator />
             </ActionsheetDragIndicatorWrapper>
 
-            {/* Adicionando scroll para permitir visualizar todas as UFs */}
             <ActionsheetScrollView style={{ maxHeight: 300 }}>
               {ufs.map((uf, index) => (
                 <ActionsheetItem
@@ -105,6 +115,8 @@ const SelectUF: React.FC<SelectUFProps> = ({ value, onChange, error }) => {
           </ActionsheetContent>
         </Actionsheet>
       </View>
+
+      {/* Exibe erro no FormControl, se houver */}
       {error && (
         <FormControlError>
           <FormControlErrorIcon as={AlertTriangle} />
@@ -113,6 +125,6 @@ const SelectUF: React.FC<SelectUFProps> = ({ value, onChange, error }) => {
       )}
     </FormControl>
   );
-};
+}
 
 export default SelectUF;

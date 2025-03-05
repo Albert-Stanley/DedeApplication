@@ -33,9 +33,9 @@ import colors from "tailwindcss/colors";
 import GoBackArrow from "@/utils/goBackArrow";
 
 // Componentes específicos do signup
-import SelectUF from "@/components/signup/selectUF";
-import TermsCheckbox from "@/components/signup/termsCheckBox";
-import TermsModal from "@/components/signup/termsModal";
+import SelectUF from "@/components/signup/SelectUF";
+import TermsCheckbox from "@/components/signup/TermsCheckBox";
+import TermsModal from "@/components/signup/TermsModal";
 import {
   formatCPF,
   formatCRM,
@@ -309,16 +309,14 @@ const SignupScreen = () => {
               <FormControlLabel>
                 <FormControlLabelText>CPF</FormControlLabelText>
               </FormControlLabel>
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite apenas números
+              </Text>
               <Controller
                 control={control}
                 name="CPF"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    className={`mb-1 ${
-                      value && !errors.CPF ? "border-gray-300" : ""
-                    }`}
-                    size="lg"
-                  >
+                  <Input className={"mb-1"} size="lg">
                     <InputField
                       value={value}
                       onChangeText={(text) => onChange(formatCPF(text))}
@@ -345,16 +343,14 @@ const SignupScreen = () => {
               <FormControlLabel>
                 <FormControlLabelText>CNPJ</FormControlLabelText>
               </FormControlLabel>
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite apenas números
+              </Text>
               <Controller
                 control={control}
                 name="CNPJ"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    className={`mb-1 ${
-                      value && !errors.CNPJ ? "border-gray-300" : ""
-                    }`}
-                    size="lg"
-                  >
+                  <Input className={"mb-1"} size="lg">
                     <InputField
                       value={value}
                       onChangeText={(text) => onChange(formatCNPJ(text))}
@@ -381,11 +377,14 @@ const SignupScreen = () => {
               <FormControlLabel>
                 <FormControlLabelText>Data de Nascimento</FormControlLabelText>
               </FormControlLabel>
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite apenas números
+              </Text>
               <Controller
                 control={control}
                 name="DataNascimento"
                 render={({ field: { onChange, value } }) => (
-                  <Input size="lg">
+                  <Input className="mb-1" size="lg">
                     <InputField
                       value={value || ""}
                       onChangeText={(text) => {
@@ -413,16 +412,14 @@ const SignupScreen = () => {
               <FormControlLabel>
                 <FormControlLabelText>CRM</FormControlLabelText>
               </FormControlLabel>
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite apenas números
+              </Text>
               <Controller
                 control={control}
                 name="CRM"
                 render={({ field: { onChange, value } }) => (
-                  <Input
-                    className={`mb-1 ${
-                      value && !errors.CRM ? "border-gray-300" : ""
-                    }`}
-                    size="lg"
-                  >
+                  <Input className={"mb-1"} size="lg">
                     <InputField
                       value={value || ""}
                       onChangeText={(text) => onChange(formatCRM(text))}
@@ -647,7 +644,7 @@ const SignupScreen = () => {
               variant="outline"
               action="secondary"
               className="rounded-lg border-primary-200"
-              onPress={() => router.push("/screens/auth/login")}
+              onPress={() => router.push("/screens/auth/Login")}
             >
               <ButtonText className="font-bold text-primary-500 text-lg">
                 Ir para o Login
