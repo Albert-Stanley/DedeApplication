@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "expo-router";
-import { useAuth } from "../hooks/useAuth"; // Aponte para o arquivo correto
+import { useAuth } from "../../hooks/useAuth"; // Aponte para o arquivo correto
 
 const LogoutButton = () => {
   const { logout } = useAuth(); // Usando o hook do AuthContext

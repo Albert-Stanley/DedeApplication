@@ -29,7 +29,7 @@ import {
   LogInIcon,
 } from "lucide-react-native";
 import { login, verifyUser } from "../../../services/authServices";
-import GoBackArrow from "@/utils/goBackArrow";
+import GoBackArrow from "@/components/common/goBackArrow";
 import { useAuth } from "@/hooks/useAuth";
 
 // Esquema de validação com Zod

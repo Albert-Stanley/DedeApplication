@@ -4,7 +4,7 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../context/AuthContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
-import ThemeToggleButton from "@/components/ThemeToggleButton";
+import ThemeToggleButton from "@/components/common/ThemeToggleButton";
 import { Box } from "@/components/ui/box";
 
 export default function Layout() {

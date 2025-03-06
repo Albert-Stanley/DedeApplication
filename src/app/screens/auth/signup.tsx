@@ -30,7 +30,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
-import GoBackArrow from "@/utils/goBackArrow";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 // Componentes específicos do signup
 import SelectUF from "@/components/signup/SelectUF";

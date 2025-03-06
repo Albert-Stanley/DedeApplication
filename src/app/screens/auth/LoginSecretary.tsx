@@ -20,7 +20,7 @@ import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, LogInIcon } from "lucide-react-native";
-import GoBackArrow from "@/utils/goBackArrow";
+import GoBackArrow from "@/components/common/goBackArrow";
 import { validateAccessKey } from "@/services/secretaryServices"; // Atualizando para a nova função de validação de chave
 
 // Schema de validação com Zod
