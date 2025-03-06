@@ -16,11 +16,11 @@ O **backend**, desenvolvido por **Lorenzo Rocha**, segue o **padrão REST** e ut
 
 - ![Expo](https://img.shields.io/badge/Expo-1B1F23?style=flat&logo=expo&logoColor=white)  
   **Expo** facilita o desenvolvimento e deploy, proporcionando uma experiência ágil e recursos prontos para uso, incluindo suporte Web.  
-  [Documentação Expo](https://docs.expo.dev/)
+  [Documentação Expo](https://docs.expo.dev)
 
 - ![GlueStack](https://img.shields.io/badge/GlueStack-FF6F00?style=flat&logo=tailwindcss&logoColor=white)  
   **GlueStack** foi escolhido pela integração com o **Tailwind CSS**, oferecendo uma interface moderna e responsiva com código otimizado.  
-  [Documentação GlueStack](https://www.gluestack.dev/)
+  [Documentação GlueStack](https://gluestack.io/ui/docs/home/overview/quick-start)
 
 - ![Zod](https://img.shields.io/badge/Zod-2F3338?style=flat&logo=typescript&logoColor=white)  
   **Zod** garante a validação robusta de dados com esquemas tipados, proporcionando segurança ao lidar com dados no frontend.  
@@ -36,11 +36,11 @@ O **backend**, desenvolvido por **Lorenzo Rocha**, segue o **padrão REST** e ut
 
 - ![React Context](https://img.shields.io/badge/React_Context-61DAFB?style=flat&logo=react&logoColor=black)  
   **useContext** foi escolhido para gerenciar o estado global da aplicação, facilitando a autenticação e o compartilhamento de dados entre componentes.  
-  [Documentação React Context](https://reactjs.org/docs/context.html)
+  [Documentação React Context](https://react.dev/reference/react/useContext)
 
 - ![Expo Router](https://img.shields.io/badge/Expo_Router-1B1F23?style=flat&logo=expo&logoColor=white)  
   **Expo Router** é utilizado para a navegação entre telas, fornecendo uma maneira simples e eficaz de gerenciar as rotas no app.  
-  [Documentação Expo Router](https://docs.expo.dev/routing/)
+  [Documentação Expo Router](https://docs.expo.dev/versions/latest/sdk/router/)
 
 ### **Autenticação e Armazenamento Seguro**:
 
