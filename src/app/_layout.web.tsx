@@ -1,9 +1,11 @@
 import "global.css";
 import { Stack } from "expo-router";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
-import React, { createContext } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../context/AuthContext";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
+import ThemeToggleButton from "@/components/ThemeToggleButton";
+import { Box } from "@/components/ui/box";
 
 export default function WebLayout() {
   const queryClient = new QueryClient();
@@ -11,12 +13,30 @@ export default function WebLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <GluestackUIProvider mode="dark">
-          <div className="w-screen h-screen flex flex-col bg-neutral-900 text-white">
-            <Stack screenOptions={{ headerShown: false }} />
-          </div>
-        </GluestackUIProvider>
+        <ThemeProvider>
+          <ThemeWrapper />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function ThemeWrapper() {
+  const { theme } = useTheme();
+
+  return (
+    <GluestackUIProvider mode={theme}>
+      {/* Garantindo que o fundo e o layout ocupem toda a tela */}
+      <div
+        className={`w-screen h-screen bg-background-50 text-white flex flex-col overflow-hidden`}
+      >
+        <ThemeToggleButton />
+        {/* Aqui vai o conteúdo principal */}
+        <Box className="flex-1 overflow-auto p-4 ">
+          {/* O conteúdo da tela será mostrado aqui */}
+          <Stack screenOptions={{ headerShown: false }} />
+        </Box>
+      </div>
+    </GluestackUIProvider>
   );
 }

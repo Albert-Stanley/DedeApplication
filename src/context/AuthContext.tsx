@@ -12,7 +12,9 @@ import {
   verifyUser,
 } from "../services/authServices";
 import { User } from "../services/authServices";
+import { View, Text } from "react-native"; // Importando View e Text
 
+// Tipagem do contexto de autenticação
 interface AuthContextType {
   user: User | null;
   token: string | null;
@@ -25,6 +27,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
+// Provedor de Contexto
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -79,9 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Exibindo mensagem de carregamento enquanto a autenticação é realizada
   if (loading) {
     return (
-      <div className="w-screen h-screen flex justify-center items-center bg-neutral-900 text-white">
-        <p>Carregando...</p>
-      </div>
+      <View className="flex-1 justify-center items-center bg-neutral-900">
+        <Text className="text-white">Carregando...</Text>
+      </View>
     );
   }
 
