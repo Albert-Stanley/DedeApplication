@@ -13,6 +13,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { Text } from "@/components/ui/text";
 import { useMutation } from "@tanstack/react-query";
+import { Spinner } from "@/components/ui/spinner";
+import { useTheme } from "@/context/ThemeContext";
 
 // Definição do componente AnimatedButton com suporte para hover
 interface AnimatedButtonProps {
@@ -27,11 +29,12 @@ const AnimatedButton = ({
   text,
   onPress,
   isLoading,
-  darkColor,
   icon,
 }: AnimatedButtonProps) => {
+  const { theme } = useTheme();
+  const spinnerColor = theme === "dark" ? "#fff" : "#000";
+
   const scale = useSharedValue(1); // Valor compartilhado para escalar o botão
-  const spinnerColor = "white"; // Cor do spinner
 
   // Estilos animados para aumentar o botão no hover ou pressionamento
   const animatedStyle = useAnimatedStyle(() => ({
@@ -55,6 +58,9 @@ const AnimatedButton = ({
       entering={FadeIn.duration(500).springify()}
     >
       <Button
+        accessibilityLabel={`Botão para ${text}`}
+        accessibilityRole="button"
+        aria-busy={isLoading}
         size="xl"
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
@@ -63,10 +69,10 @@ const AnimatedButton = ({
         className="hover:scale-105 transition-transform duration-200 py-3 px-5 rounded-xl flex-row items-center"
       >
         {isLoading ? (
-          <ActivityIndicator color={spinnerColor} />
+          <Spinner color={spinnerColor} />
         ) : (
           <>
-            <Text className="text-lg leading-tight  font-semibold text-center">
+            <Text className="text-lg leading-tight  font-bold text-center">
               {text}
             </Text>
             <ButtonIcon as={icon} className="ml-3" />

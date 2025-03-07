@@ -52,7 +52,7 @@ export default function ThemeToggleButton() {
           }}
         >
           <Ionicons
-            name={isToggled ? "moon" : "sunny"}
+            name={isToggled ? "moon-outline" : "sunny"}
             size={24}
             color={isToggled ? "#fff" : "#333"}
           />
