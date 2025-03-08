@@ -90,7 +90,7 @@ const App = () => {
   const loginMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/Login");
+      router.push("/screens/auth/EmailVerification");
     },
   });
 

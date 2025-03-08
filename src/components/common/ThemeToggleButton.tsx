@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import { TouchableOpacity, View, Animated } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ThemeToggleButton() {
   const { theme, toggleTheme } = useTheme();
-  const [isToggled, setIsToggled] = React.useState(theme === "dark");
-  const scale = new Animated.Value(1);
+  const scale = useRef(new Animated.Value(1)).current;
 
   // Animação suave ao pressionar o botão
-  const handlePress = () => {
+  const handlePress = useCallback(() => {
     Animated.sequence([
       Animated.spring(scale, {
         toValue: 1.2,
@@ -26,8 +25,7 @@ export default function ThemeToggleButton() {
     ]).start();
 
     toggleTheme();
-    setIsToggled(!isToggled); // Alterna o estado do tema
-  };
+  }, [scale, toggleTheme]);
 
   return (
     <Animated.View
@@ -52,9 +50,9 @@ export default function ThemeToggleButton() {
           }}
         >
           <Ionicons
-            name={isToggled ? "moon-outline" : "sunny"}
+            name={theme === "dark" ? "moon-outline" : "sunny"}
             size={24}
-            color={isToggled ? "#fff" : "#333"}
+            color={theme === "dark" ? "#fff" : "#333"}
           />
         </View>
       </TouchableOpacity>

@@ -10,6 +10,7 @@ import {
 } from "../services/authServices";
 import { User } from "../services/authServices";
 import { View, Text } from "react-native"; // Importando View e Text
+import { set } from "react-hook-form";
 
 // Tipagem do contexto de autenticação
 interface AuthContextType {
@@ -35,6 +36,8 @@ interface AuthContextType {
     code: string
   ) => Promise<{ success: boolean; message: string }>;
   handleEmailVerification: (code: string) => Promise<boolean>;
+  pendingEmail: string | null;
+  setPendingEmail: (email: string | null) => void;
 }
 
 // Criando o Contexto de Autenticação
@@ -47,6 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -118,6 +122,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     if (response.success) {
+      setPendingEmail(userData.Email); // Salvando o email pendente
+      await sendVerificationEmail(userData.Email); // Enviando o email de verificação para o usuário recém-cadastrado
       // Retornar true após o cadastro bem-sucedido
       return true;
     } else {
@@ -131,6 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (verificationResponse.success) {
         // Código de verificação foi validado com sucesso
+        setPendingEmail(null); // Removendo o email pendente após a verificação bem-sucedida
         return true;
       } else {
         // Código de verificação falhou
@@ -162,6 +169,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         sendVerificationEmail, // Passando a função
         verifyEmailCode, // Passando a função
         handleEmailVerification, // Passando a função
+        pendingEmail, // Passando o estado do email pendente para o contexto de autenticação
+        setPendingEmail, // Passando a função para atualizar o estado do email pendente
       }}
     >
       {children}

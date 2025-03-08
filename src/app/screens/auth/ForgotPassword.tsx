@@ -11,9 +11,7 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import { Pressable } from "@/components/ui/pressable";
 import { Input, InputField } from "@/components/ui/input";
-import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +21,7 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -83,26 +82,11 @@ const ForgotPasswordScreen = () => {
     sendEmailMutation.mutate(data);
   };
 
-  const handleBack = () => {
-    // SUBSTITUIR PELO GOBACK COMPONENT
-    router.replace("/");
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       {/* Header with Back Button */}
       <VStack className="absolute top-0 left-0 right-0 px-4 pt-12 z-10">
-        <Pressable
-          onPress={handleBack}
-          accessibilityRole="button"
-          className="w-12 h-12 p-2 items-center justify-center rounded-full bg-background-200 hover:bg-background-300 active:bg-background-400"
-        >
-          <Icon
-            as={ArrowLeftIcon}
-            className="stroke-background-800"
-            size="xl"
-          />
-        </Pressable>
+        <GoBackArrow />
       </VStack>
 
       {/* Main Content */}
