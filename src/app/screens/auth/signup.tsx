@@ -49,7 +49,8 @@ import {
 } from "@/utils/validations";
 
 // Serviços
-import { registerUser } from "@/services/authServices";
+import { registerUser, RegisterResponse } from "@/services/authServices";
+import { useAuth } from "@/hooks/useAuth";
 
 //
 const SignupSchema = z
@@ -214,6 +215,9 @@ const SignupScreen = () => {
   // Hook de roteamento para navegação entre as telas
   const router = useRouter();
 
+  // Hook de autenticação para cadastro
+  const { handleRegister } = useAuth();
+
   // Mutação para cadastro do usuário
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: Signup) => {
@@ -229,21 +233,32 @@ const SignupScreen = () => {
         data.UF
       );
     },
-    onSuccess: (response) => {
-      // Exibe a resposta do backend para depuração
+    onSuccess: (response: RegisterResponse, data: Signup) => {
       console.log("Resposta do backend:", response);
-      if (response.success) {
+      if (response.success && response.data) {
         Alert.alert(
           "Cadastro realizado!",
           "Os dados foram enviados com sucesso."
         );
-        router.push("/success");
+
+        handleRegister({
+          Name: response.data.Name,
+          CPF: response.data.CPF,
+          CNPJ: response.data.CNPJ || "",
+          DataNascimento: response.data.DataNascimento,
+          CRM: response.data.CRM || "",
+          Email: response.data.Email,
+          Password: data.Password, // O dado original do formulário
+          HospitalName: response.data.HospitalName,
+          UF: response.data.UF,
+        });
+
+        router.push("/screens/auth/EmailVerification");
       } else {
         Alert.alert("Erro", response.message || "Erro ao cadastrar.");
       }
     },
     onError: (error) => {
-      // Exibe o erro completo no console para depuração
       console.log("Erro ao tentar cadastrar:", error);
       Alert.alert(
         "Erro",

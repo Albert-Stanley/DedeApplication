@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { SafeAreaView, ActivityIndicator, ScrollView } from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 import React, { useCallback } from "react";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";

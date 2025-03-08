@@ -13,6 +13,7 @@ export const saveToken = async (token: string) => {
     }
   } catch (error) {
     console.error("Erro ao salvar o token:", error);
+    throw new Error("Médico não encontrado");
   }
 };
 

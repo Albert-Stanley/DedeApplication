@@ -57,7 +57,9 @@ O deploy do projeto será feito em breve, e atualmente estamos em fase de testes
 
 ## 📌 Conecte-se com os Desenvolvedores
 
-- [Lorenzo Rocha no LinkedIn](https://www.linkedin.com/in/lorenzo-rocha-179038284/) ![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)
-- [Albert Stanley no LinkedIn](https://www.linkedin.com/in/albert-stanley/) ![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)
+- **Backend**: [Lorenzo Rocha no LinkedIn](https://www.linkedin.com/in/lorenzo-rocha-179038284/) ![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white) - Responsável pelo backend
+- **Frontend**: [Albert Stanley no LinkedIn](https://www.linkedin.com/in/albert-stanley/) ![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white) - Responsável pelo frontend
+
+---
 
 ---

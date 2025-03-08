@@ -1,15 +1,12 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  ReactNode,
-} from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import {
   login,
   logout as authLogout,
   fetchToken,
   verifyUser,
+  registerUser,
+  sendVerificationEmail, // Importando do authService
+  verifyEmailCode, // Importando do authService
 } from "../services/authServices";
 import { User } from "../services/authServices";
 import { View, Text } from "react-native"; // Importando View e Text
@@ -20,6 +17,24 @@ interface AuthContextType {
   token: string | null;
   login: (CRMorEmail: string, Password: string) => Promise<boolean>;
   logout: () => Promise<void>;
+  handleRegister: (userData: {
+    Name: string;
+    CPF: string;
+    CNPJ: string;
+    DataNascimento: string;
+    CRM: string;
+    HospitalName: string;
+    UF: string;
+    Email: string;
+    Password: string;
+  }) => Promise<boolean>;
+  sendVerificationEmail: (
+    email: string
+  ) => Promise<{ success: boolean; message: string }>;
+  verifyEmailCode: (
+    code: string
+  ) => Promise<{ success: boolean; message: string }>;
+  handleEmailVerification: (code: string) => Promise<boolean>;
 }
 
 // Criando o Contexto de Autenticação
@@ -79,6 +94,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
+  const handleRegister = async (userData: {
+    Name: string;
+    CPF: string;
+    CNPJ: string;
+    DataNascimento: string;
+    CRM: string;
+    HospitalName: string;
+    UF: string;
+    Email: string;
+    Password: string;
+  }): Promise<boolean> => {
+    const response = await registerUser(
+      userData.Name,
+      userData.CPF,
+      userData.CNPJ,
+      userData.DataNascimento,
+      userData.CRM,
+      userData.HospitalName,
+      userData.UF,
+      userData.Email,
+      userData.Password
+    );
+
+    if (response.success) {
+      // Retornar true após o cadastro bem-sucedido
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const handleEmailVerification = async (code: string) => {
+    try {
+      const verificationResponse = await verifyEmailCode(code);
+
+      if (verificationResponse.success) {
+        // Código de verificação foi validado com sucesso
+        return true;
+      } else {
+        // Código de verificação falhou
+        return false;
+      }
+    } catch (error) {
+      console.error("Erro ao verificar o código de e-mail:", error);
+      return false;
+    }
+  };
+
   // Exibindo mensagem de carregamento enquanto a autenticação é realizada
   if (loading) {
     return (
@@ -90,7 +153,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, token, login: handleLogin, logout: handleLogout }}
+      value={{
+        user,
+        token,
+        login: handleLogin,
+        logout: handleLogout,
+        handleRegister,
+        sendVerificationEmail, // Passando a função
+        verifyEmailCode, // Passando a função
+        handleEmailVerification, // Passando a função
+      }}
     >
       {children}
     </AuthContext.Provider>

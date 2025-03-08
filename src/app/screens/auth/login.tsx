@@ -28,7 +28,6 @@ import {
   EyeOffIcon,
   LogInIcon,
 } from "lucide-react-native";
-import { login, verifyUser } from "../../../services/authServices";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useAuth } from "@/hooks/useAuth";
 

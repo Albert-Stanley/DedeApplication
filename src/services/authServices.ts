@@ -17,6 +17,22 @@ interface AuthResponse {
   token?: string;
 }
 
+// Para respostas do cadastro que incluem `data`
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    Name: string;
+    CPF: string;
+    CNPJ?: string;
+    DataNascimento: string;
+    CRM?: string;
+    Email: string;
+    HospitalName: string;
+    UF: string;
+  };
+}
+
 // Função para lidar com erros de requisição
 const handleError = (error: any) => {
   return (
@@ -114,9 +130,9 @@ export const registerUser = async (
   UF: string,
   Email: string,
   Password: string
-): Promise<AuthResponse> => {
+): Promise<RegisterResponse> => {
   try {
-    const response = await api.post<AuthResponse>("/users/register", {
+    const response = await api.post<RegisterResponse>("/users/register", {
       Name,
       CRM,
       CPF,
@@ -142,5 +158,29 @@ export const registerUser = async (
       success: false,
       message: handleError(error),
     };
+  }
+};
+
+// Função para enviar o email para ser verificado
+export const sendVerificationEmail = async (Email: string) => {
+  try {
+    const response = await api.post("/users/send-verification-email", {
+      Email,
+    });
+    return response.data; // Retorna o sucesso ou falha da requisição
+  } catch (error) {
+    console.error("Erro ao enviar e-mail de verificação:", handleError(error));
+    return { success: false, message: handleError(error) };
+  }
+};
+
+// Função para validar o código de verificação
+export const verifyEmailCode = async (code: string) => {
+  try {
+    const response = await api.post("/users/verify-email-code", { code });
+    return response.data; // Retorna o sucesso ou falha da requisição
+  } catch (error) {
+    console.error("Erro ao validar código de verificação:", handleError(error));
+    return { success: false, message: handleError(error) };
   }
 };
