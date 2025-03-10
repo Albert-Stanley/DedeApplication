@@ -4,7 +4,12 @@ import React, { useCallback } from "react";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { Button, ButtonIcon } from "@/components/ui/button";
-import { LogInIcon, UserPlusIcon, StethoscopeIcon } from "lucide-react-native";
+import {
+  LogInIcon,
+  UserPlusIcon,
+  StethoscopeIcon,
+  Headset,
+} from "lucide-react-native";
 import Animated, {
   withSpring,
   useSharedValue,
@@ -90,7 +95,7 @@ const App = () => {
   const loginMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/EmailVerification");
+      router.push("/screens/auth/Login");
     },
   });
 
@@ -140,11 +145,11 @@ const App = () => {
               icon={UserPlusIcon}
             />
             <AnimatedButton
-              text="Entrar como Enfermeiro(a)"
+              text="Entrar como Secretário(a)"
               onPress={() => nurseMutation.mutate()}
               isLoading={nurseMutation.isPending}
               darkColor="#4A5568"
-              icon={StethoscopeIcon}
+              icon={Headset}
             />
           </VStack>
         </Box>
