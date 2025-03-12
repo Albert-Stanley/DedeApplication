@@ -10,7 +10,6 @@ import {
 } from "../services/authServices";
 import { User } from "../services/authServices";
 import { View, Text } from "react-native"; // Importando View e Text
-import { set } from "react-hook-form";
 
 // Tipagem do contexto de autenticação
 interface AuthContextType {
