@@ -1,12 +1,15 @@
 import { create } from "zustand";
+import { FormDataSchema } from "../schema/formSchema";
 
-interface FormState {
-  patientData: any;
-  updatePatientData: (newData: any) => void;
-}
+type FormState = Partial<FormDataSchema> & {
+  setData: (data: Partial<FormDataSchema>) => void;
+};
 
 export const useFormStore = create<FormState>((set) => ({
-  patientData: {},
-  updatePatientData: (newData) =>
-    set((state) => ({ patientData: { ...state.patientData, ...newData } })),
+  setData: (data) => {
+    set((state) => ({
+      ...state,
+      ...data, // Combina os dados antigos com os novos
+    }));
+  },
 }));

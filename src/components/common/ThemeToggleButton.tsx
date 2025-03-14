@@ -52,7 +52,7 @@ export default function ThemeToggleButton() {
           <Ionicons
             name={theme === "dark" ? "moon-outline" : "sunny"}
             size={24}
-            color={theme === "dark" ? "#fff" : "#333"}
+            color={theme === "dark" ? "#d0e0e3" : "	#333333"}
           />
         </View>
       </TouchableOpacity>

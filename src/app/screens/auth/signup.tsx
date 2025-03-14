@@ -518,7 +518,7 @@ const SignupScreen = () => {
             >
               <ButtonText className="font-bold text-lg">
                 {isPending ? (
-                  <Spinner size="small" color={colors.gray[500]} />
+                  <Spinner size="small" color={colors.gray[500]} /> // mudar cor para acompanhar o tema
                 ) : (
                   "Cadastrar"
                 )}

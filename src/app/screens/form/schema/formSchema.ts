@@ -3,9 +3,10 @@ import { z } from "zod";
 export const formSchema = z.object({
   // Step 1: Dados do Paciente
   NomePaciente: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-  DataVisita: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Data inválida",
-  }),
+  DataVisita: z.string(),
+  // .refine((val) => !isNaN(Date.parse(val)), {
+  //   message: "Data inválida",
+  // }),
   HospitalName: z.string(),
   MedicoDiarista: z.string(),
   Saps3: z.string(),
