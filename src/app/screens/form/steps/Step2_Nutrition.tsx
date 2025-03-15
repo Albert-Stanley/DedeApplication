@@ -61,7 +61,7 @@ const Step2_Nutrition = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
-            <Center className="w-[300px] h-[150px]">
+            <Center className="w-[450px] h-[100px]">
               <Progress value={33.4} size="md" orientation="horizontal">
                 <ProgressFilledTrack />
               </Progress>

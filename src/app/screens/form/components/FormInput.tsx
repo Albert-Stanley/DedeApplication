@@ -16,6 +16,8 @@ interface FormInputProps {
   control: any;
   errors: any;
   placeholder: string;
+  value?: string;
+  editable?: boolean;
   size?: "sm" | "md" | "lg"; // Definindo um tamanho padrão, mas pode ser personalizado
 }
 
@@ -25,6 +27,7 @@ const FormInput = ({
   control,
   errors,
   placeholder,
+  editable = true,
   size = "lg",
 }: FormInputProps) => {
   return (
@@ -43,6 +46,7 @@ const FormInput = ({
               value={value}
               onChangeText={onChange}
               onBlur={onBlur}
+              editable={editable}
               returnKeyType="done"
             />
           </Input>
@@ -51,7 +55,9 @@ const FormInput = ({
       {errors?.[name] && (
         <FormControlError>
           <FormControlErrorIcon as={AlertTriangle} />
-          <FormControlErrorText>{errors[name]?.message}</FormControlErrorText>
+          <FormControlErrorText>
+            {errors[name]?.message || "Erro no campo, por favor verifique."}
+          </FormControlErrorText>
         </FormControlError>
       )}
     </FormControl>

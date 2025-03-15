@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { formSchema } from "../schema/formSchema"; // Importando o schema completo
 import { z } from "zod";
 import { useRouter } from "expo-router";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
@@ -12,6 +12,7 @@ import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Center } from "@/components/ui/center";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/nextButton";
+import DatePicker from "../components/DatePickerField";
 import React from "react";
 
 const patientInfoSchema = formSchema.pick({
@@ -33,13 +34,12 @@ const PatientInfo = () => {
   const {
     control,
     handleSubmit,
-    trigger,
     formState: { errors, isSubmitting, isValid },
   } = useForm<PatientInfoFormData>({
     resolver: zodResolver(patientInfoSchema), // Usando o schema de validação correto
     defaultValues: {
       NomePaciente: "",
-      DataVisita: "",
+      DataVisita: new Date(),
       HospitalName: "",
       MedicoDiarista: "",
       Saps3: "",
@@ -50,8 +50,7 @@ const PatientInfo = () => {
   });
 
   const onSubmit = async (data: PatientInfoFormData) => {
-    const isValidForm = await trigger(); // Verifica se o formulário é válido antes de continuar
-    if (!isValidForm) return; // Se não for válido, não faz nada
+    if (!isValid) return; // Se não for válido, não faz nada
 
     setData(data); // Salvando os dados no estado global
     console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
@@ -65,8 +64,8 @@ const PatientInfo = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
-            <Center className="w-[300px] h-[150px]">
-              <Progress value={16.7} size="md" orientation="horizontal">
+            <Center className="w-[450px] h-[100px]">
+              <Progress value={16.7} size="lg" orientation="horizontal">
                 <ProgressFilledTrack />
               </Progress>
             </Center>
@@ -77,13 +76,20 @@ const PatientInfo = () => {
               errors={errors}
               placeholder="Digite o nome do paciente"
             />
-            <FormInput
+            <Controller
               name="DataVisita"
-              label="Data da Visita"
               control={control}
-              errors={errors}
-              placeholder="Digite a data da visita"
+              render={({ field }) => (
+                <DatePicker
+                  name="DataVisita"
+                  control={control}
+                  errors={errors}
+                  label="Data da Visita"
+                  placeholder="Selecione a data da visita"
+                />
+              )}
             />
+
             <FormInput
               name="HospitalName"
               label="Nome do Hospital"
