@@ -44,8 +44,13 @@ const FormRadio = ({
         render={({ field: { onChange, value } }) => (
           <RadioGroup value={value || ""} onChange={onChange}>
             <HStack space="lg">
-              {options.map((option, idx) => (
-                <Radio size={size} key={idx} value={option.value}>
+              {options.map((option) => (
+                <Radio
+                  size={size}
+                  key={option.value}
+                  value={option.value}
+                  id={`${name}-${option.value}`}
+                >
                   <RadioIndicator>
                     <RadioIcon as={CircleIcon} />
                   </RadioIndicator>
