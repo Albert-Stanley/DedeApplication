@@ -28,7 +28,7 @@ export const formSchema = z.object({
   FerramentasDiagnosticasPendentes: z.string(),
 
   // Step 2: Nutrição e Função Intestinal
-  AporteNutricional: z.string(),
+  AporteNutricional: z.string().min(3, "Aporte nutricional obrigatório"),
   ProgredirDieta: z.enum(["Sim", "Não"]),
   SuspenderDieta: z.enum(["Sim", "Não"]),
   AntiemeticosOuCineticos: z.enum(["Sim", "Não"]),

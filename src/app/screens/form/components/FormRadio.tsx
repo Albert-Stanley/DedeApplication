@@ -7,32 +7,32 @@ import {
   FormControlErrorIcon,
 } from "@/components/ui/form-control";
 import { Controller } from "react-hook-form";
-import { AlertTriangle } from "lucide-react-native";
+import { AlertTriangle, CircleIcon } from "lucide-react-native";
 import {
-  Checkbox,
-  CheckboxGroup,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckboxIcon,
-} from "@/components/ui/checkbox";
-import { CheckIcon } from "@/components/ui/icon";
-import { VStack } from "@/components/ui/vstack";
+  Radio,
+  RadioGroup,
+  RadioIcon,
+  RadioIndicator,
+  RadioLabel,
+} from "@/components/ui/radio"; // Alterando para usar Radio
+import { HStack } from "@/components/ui/hstack";
 
-interface FormCheckboxProps {
+interface FormRadioProps {
   name: string;
   label: string;
   control: any;
   errors: any;
-  options: { label: string; value: string }[];
+  size: "sm" | "md" | "lg"; // Adicionando tamanho do Radio
+  options: { label: string; value: string }[]; // Sim/Não opções
 }
-
-const FormCheckbox = ({
+const FormRadio = ({
   name,
   label,
   control,
   errors,
-  options,
-}: FormCheckboxProps) => {
+  size,
+  options = [],
+}: FormRadioProps) => {
   return (
     <FormControl isInvalid={!!errors?.[name]}>
       <FormControlLabel>
@@ -42,18 +42,18 @@ const FormCheckbox = ({
         name={name}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <CheckboxGroup value={value} onChange={onChange}>
-            <VStack space="md">
+          <RadioGroup value={value || ""} onChange={onChange}>
+            <HStack space="lg">
               {options.map((option, idx) => (
-                <Checkbox key={idx} value={option.value}>
-                  <CheckboxIndicator>
-                    <CheckboxIcon as={CheckIcon} />
-                  </CheckboxIndicator>
-                  <CheckboxLabel>{option.label}</CheckboxLabel>
-                </Checkbox>
+                <Radio size={size} key={idx} value={option.value}>
+                  <RadioIndicator>
+                    <RadioIcon as={CircleIcon} />
+                  </RadioIndicator>
+                  <RadioLabel>{option.label}</RadioLabel>
+                </Radio>
               ))}
-            </VStack>
-          </CheckboxGroup>
+            </HStack>
+          </RadioGroup>
         )}
       />
       {errors?.[name] && (
@@ -66,4 +66,4 @@ const FormCheckbox = ({
   );
 };
 
-export default FormCheckbox;
+export default FormRadio;

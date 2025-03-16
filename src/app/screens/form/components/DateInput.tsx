@@ -53,7 +53,7 @@ const DateInput = ({
           name={name}
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
-            <Input size={size} className="w-full min-h-[45px] justify-center">
+            <Input size={size} className="w-full justify-center">
               <InputField
                 id={name}
                 placeholder={placeholder}
@@ -62,7 +62,7 @@ const DateInput = ({
                 onBlur={onBlur}
                 editable={editable}
                 returnKeyType="done"
-                className="h-[45px] px-3 text-left"
+                className="h-[45px] px-3 text-left text-base leading-[20px] min-h-[45px]"
               />
             </Input>
           )}

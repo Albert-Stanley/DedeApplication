@@ -39,13 +39,13 @@ const FormInput = ({
         className="w-full mb-3"
       >
         <FormControlLabel>
-          <FormControlLabelText>{label}</FormControlLabelText>
+          <FormControlLabelText size="md">{label}</FormControlLabelText>
         </FormControlLabel>
         <Controller
           name={name}
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
-            <Input size={size} className="w-full min-h-[45px] justify-center">
+            <Input size={size} className="w-full justify-center">
               <InputField
                 id={name}
                 placeholder={placeholder}
@@ -54,13 +54,13 @@ const FormInput = ({
                 onBlur={onBlur}
                 editable={editable}
                 returnKeyType="done"
-                className="h-[45px] px-3 text-left"
+                className="h-[45px]  px-3 text-left text-base leading-[20px] min-h-[45px] overflow-x-auto whitespace-nowrap"
               />
             </Input>
           )}
         />
         {errors?.[name] && (
-          <FormControlError>
+          <FormControlError className="mt-1">
             <FormControlErrorIcon as={AlertTriangle} />
             <FormControlErrorText>
               {errors[name]?.message || "Erro no campo, por favor verifique."}

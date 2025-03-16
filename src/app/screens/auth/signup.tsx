@@ -360,7 +360,7 @@ const SignupScreen = () => {
             </FormControl>
 
             {/* Campo de UF */}
-            <Text className="text-lg font-bold font-medium text-typography-900">
+            <Text className="text-lg font-bold text-typography-900">
               Selecione sua UF
             </Text>
             <Controller

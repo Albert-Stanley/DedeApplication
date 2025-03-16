@@ -1,14 +1,17 @@
 import React from "react";
 import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Center } from "@/components/ui/center";
+import { Text } from "@/components/ui/text";
 
 interface ProgressBarProps {
   value: number;
+  step: string;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ value }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ value, step }) => {
   return (
     <Center className="w-full">
+      <Text className="text-lg font-bold text-primary-500">{step}</Text>
       <Progress
         value={value}
         size="md"

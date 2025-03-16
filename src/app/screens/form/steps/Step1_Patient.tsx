@@ -1,15 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { formSchema } from "../schema/formSchema"; // Importando o schema completo
 import { z } from "zod";
 import { useRouter } from "expo-router";
-import { SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { SafeAreaView, ScrollView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
-import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
-import { Center } from "@/components/ui/center";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/nextButton";
 import DateInput from "../components/DateInput";
@@ -65,7 +63,7 @@ const PatientInfo = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
-            <ProgressBar value={16.7} />
+            <ProgressBar value={16.7} step={"1/6"} />
             <FormInput
               name="NomePaciente"
               label="Nome do Paciente"
@@ -123,7 +121,7 @@ const PatientInfo = () => {
               label="Ferramentas Diagnósticas Pendentes"
               control={control}
               errors={errors}
-              placeholder="Digite as ferramentas diagnósticas pendentes"
+              placeholder="Ferramentas Pendentes"
             />
             <NextButton
               onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
