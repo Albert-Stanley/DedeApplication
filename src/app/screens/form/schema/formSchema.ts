@@ -3,9 +3,23 @@ import { z } from "zod";
 export const formSchema = z.object({
   // Step 1: Dados do Paciente
   NomePaciente: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
-  DataVisita: z.date().refine((val) => !isNaN(val.getTime()), {
-    message: "Por favor, insira uma data válida.",
-  }),
+  DataVisita: z
+    .string()
+    .regex(/^(\d{2})\/(\d{2})\/(\d{4})$/, "Formato de data inválido") // Regex para validar o formato dd/mm/aaaa
+    .refine(
+      (value) => {
+        const [day, month, year] = value.split("/").map(Number);
+        const date = new Date(year, month - 1, day); // Meses começam em 0, então subtrai 1
+        return (
+          date.getFullYear() === year &&
+          date.getMonth() + 1 === month &&
+          date.getDate() === day
+        ); // Verifica se a data é válida
+      },
+      {
+        message: "Data inválida",
+      }
+    ),
   HospitalName: z.string(),
   MedicoDiarista: z.string(),
   Saps3: z.string(),

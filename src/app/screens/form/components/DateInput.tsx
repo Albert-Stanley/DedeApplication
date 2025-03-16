@@ -1,36 +1,44 @@
+import React from "react";
+import { Controller } from "react-hook-form";
 import {
   FormControl,
   FormControlLabel,
-  FormControlErrorText,
   FormControlLabelText,
-  FormControlErrorIcon,
   FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
 } from "@/components/ui/form-control";
-import { Controller } from "react-hook-form";
-import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
+import { AlertTriangle } from "lucide-react-native";
 import { View } from "react-native";
 
-interface FormInputProps {
+interface DateInputProps {
   name: string;
   label: string;
   control: any;
   errors: any;
-  placeholder: string;
-  value?: string;
-  editable?: boolean;
   size?: "sm" | "md" | "lg";
+  placeholder: string;
+  editable?: boolean;
 }
 
-const FormInput = ({
+const DateInput = ({
   name,
   label,
   control,
   errors,
+  size = "lg",
   placeholder,
   editable = true,
-  size = "lg",
-}: FormInputProps) => {
+}: DateInputProps) => {
+  const formatDate = (input: string) => {
+    const numbersOnly = input.replace(/\D/g, ""); // Remove não numéricos
+    let formatted = numbersOnly.slice(0, 2);
+    if (numbersOnly.length >= 3) formatted += "/" + numbersOnly.slice(2, 4);
+    if (numbersOnly.length >= 5) formatted += "/" + numbersOnly.slice(4, 8);
+    return formatted;
+  };
+
   return (
     <View className="w-full items-center justify-center">
       <FormControl
@@ -50,7 +58,7 @@ const FormInput = ({
                 id={name}
                 placeholder={placeholder}
                 value={value}
-                onChangeText={onChange}
+                onChangeText={(text) => onChange(formatDate(text))}
                 onBlur={onBlur}
                 editable={editable}
                 returnKeyType="done"
@@ -72,4 +80,4 @@ const FormInput = ({
   );
 };
 
-export default FormInput;
+export default DateInput;

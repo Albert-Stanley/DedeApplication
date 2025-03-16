@@ -13,8 +13,9 @@ import { Center } from "@/components/ui/center";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/nextButton";
 import React from "react";
+import ProgressBar from "../components/ProgressBar";
 
-const Step2_NutritionSchema = formSchema.pick({
+const NutritionSchema = formSchema.pick({
   AporteNutricional: true,
   ProgredirDieta: true,
   SuspenderDieta: true,
@@ -23,9 +24,9 @@ const Step2_NutritionSchema = formSchema.pick({
   AjusteNutricional: true,
 });
 
-type Step2_NutritionFormData = z.infer<typeof Step2_NutritionSchema>;
+type NutritionFormData = z.infer<typeof NutritionSchema>;
 
-const Step2_Nutrition = () => {
+const Nutrition = () => {
   const router = useRouter();
   const setData = useFormStore((state) => state.setData);
   const {
@@ -33,8 +34,8 @@ const Step2_Nutrition = () => {
     handleSubmit,
     trigger,
     formState: { errors, isSubmitting, isValid },
-  } = useForm<Step2_NutritionFormData>({
-    resolver: zodResolver(Step2_NutritionSchema), // Usando o schema de validação correto
+  } = useForm<NutritionFormData>({
+    resolver: zodResolver(NutritionSchema), // Usando o schema de validação correto
     defaultValues: {
       AporteNutricional: "",
       ProgredirDieta: "Sim",
@@ -45,14 +46,14 @@ const Step2_Nutrition = () => {
     },
   });
 
-  const onSubmit = async (data: Step2_NutritionFormData) => {
+  const onSubmit = async (data: NutritionFormData) => {
     const isValidForm = await trigger(); // Verifica se o formulário é válido antes de continuar
     if (!isValidForm) return; // Se não for válido, não faz nada
 
     setData(data); // Salvando os dados no estado global
     console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
 
-    router.push("/form/steps/Step2_Nutrition"); // Navegando para a próxima fase
+    router.push("/screens/form/steps/Step3_Sedation");
   };
 
   return (
@@ -61,11 +62,7 @@ const Step2_Nutrition = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
-            <Center className="w-[450px] h-[100px]">
-              <Progress value={33.4} size="md" orientation="horizontal">
-                <ProgressFilledTrack />
-              </Progress>
-            </Center>
+            <ProgressBar value={33} />
             <FormInput
               name="NomePaciente"
               label="Nome do Paciente"
@@ -77,7 +74,6 @@ const Step2_Nutrition = () => {
             <NextButton
               onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
-              isValid={isValid} // Validando corretamente o estado do botão
             />
           </VStack>
         </Box>
@@ -86,4 +82,4 @@ const Step2_Nutrition = () => {
   );
 };
 
-export default Step2_Nutrition;
+export default Nutrition;

@@ -12,8 +12,9 @@ import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
 import { Center } from "@/components/ui/center";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/nextButton";
-import DatePicker from "../components/DatePickerField";
+import DateInput from "../components/DateInput";
 import React from "react";
+import ProgressBar from "../components/ProgressBar";
 
 const patientInfoSchema = formSchema.pick({
   NomePaciente: true,
@@ -39,7 +40,7 @@ const PatientInfo = () => {
     resolver: zodResolver(patientInfoSchema), // Usando o schema de validação correto
     defaultValues: {
       NomePaciente: "",
-      DataVisita: new Date(),
+      DataVisita: "",
       HospitalName: "",
       MedicoDiarista: "",
       Saps3: "",
@@ -55,7 +56,7 @@ const PatientInfo = () => {
     setData(data); // Salvando os dados no estado global
     console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
 
-    router.push("/form/steps/Step2_Nutrition"); // Navegando para a próxima fase
+    router.push("/screens/form/steps/Step2_Nutrition"); // Navegando para a próxima fase
   };
 
   return (
@@ -64,11 +65,7 @@ const PatientInfo = () => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
-            <Center className="w-[450px] h-[100px]">
-              <Progress value={16.7} size="lg" orientation="horizontal">
-                <ProgressFilledTrack />
-              </Progress>
-            </Center>
+            <ProgressBar value={16.7} />
             <FormInput
               name="NomePaciente"
               label="Nome do Paciente"
@@ -76,18 +73,14 @@ const PatientInfo = () => {
               errors={errors}
               placeholder="Digite o nome do paciente"
             />
-            <Controller
+
+            <DateInput
               name="DataVisita"
+              label="Data da Visita"
               control={control}
-              render={({ field }) => (
-                <DatePicker
-                  name="DataVisita"
-                  control={control}
-                  errors={errors}
-                  label="Data da Visita"
-                  placeholder="Selecione a data da visita"
-                />
-              )}
+              errors={errors}
+              size="lg"
+              placeholder="Digite a data (dd/mm/aaaa)"
             />
 
             <FormInput
@@ -132,11 +125,9 @@ const PatientInfo = () => {
               errors={errors}
               placeholder="Digite as ferramentas diagnósticas pendentes"
             />
-
             <NextButton
               onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
-              isValid={isValid} // Validando corretamente o estado do botão
             />
           </VStack>
         </Box>
