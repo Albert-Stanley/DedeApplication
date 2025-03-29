@@ -44,7 +44,7 @@ const FormSelect = ({
         name={name}
         control={control}
         render={({ field: { onChange, value } }) => (
-          <Select value={value} onValueChange={onChange}>
+          <Select selectedValue={value} onValueChange={onChange}>
             <SelectTrigger variant="outline" size={size}>
               <SelectInput placeholder="Selecione uma opção" />
               <SelectIcon as={ChevronDownIcon} />

@@ -8,7 +8,7 @@ interface ProgressBarProps {
   step: string;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ value, step }) => {
+const ProgressBar = ({ value, step }: ProgressBarProps) => {
   return (
     <Center className="w-full">
       <Text className="text-lg font-bold text-primary-500">{step}</Text>
