@@ -31,8 +31,6 @@ const PalliativeSchema = formSchema.pick({
 type PalliativeFormData = z.infer<typeof PalliativeSchema>;
 
 const Palliative = () => {
-  const router = useRouter();
-  const setData = useFormStore((state) => state.setData);
   const {
     control,
     handleSubmit,
@@ -44,10 +42,7 @@ const Palliative = () => {
   const onSubmit = async (data: PalliativeFormData) => {
     if (!isValid) return; // Se não for válido, não faz nada
 
-    setData(data); // Salvando os dados no estado global
-    console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
-
-    router.push("/screens/form/steps/Step6_Palliative");
+    //criar modal pós form
   };
 
   return (

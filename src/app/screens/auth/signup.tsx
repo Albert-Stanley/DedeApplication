@@ -90,62 +90,58 @@ const SignupScreen = () => {
   const router = useRouter();
 
   // Hook de autenticação para cadastro
-  const { handleRegister } = useAuth();
+  const { handleRegister, setPendingEmail } = useAuth();
 
   // Mutação para cadastro do usuário
-  const { mutate, isPending } = useMutation({
+  const signupMutation = useMutation({
+    // Renomeado para clareza
     mutationFn: async (data: Signup) => {
-      return registerUser(
-        data.Name,
-        data.CPF,
-        data.CNPJ || "",
-        data.DataNascimento,
-        data.Email,
-        data.CRM || "",
-        data.Password,
-        data.HospitalName,
-        data.UF
-      );
-    },
-    onSuccess: (response: RegisterResponse, data: Signup) => {
-      console.log("Resposta do backend:", response);
-      if (response.success && response.data) {
-        Alert.alert(
-          "Cadastro realizado!",
-          "Os dados foram enviados com sucesso."
+      // Chama a função do contexto que encapsula a lógica
+      const success = await handleRegister({
+        Name: data.Name,
+        CPF: data.CPF,
+        CNPJ: data.CNPJ || "",
+        DataNascimento: data.DataNascimento,
+        CRM: data.CRM || "",
+        HospitalName: data.HospitalName,
+        UF: data.UF,
+        Email: data.Email,
+        Password: data.Password, // Passa a senha original do form
+      });
+
+      if (!success) {
+        // Se handleRegister retornar false, lança um erro para acionar onError
+        // Você pode querer buscar a mensagem de erro específica do contexto/serviço se disponível
+        throw new Error(
+          "Falha ao registrar usuário ou enviar e-mail de verificação."
         );
-
-        handleRegister({
-          Name: response.data.Name,
-          CPF: response.data.CPF,
-          CNPJ: response.data.CNPJ || "", //mudar se for obrigatório ******
-          DataNascimento: response.data.DataNascimento,
-          CRM: response.data.CRM || "", //mudar se for obrigatório ******
-          Email: response.data.Email,
-          Password: data.Password, // O dado original do formulário
-          HospitalName: response.data.HospitalName,
-          UF: response.data.UF,
-        });
-
-        router.push("/screens/auth/EmailVerification");
-      } else {
-        Alert.alert("Erro", response.message || "Erro ao cadastrar.");
       }
+      // Retorna os dados originais ou o email para uso no onSuccess, se necessário
+      return { success: true, email: data.Email };
     },
-    onError: (error) => {
-      console.log("Erro ao tentar cadastrar:", error);
+    onSuccess: (result) => {
+      // result agora contém { success: true, email: ... }
+      // setPendingEmail(result.email); // O handleRegister no contexto JÁ FAZ ISSO. Não precisa aqui.
       Alert.alert(
-        "Erro",
-        "Ocorreu um erro ao tentar cadastrar. Tente novamente mais tarde."
+        "Cadastro Iniciado!",
+        "Enviamos um código de verificação para o seu e-mail." // Mensagem mais precisa
       );
-      console.error("Erro no cadastro:", error);
+      router.push("/screens/auth/EmailVerification"); // Navega para verificação
+    },
+    onError: (error: Error) => {
+      // Tipar o erro
+      console.error("Erro no processo de cadastro:", error);
+      Alert.alert(
+        "Erro no Cadastro",
+        error.message || "Ocorreu um erro. Tente novamente."
+      );
     },
   });
 
-  // Função chamada ao submeter o formulário
+  // Função chamada ao submeter o formulário (adapta a chamada da mutação)
   const onSubmit = (data: Signup) => {
     console.log("Dados do formulário:", data);
-    mutate(data); // Inicia a mutação para cadastro
+    signupMutation.mutate(data); // Chama a mutação corrigida
   };
 
   return (
@@ -514,10 +510,10 @@ const SignupScreen = () => {
             <Button
               className="w-full"
               onPress={handleSubmit(onSubmit)}
-              isDisabled={isPending}
+              isDisabled={signupMutation.isPending}
             >
               <ButtonText className="font-bold text-lg">
-                {isPending ? (
+                {signupMutation.isPending ? (
                   <Spinner size="small" color={colors.gray[500]} /> // mudar cor para acompanhar o tema
                 ) : (
                   "Cadastrar"
