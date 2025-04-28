@@ -4,12 +4,7 @@ import React, { useCallback } from "react";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { Button, ButtonIcon } from "@/components/ui/button";
-import {
-  LogInIcon,
-  UserPlusIcon,
-  StethoscopeIcon,
-  Headset,
-} from "lucide-react-native";
+import { LogInIcon, UserPlusIcon, Headset } from "lucide-react-native";
 import Animated, {
   withSpring,
   useSharedValue,
@@ -19,7 +14,7 @@ import Animated, {
 import { Text } from "@/components/ui/text";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
-import { useTheme } from "@/context/ThemeContext";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 // Definição do componente AnimatedButton com suporte para hover
 interface AnimatedButtonProps {
@@ -36,7 +31,9 @@ const AnimatedButton = ({
   isLoading,
   icon,
 }: AnimatedButtonProps) => {
-  const { theme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
+  console.log(theme);
+
   const spinnerColor = theme === "dark" ? "#fff" : "#000";
 
   const scale = useSharedValue(1); // Valor compartilhado para escalar o botão

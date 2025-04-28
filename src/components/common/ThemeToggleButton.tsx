@@ -1,10 +1,11 @@
 import React, { useCallback, useRef } from "react";
 import { TouchableOpacity, View, Animated } from "react-native";
-import { useTheme } from "../../context/ThemeContext";
+import { useThemeStore } from "../../stores/useThemeStore";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ThemeToggleButton() {
-  const { theme, toggleTheme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
   const scale = useRef(new Animated.Value(1)).current;
 
   // Animação suave ao pressionar o botão

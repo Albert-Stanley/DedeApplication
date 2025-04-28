@@ -9,7 +9,7 @@ import {
   ButtonText,
 } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { ArrowDown, Scroll, UserRoundPen } from "lucide-react-native";
+import { ArrowDown, UserRoundPen } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
 const homepage = () => {
@@ -20,7 +20,9 @@ const homepage = () => {
   };
 
   const handleShowPatients = () => {
-    router.push("/screens/patients/form");
+    // router.push("/screens/patients/form");
+    //jogar para a tela com os pacientes que o médico tem acesso
+    //cada paciente ao ser clicado aparece seu formulario, ao qual o medico pode alterar os dados
   };
 
   return (

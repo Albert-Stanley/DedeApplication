@@ -3,9 +3,9 @@ import { Stack } from "expo-router";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../context/AuthContext";
-import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import ThemeToggleButton from "@/components/common/ThemeToggleButton";
 import { Box } from "@/components/ui/box";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 export default function WebLayout() {
   const queryClient = new QueryClient();
@@ -13,16 +13,14 @@ export default function WebLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider>
-          <ThemeWrapper />
-        </ThemeProvider>
+        <ThemeWrapper />
       </AuthProvider>
     </QueryClientProvider>
   );
 }
 
 function ThemeWrapper() {
-  const { theme } = useTheme();
+  const theme = useThemeStore((state) => state.theme);
 
   return (
     <GluestackUIProvider mode={theme}>
