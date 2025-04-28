@@ -454,7 +454,7 @@ const SignupScreen = () => {
                 name="ConfirmPassword"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input variant="rounded" className="mb-1" size="lg">
+                  <Input variant="outline" className="mb-1" size="lg">
                     <InputField
                       id="ConfirmPassword"
                       placeholder="Digite novamente sua senha"

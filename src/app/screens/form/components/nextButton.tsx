@@ -1,27 +1,34 @@
 import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { View } from "react-native";
+import React from "react";
 
 interface NextButtonProps {
-  onSubmit: () => void;
-  isPending: boolean;
+  onPress: () => void;
+  isPending?: boolean;
+  isDisabled?: boolean;
+  title?: string;
 }
 
-const NextButton = ({ onSubmit, isPending }: NextButtonProps) => {
+const NextButton = ({
+  onPress,
+  isPending = false,
+  isDisabled = false,
+  title = "Próximo",
+}: NextButtonProps) => {
   return (
-    <View>
-      <Button
-        size="md"
-        variant="solid"
-        action="primary"
-        className="w-full"
-        onPress={onSubmit}
-      >
-        <ButtonText className="font-bold text-lg">
-          {isPending ? <Spinner size="small" /> : "Próximo"}
-        </ButtonText>
-      </Button>
-    </View>
+    <Button
+      size="lg"
+      variant="solid"
+      action="primary"
+      onPress={onPress}
+      isDisabled={isDisabled || isPending}
+    >
+      {isPending ? (
+        <Spinner size="small" color="$textLight50" />
+      ) : (
+        <ButtonText className="font-bold text-lg">{title}</ButtonText>
+      )}
+    </Button>
   );
 };
 

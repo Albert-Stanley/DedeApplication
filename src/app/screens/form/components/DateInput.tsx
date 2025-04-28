@@ -57,7 +57,7 @@ const DateInput = ({
               <InputField
                 id={name}
                 placeholder={placeholder}
-                value={value}
+                value={value ?? ""}
                 onChangeText={(text) => onChange(formatDate(text))}
                 onBlur={onBlur}
                 editable={editable}

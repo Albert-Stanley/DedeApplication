@@ -9,8 +9,8 @@ import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
-import NextButton from "../components/nextButton";
-import React from "react";
+import NextButton from "../components/NextButton";
+import React, { useEffect } from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
 
@@ -31,18 +31,70 @@ const PalliativeSchema = formSchema.pick({
 type PalliativeFormData = z.infer<typeof PalliativeSchema>;
 
 const Palliative = () => {
+  const setData = useFormStore((state) => state.setData);
+  const TipoCultura = useFormStore((state) => state.TipoCultura);
+  const ObsCulturas = useFormStore((state) => state.ObsCulturas);
+  const SuspensaoTerapias = useFormStore((state) => state.SuspensaoTerapias);
+  const ObsSuspensao = useFormStore((state) => state.ObsSuspensao);
+  const ExamesPendentes = useFormStore((state) => state.ExamesPendentes);
+  const AgendamentoExames = useFormStore((state) => state.AgendamentoExames);
+  const Especialidades = useFormStore((state) => state.Especialidades);
+  const CuidadosPaliativos = useFormStore((state) => state.CuidadosPaliativos);
+  const FamiliaresCientes = useFormStore((state) => state.FamiliaresCientes);
+  const ObsPaliativos = useFormStore((state) => state.ObsPaliativos);
+  const AltaUTI = useFormStore((state) => state.AltaUTI);
+
+  const defaultValues = React.useMemo(
+    () => ({
+      TipoCultura: TipoCultura,
+      ObsCulturas: ObsCulturas,
+      SuspensaoTerapias: SuspensaoTerapias,
+      ObsSuspensao: ObsSuspensao,
+      ExamesPendentes: ExamesPendentes,
+      AgendamentoExames: AgendamentoExames,
+      Especialidades: Especialidades,
+      CuidadosPaliativos: CuidadosPaliativos,
+      FamiliaresCientes: FamiliaresCientes,
+      ObsPaliativos: ObsPaliativos,
+      AltaUTI: AltaUTI,
+    }),
+    [
+      TipoCultura,
+      ObsCulturas,
+      SuspensaoTerapias,
+      ObsSuspensao,
+      ExamesPendentes,
+      AgendamentoExames,
+      Especialidades,
+      CuidadosPaliativos,
+      FamiliaresCientes,
+      ObsPaliativos,
+      AltaUTI,
+    ]
+  );
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<PalliativeFormData>({
-    resolver: zodResolver(PalliativeSchema), // Usando o schema de validação correto
+    resolver: zodResolver(PalliativeSchema),
+    defaultValues: defaultValues,
   });
 
-  const onSubmit = async (data: PalliativeFormData) => {
-    if (!isValid) return; // Se não for válido, não faz nada
+  const completeFormData = useFormStore((state) => state);
 
-    //criar modal pós form
+  useEffect(() => {
+    console.log("--- Dados Completos do Formulário (Todas as Etapas) ---");
+    console.log(JSON.stringify(completeFormData, null, 2)); // Pretty print the JSON
+    console.log("-----------------------------------------------------");
+  }, [completeFormData]); // Esse efeito será chamado sempre que o estado mudar
+
+  const onSubmit = (data: PalliativeFormData) => {
+    setData(data); // Atualiza o estado com os novos dados
+    console.log("Dados salvos etapa 6: ", data);
+
+    alert("Formulário concluído! Verifique o console para os dados completos.");
   };
 
   return (
@@ -154,7 +206,7 @@ const Palliative = () => {
             />
 
             <NextButton
-              onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
+              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
             />
           </VStack>

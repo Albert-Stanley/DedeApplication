@@ -49,7 +49,7 @@ const FormInput = ({
               <InputField
                 id={name}
                 placeholder={placeholder}
-                value={value}
+                value={value ?? ""}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 editable={editable}

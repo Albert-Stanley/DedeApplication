@@ -9,7 +9,7 @@ import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
-import NextButton from "../components/nextButton";
+import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
@@ -31,20 +31,57 @@ type MetabolicFormData = z.infer<typeof MetabolicSchema>;
 const Metabolic = () => {
   const router = useRouter();
   const setData = useFormStore((state) => state.setData);
+  const Hipoglicemia = useFormStore((state) => state.Hipoglicemia);
+  const HiperglicemiaMaisDeDoisEpisodios = useFormStore(
+    (state) => state.HiperglicemiaMaisDeDoisEpisodios
+  );
+  const Insulina24h = useFormStore((state) => state.Insulina24h);
+  const AjusteGlicemico = useFormStore((state) => state.AjusteGlicemico);
+  const Ira = useFormStore((state) => state.Ira);
+  const BalancoHidrico = useFormStore((state) => state.BalancoHidrico);
+  const CorrecaoEletronicos = useFormStore(
+    (state) => state.CorrecaoEletronicos
+  );
+  const CriterioUrgenciaHD = useFormStore((state) => state.CriterioUrgenciaHD);
+  const ObsDisturbios = useFormStore((state) => state.ObsDisturbios);
+
+  const defaultValues = React.useMemo(
+    () => ({
+      Hipoglicemia: Hipoglicemia,
+      HiperglicemiaMaisDeDoisEpisodios: HiperglicemiaMaisDeDoisEpisodios,
+      Insulina24h: Insulina24h,
+      AjusteGlicemico: AjusteGlicemico,
+      Ira: Ira,
+      BalancoHidrico: BalancoHidrico,
+      CorrecaoEletronicos: CorrecaoEletronicos,
+      CriterioUrgenciaHD: CriterioUrgenciaHD,
+      ObsDisturbios: ObsDisturbios,
+    }),
+    [
+      Hipoglicemia,
+      HiperglicemiaMaisDeDoisEpisodios,
+      Insulina24h,
+      AjusteGlicemico,
+      Ira,
+      BalancoHidrico,
+      CorrecaoEletronicos,
+      CriterioUrgenciaHD,
+      ObsDisturbios,
+    ]
+  );
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<MetabolicFormData>({
-    resolver: zodResolver(MetabolicSchema), // Usando o schema de validação correto
+    resolver: zodResolver(MetabolicSchema),
+    defaultValues: defaultValues,
   });
 
-  const onSubmit = async (data: MetabolicFormData) => {
-    if (!isValid) return; // Se não for válido, não faz nada
-
+  const onSubmit = (data: MetabolicFormData) => {
     setData(data); // Salvando os dados no estado global
-    console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
-
+    console.log("Dados da etapa 4: ", data); // Verificando os dados da fase atual
     router.push("/screens/form/steps/Step5_Antibiotics");
   };
 
@@ -136,7 +173,7 @@ const Metabolic = () => {
             />
 
             <NextButton
-              onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
+              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
             />
           </VStack>

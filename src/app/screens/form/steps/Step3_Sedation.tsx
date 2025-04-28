@@ -9,7 +9,7 @@ import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
-import NextButton from "../components/nextButton";
+import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
@@ -31,20 +31,55 @@ type SedationFormData = z.infer<typeof SedationSchema>;
 const Sedation = () => {
   const router = useRouter();
   const setData = useFormStore((state) => state.setData);
+  const Analgesicos = useFormStore((state) => state.Analgesicos);
+  const AjusteAnalgesia = useFormStore((state) => state.AjusteAnalgesia);
+  const Sedacao = useFormStore((state) => state.Sedacao);
+  const RassAlvo = useFormStore((state) => state.RassAlvo);
+  const DespertarDiario = useFormStore((state) => state.DespertarDiario);
+  const Delirium = useFormStore((state) => state.Delirium);
+  const AjusteSedacao = useFormStore((state) => state.AjusteSedacao);
+  const DrogasVasoativas = useFormStore((state) => state.DrogasVasoativas);
+  const AjusteDrogasVasoativas = useFormStore(
+    (state) => state.AjusteDrogasVasoativas
+  );
+
+  const defaultValues = React.useMemo(
+    () => ({
+      Analgesicos: Analgesicos,
+      AjusteAnalgesia: AjusteAnalgesia,
+      Sedacao: Sedacao,
+      RassAlvo: RassAlvo,
+      DespertarDiario: DespertarDiario,
+      Delirium: Delirium,
+      AjusteSedacao: AjusteSedacao,
+      DrogasVasoativas: DrogasVasoativas,
+      AjusteDrogasVasoativas: AjusteDrogasVasoativas,
+    }),
+    [
+      Analgesicos,
+      AjusteAnalgesia,
+      Sedacao,
+      RassAlvo,
+      DespertarDiario,
+      Delirium,
+      AjusteSedacao,
+      DrogasVasoativas,
+      AjusteDrogasVasoativas,
+    ]
+  );
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<SedationFormData>({
     resolver: zodResolver(SedationSchema), // Usando o schema de validação correto
+    defaultValues: defaultValues,
   });
 
-  const onSubmit = async (data: SedationFormData) => {
-    if (!isValid) return; // Se não for válido, não faz nada
-
+  const onSubmit = (data: SedationFormData) => {
     setData(data); // Salvando os dados no estado global
-    console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
-
+    console.log("Dados da etapa 3: ", data); // Verificando os dados da fase atual
     router.push("/screens/form/steps/Step4_Metabolic");
   };
 
@@ -128,7 +163,7 @@ const Sedation = () => {
             />
 
             <NextButton
-              onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
+              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
             />
           </VStack>

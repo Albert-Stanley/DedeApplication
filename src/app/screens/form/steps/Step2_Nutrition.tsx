@@ -9,7 +9,7 @@ import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
-import NextButton from "../components/nextButton";
+import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
@@ -28,20 +28,48 @@ type NutritionFormData = z.infer<typeof NutritionSchema>;
 const Nutrition = () => {
   const router = useRouter();
   const setData = useFormStore((state) => state.setData);
+  const AporteNutricional = useFormStore((state) => state.AporteNutricional);
+  const ProgredirDieta = useFormStore((state) => state.ProgredirDieta);
+  const SuspenderDieta = useFormStore((state) => state.SuspenderDieta);
+  const AntiemeticosOuCineticos = useFormStore(
+    (state) => state.AntiemeticosOuCineticos
+  );
+  const EvacuacaoUltimas48h = useFormStore(
+    (state) => state.EvacuacaoUltimas48h
+  );
+  const AjusteNutricional = useFormStore((state) => state.AjusteNutricional);
+
+  const defaultValues = React.useMemo(
+    () => ({
+      AporteNutricional: AporteNutricional,
+      ProgredirDieta: ProgredirDieta,
+      SuspenderDieta: SuspenderDieta,
+      AntiemeticosOuCineticos: AntiemeticosOuCineticos,
+      EvacuacaoUltimas48h: EvacuacaoUltimas48h,
+      AjusteNutricional: AjusteNutricional,
+    }),
+    [
+      AporteNutricional,
+      ProgredirDieta,
+      SuspenderDieta,
+      AntiemeticosOuCineticos,
+      EvacuacaoUltimas48h,
+      AjusteNutricional,
+    ]
+  );
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<NutritionFormData>({
-    resolver: zodResolver(NutritionSchema), // Usando o schema de validação correto
+    resolver: zodResolver(NutritionSchema),
+    defaultValues: defaultValues,
   });
 
-  const onSubmit = async (data: NutritionFormData) => {
-    if (!isValid) return; // Se não for válido, não faz nada
-
+  const onSubmit = (data: NutritionFormData) => {
     setData(data); // Salvando os dados no estado global
-    console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
-
+    console.log("Dados da Etapa 2 : ", data); // Verificando os dados da fase atual
     router.push("/screens/form/steps/Step3_Sedation");
   };
 
@@ -113,7 +141,7 @@ const Nutrition = () => {
             />
 
             <NextButton
-              onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
+              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
             />
           </VStack>

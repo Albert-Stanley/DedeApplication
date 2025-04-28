@@ -9,7 +9,7 @@ import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
-import NextButton from "../components/nextButton";
+import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
@@ -29,20 +29,49 @@ type AntibioticFormData = z.infer<typeof AntibioticSchema>;
 const Antibiotic = () => {
   const router = useRouter();
   const setData = useFormStore((state) => state.setData);
+  const Transfusao = useFormStore((state) => state.Transfusao);
+  const TipoTransfusao = useFormStore((state) => state.TipoTransfusao);
+  const ObsHemoterapia = useFormStore((state) => state.ObsHemoterapia);
+  const Antibiotico = useFormStore((state) => state.Antibiotico);
+  const EscalonarAntibiotico = useFormStore(
+    (state) => state.EscalonarAntibiotico
+  );
+  const ObsAntibiotico = useFormStore((state) => state.ObsAntibiotico);
+  const SolicitarCulturas = useFormStore((state) => state.SolicitarCulturas);
+
+  const defaultValues = React.useMemo(
+    () => ({
+      Transfusao: Transfusao,
+      TipoTransfusao: TipoTransfusao,
+      ObsHemoterapia: ObsHemoterapia,
+      Antibiotico: Antibiotico,
+      EscalonarAntibiotico: EscalonarAntibiotico,
+      ObsAntibiotico: ObsAntibiotico,
+      SolicitarCulturas: SolicitarCulturas,
+    }),
+    [
+      Transfusao,
+      TipoTransfusao,
+      ObsHemoterapia,
+      Antibiotico,
+      EscalonarAntibiotico,
+      ObsAntibiotico,
+      SolicitarCulturas,
+    ]
+  );
+
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
   } = useForm<AntibioticFormData>({
-    resolver: zodResolver(AntibioticSchema), // Usando o schema de validação correto
+    resolver: zodResolver(AntibioticSchema),
+    defaultValues: defaultValues,
   });
 
-  const onSubmit = async (data: AntibioticFormData) => {
-    if (!isValid) return; // Se não for válido, não faz nada
-
+  const onSubmit = (data: AntibioticFormData) => {
     setData(data); // Salvando os dados no estado global
-    console.log("Dados da fase atual:", data); // Verificando os dados da fase atual
-
+    console.log("Dados da estapa 5: ", data); // Verificando os dados da fase atual
     router.push("/screens/form/steps/Step6_Palliative");
   };
 
@@ -116,7 +145,7 @@ const Antibiotic = () => {
             />
 
             <NextButton
-              onSubmit={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
+              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}
             />
           </VStack>
