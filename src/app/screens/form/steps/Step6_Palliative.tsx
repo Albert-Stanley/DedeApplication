@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { formSchema } from "../schema/formSchema"; // Importando o schema completo
 import { z } from "zod";
-import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
@@ -82,17 +81,15 @@ const Palliative = () => {
     defaultValues: defaultValues,
   });
 
-  const completeFormData = useFormStore((state) => state);
-
-  useEffect(() => {
-    console.log("--- Dados Completos do Formulário (Todas as Etapas) ---");
-    console.log(JSON.stringify(completeFormData, null, 2)); // Pretty print the JSON
-    console.log("-----------------------------------------------------");
-  }, [completeFormData]); // Esse efeito será chamado sempre que o estado mudar
-
   const onSubmit = (data: PalliativeFormData) => {
     setData(data); // Atualiza o estado com os novos dados
-    console.log("Dados salvos etapa 6: ", data);
+
+    const completeData = useFormStore.getState(); // Pega o estado completo
+    console.log(completeData);
+
+    console.log("--- Dados Completos do Formulário (Todas as Etapas) ---");
+    console.log(JSON.stringify(completeData, null, 2));
+    console.log("-----------------------------------------------------");
 
     alert("Formulário concluído! Verifique o console para os dados completos.");
   };

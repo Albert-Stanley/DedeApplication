@@ -70,8 +70,13 @@ const Antibiotic = () => {
   });
 
   const onSubmit = (data: AntibioticFormData) => {
-    setData(data); // Salvando os dados no estado global
-    console.log("Dados da estapa 5: ", data); // Verificando os dados da fase atual
+    console.log("Data recebida na etapa 5:", data);
+    setData(data);
+
+    // Verifica se os dados antigos ainda estão lá
+    const estadoCompleto = useFormStore.getState();
+    console.log("Zustand após etapa 5:", estadoCompleto);
+
     router.push("/screens/form/steps/Step6_Palliative");
   };
 
