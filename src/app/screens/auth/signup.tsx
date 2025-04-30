@@ -171,6 +171,8 @@ const SignupScreen = () => {
                     <InputField
                       id="Name"
                       placeholder="Digite seu Nome"
+                      autoComplete="name"
+                      textContentType="name"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -278,6 +280,7 @@ const SignupScreen = () => {
                       }}
                       placeholder="Digite sua Data de Nascimento"
                       keyboardType="numeric"
+                      autoComplete="birthdate-full"
                     />
                   </Input>
                 )}
@@ -388,6 +391,8 @@ const SignupScreen = () => {
                       onChangeText={onChange}
                       onBlur={onBlur}
                       keyboardType="email-address"
+                      autoComplete="email"
+                      textContentType="emailAddress"
                       returnKeyType="done"
                     />
                   </Input>

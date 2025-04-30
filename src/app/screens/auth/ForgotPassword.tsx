@@ -121,6 +121,8 @@ const ForgotPasswordScreen = () => {
                       onChangeText={onChange}
                       onBlur={onBlur}
                       keyboardType="email-address"
+                      autoComplete="email"
+                      textContentType="emailAddress"
                       onSubmitEditing={handleSubmit(onSubmit)}
                       returnKeyType="done"
                     />
