@@ -81,17 +81,17 @@ const Palliative = () => {
     defaultValues: defaultValues,
   });
 
+  // Adicione este log para ver os erros de validação no console
+  console.log("Erros de Validação RHF:", errors);
+
   const onSubmit = (data: PalliativeFormData) => {
+    console.log("Dados da etapa 6: ", data);
     setData(data); // Atualiza o estado com os novos dados
 
-    const completeData = useFormStore.getState(); // Pega o estado completo
-    console.log(completeData);
+    const estadoCompleto = useFormStore.getState();
+    console.log("Todos os dados do formulário: ", estadoCompleto);
 
-    console.log("--- Dados Completos do Formulário (Todas as Etapas) ---");
-    console.log(JSON.stringify(completeData, null, 2));
-    console.log("-----------------------------------------------------");
-
-    alert("Formulário concluído! Verifique o console para os dados completos.");
+    alert("Formulário concluído com sucesso!");
   };
 
   return (
@@ -123,8 +123,8 @@ const Palliative = () => {
               label="Suspensão de Terapias"
               size="lg"
               options={[
-                { label: "Sim", value: "sim" },
-                { label: "Não", value: "nao" },
+                { label: "Sim", value: "Sim" },
+                { label: "Não", value: "Não" },
               ]}
               errors={errors.SuspensaoTerapias?.message}
             />
@@ -166,8 +166,8 @@ const Palliative = () => {
               label="Cuidados Paliativos"
               size="lg"
               options={[
-                { label: "Sim", value: "sim" },
-                { label: "Não", value: "nao" },
+                { label: "Sim", value: "Sim" },
+                { label: "Não", value: "Não" },
               ]}
               errors={errors.CuidadosPaliativos?.message}
             />
@@ -177,8 +177,8 @@ const Palliative = () => {
               label="Familiares Cientes"
               size="lg"
               options={[
-                { label: "Sim", value: "sim" },
-                { label: "Não", value: "nao" },
+                { label: "Sim", value: "Sim" },
+                { label: "Não", value: "Não" },
               ]}
               errors={errors.FamiliaresCientes?.message}
             />
@@ -196,8 +196,8 @@ const Palliative = () => {
               label="Alta da UTI"
               size="lg"
               options={[
-                { label: "Sim", value: "sim" },
-                { label: "Não", value: "nao" },
+                { label: "Sim", value: "Sim" },
+                { label: "Não", value: "Não" },
               ]}
               errors={errors.AltaUTI?.message}
             />

@@ -73,10 +73,6 @@ const Antibiotic = () => {
     console.log("Data recebida na etapa 5:", data);
     setData(data);
 
-    // Verifica se os dados antigos ainda estão lá
-    const estadoCompleto = useFormStore.getState();
-    console.log("Zustand após etapa 5:", estadoCompleto);
-
     router.push("/screens/form/steps/Step6_Palliative");
   };
 
@@ -148,7 +144,6 @@ const Antibiotic = () => {
               size="lg"
               errors={errors.SolicitarCulturas?.message}
             />
-
             <NextButton
               onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
               isPending={isSubmitting}

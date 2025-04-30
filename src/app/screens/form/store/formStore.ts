@@ -13,7 +13,9 @@ export const useFormStore = create<FormState>()(
       setData: (data) => {
         set((state) => ({
           ...state,
-          ...data, // Combina os dados antigos com os novos
+          ...Object.fromEntries(
+            Object.entries(data).map(([k, v]) => [k, v ?? ""]) // força strings vazias
+          ),
         }));
       },
     }),
