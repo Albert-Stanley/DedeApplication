@@ -3,6 +3,7 @@ import React from "react";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { LogOut, MoveLeft, Edit } from "lucide-react-native";
 import { router } from "expo-router";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 const Profile = () => {
   const goBack = () => {
@@ -15,6 +16,7 @@ const Profile = () => {
 
   return (
     <SafeAreaView className="flex-1 justify-center text-center items-center px-4 bg-background-50">
+      <GoBackArrow />
       {/* Nome e email do Usuário */}
       <View className="items-center mb-6">
         <Text className="text-xl font-bold text-neutral-100">Albert Dev</Text>

@@ -16,7 +16,7 @@ const homepage = () => {
   const router = useRouter();
 
   const goProfile = () => {
-    router.push("/screens/user/profile");
+    router.push("/screens/doctor/Profile");
   };
 
   const handleShowPatients = () => {
