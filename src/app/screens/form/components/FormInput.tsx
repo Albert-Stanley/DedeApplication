@@ -32,6 +32,7 @@ const FormInput = ({
   editable = true,
   size = "lg",
 }: FormInputProps) => {
+  //tema global da aplicação
   const theme = useThemeStore((state) => state.theme);
   return (
     <View className="w-full items-center justify-center">
