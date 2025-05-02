@@ -1,5 +1,3 @@
-/* usar zustand */
-
 import { create } from "zustand";
 
 type ThemeMode = "light" | "dark";

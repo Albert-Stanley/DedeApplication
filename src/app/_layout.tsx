@@ -6,6 +6,7 @@ import { AuthProvider } from "../context/AuthContext";
 import ThemeToggleButton from "@/components/common/ThemeToggleButton";
 import { Box } from "@/components/ui/box";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { StatusBar } from "react-native";
 
 export default function Layout() {
   const queryClient = new QueryClient();
@@ -24,14 +25,13 @@ function ThemeWrapper() {
 
   return (
     <GluestackUIProvider mode={theme}>
-      {/* Garantindo que o fundo e o layout ocupem toda a tela */}
+      <StatusBar
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
+      />
       <Box className="w-screen h-screen bg-background-50 text-white flex flex-col overflow-hidden">
-        {/* O conteúdo principal */}
         <Box className="flex-1 overflow-auto p-4">
-          {/* O conteúdo da tela será mostrado aqui */}
           <Stack screenOptions={{ headerShown: false }} />
         </Box>
-        {/* O botão de alternância de tema será visível no final da tela */}
         <Box className="absolute top-4 right-4 z-10">
           <ThemeToggleButton />
         </Box>

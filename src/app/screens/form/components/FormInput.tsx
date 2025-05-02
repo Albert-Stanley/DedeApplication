@@ -10,6 +10,7 @@ import { Controller } from "react-hook-form";
 import { AlertTriangle } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import { View } from "react-native";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 interface FormInputProps {
   name: string;
@@ -31,6 +32,7 @@ const FormInput = ({
   editable = true,
   size = "lg",
 }: FormInputProps) => {
+  const theme = useThemeStore((state) => state.theme);
   return (
     <View className="w-full items-center justify-center">
       <FormControl
@@ -54,6 +56,7 @@ const FormInput = ({
                 onBlur={onBlur}
                 editable={editable}
                 returnKeyType="done"
+                keyboardAppearance={theme === "dark" ? "dark" : "light"}
                 className="h-[45px]  px-3 text-left text-base leading-[20px] min-h-[45px] overflow-x-auto whitespace-nowrap"
               />
             </Input>

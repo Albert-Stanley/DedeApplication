@@ -11,6 +11,7 @@ import {
 import { Input, InputField } from "@/components/ui/input";
 import { AlertTriangle } from "lucide-react-native";
 import { View } from "react-native";
+import { useThemeStore } from "@/stores/useThemeStore";
 
 interface DateInputProps {
   name: string;
@@ -39,6 +40,8 @@ const DateInput = ({
     return formatted;
   };
 
+  const theme = useThemeStore((state) => state.theme);
+
   return (
     <View className="w-full items-center justify-center">
       <FormControl
@@ -62,6 +65,9 @@ const DateInput = ({
                 onBlur={onBlur}
                 editable={editable}
                 returnKeyType="done"
+                autoComplete="birthdate-full"
+                keyboardAppearance={theme === "dark" ? "dark" : "light"}
+                keyboardType="numeric"
                 className="h-[45px] px-3 text-left text-base leading-[20px] min-h-[45px]"
               />
             </Input>

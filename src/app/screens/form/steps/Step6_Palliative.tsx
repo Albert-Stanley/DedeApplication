@@ -9,7 +9,7 @@ import FormInput from "../components/FormInput";
 import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/NextButton";
-import React, { useEffect } from "react";
+import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
 
@@ -90,8 +90,6 @@ const Palliative = () => {
 
     const estadoCompleto = useFormStore.getState();
     console.log("Todos os dados do formulário: ", estadoCompleto);
-
-    alert("Formulário concluído com sucesso!");
   };
 
   return (
