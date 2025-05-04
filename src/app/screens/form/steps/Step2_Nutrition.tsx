@@ -13,6 +13,8 @@ import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
+import BackButton from "../components/BackButton";
+import { HStack } from "@/components/ui/hstack";
 
 const NutritionSchema = formSchema.pick({
   AporteNutricional: true,
@@ -140,10 +142,13 @@ const Nutrition = () => {
               placeholder="Digite o Ajuste Nutricional"
             />
 
-            <NextButton
-              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
-              isPending={isSubmitting}
-            />
+            <HStack className="justify-between">
+              <BackButton destinationRoute="/screens/form/steps/Step1_Patient" />
+              <NextButton
+                onPress={handleSubmit(onSubmit)}
+                isPending={isSubmitting}
+              />
+            </HStack>
           </VStack>
         </Box>
       </ScrollView>

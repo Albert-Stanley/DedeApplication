@@ -14,6 +14,9 @@ import DateInput from "../components/DateInput";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import { shallow } from "zustand/shallow";
+import { HStack } from "@/components/ui/hstack";
+import { Button, ButtonText } from "@/components/ui/button";
+import BackButton from "../components/BackButton";
 
 const patientInfoSchema = formSchema.pick({
   NomePaciente: true,
@@ -146,10 +149,13 @@ const PatientInfo = () => {
               errors={errors}
               placeholder="Ferramentas Pendentes"
             />
-            <NextButton
-              onPress={handleSubmit(onSubmit)}
-              isPending={isSubmitting}
-            />
+            <HStack className="justify-between">
+              <BackButton destinationRoute="/" />
+              <NextButton
+                onPress={handleSubmit(onSubmit)}
+                isPending={isSubmitting}
+              />
+            </HStack>
           </VStack>
         </Box>
       </ScrollView>

@@ -12,6 +12,8 @@ import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
+import BackButton from "../components/BackButton";
+import { HStack } from "@/components/ui/hstack";
 
 const PalliativeSchema = formSchema.pick({
   TipoCultura: true,
@@ -199,11 +201,13 @@ const Palliative = () => {
               ]}
               errors={errors.AltaUTI?.message}
             />
-
-            <NextButton
-              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
-              isPending={isSubmitting}
-            />
+            <HStack className="justify-between">
+              <BackButton destinationRoute="/screens/form/steps/Step5_Antibiotics" />
+              <NextButton
+                onPress={handleSubmit(onSubmit)}
+                isPending={isSubmitting}
+              />
+            </HStack>
           </VStack>
         </Box>
       </ScrollView>

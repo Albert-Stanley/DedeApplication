@@ -13,6 +13,8 @@ import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
+import BackButton from "../components/BackButton";
+import { HStack } from "@/components/ui/hstack";
 
 const MetabolicSchema = formSchema.pick({
   Hipoglicemia: true,
@@ -171,11 +173,13 @@ const Metabolic = () => {
               errors={errors.ObsDisturbios}
               placeholder="Ex: Hiponatremia"
             />
-
-            <NextButton
-              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
-              isPending={isSubmitting}
-            />
+            <HStack className="justify-between">
+              <BackButton destinationRoute="/screens/form/steps/Step3_Sedation" />
+              <NextButton
+                onPress={handleSubmit(onSubmit)}
+                isPending={isSubmitting}
+              />
+            </HStack>
           </VStack>
         </Box>
       </ScrollView>

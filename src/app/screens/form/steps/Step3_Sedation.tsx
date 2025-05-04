@@ -13,6 +13,8 @@ import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
+import { HStack } from "@/components/ui/hstack";
+import BackButton from "../components/BackButton";
 
 const SedationSchema = formSchema.pick({
   Analgesicos: true,
@@ -162,10 +164,13 @@ const Sedation = () => {
               placeholder="Ex: Escala de vasopressores"
             />
 
-            <NextButton
-              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
-              isPending={isSubmitting}
-            />
+            <HStack className="justify-between">
+              <BackButton destinationRoute="/screens/form/steps/Step2_Nutrition" />
+              <NextButton
+                onPress={handleSubmit(onSubmit)}
+                isPending={isSubmitting}
+              />
+            </HStack>
           </VStack>
         </Box>
       </ScrollView>

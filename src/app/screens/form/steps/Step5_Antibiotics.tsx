@@ -13,6 +13,8 @@ import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
+import BackButton from "../components/BackButton";
+import { HStack } from "@/components/ui/hstack";
 
 const AntibioticSchema = formSchema.pick({
   Transfusao: true,
@@ -63,7 +65,7 @@ const Antibiotic = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<AntibioticFormData>({
     resolver: zodResolver(AntibioticSchema),
     defaultValues: defaultValues,
@@ -144,10 +146,13 @@ const Antibiotic = () => {
               size="lg"
               errors={errors.SolicitarCulturas?.message}
             />
-            <NextButton
-              onPress={handleSubmit(onSubmit)} // Passando handleSubmit corretamente
-              isPending={isSubmitting}
-            />
+            <HStack className="justify-between">
+              <BackButton destinationRoute="/screens/form/steps/Step4_Metabolic" />
+              <NextButton
+                onPress={handleSubmit(onSubmit)}
+                isPending={isSubmitting}
+              />
+            </HStack>
           </VStack>
         </Box>
       </ScrollView>

@@ -1,13 +1,12 @@
 import React from "react";
 import { Pressable } from "@/components/ui/pressable";
 import { VStack } from "@/components/ui/vstack";
-import { useRouter, usePathname } from "expo-router";
+import { useRouter } from "expo-router";
 import { Icon } from "@/components/ui/icon";
 import { ArrowLeftIcon } from "lucide-react-native";
 
 const GoBackArrow = () => {
   const router = useRouter();
-  const pathname = usePathname(); // Obtém o caminho atual da rota
 
   const handleBack = () => {
     // Verifica se há uma navegação anterior para voltar
