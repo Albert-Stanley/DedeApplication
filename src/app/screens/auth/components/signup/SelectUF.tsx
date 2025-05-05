@@ -11,15 +11,15 @@ import {
   ActionsheetBackdrop,
   ActionsheetDragIndicator,
   ActionsheetScrollView,
-} from "../ui/actionsheet";
-import { Button, ButtonText } from "../ui/button";
+} from "../../../../../components/ui/actionsheet";
+import { Button, ButtonText } from "../../../../../components/ui/button";
 import {
   FormControl,
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-} from "../ui/form-control";
-import { Icon } from "../ui/icon";
+} from "../../../../../components/ui/form-control";
+import { Icon } from "../../../../../components/ui/icon";
 import { AlertTriangle, ArrowDown } from "lucide-react-native";
 
 // Lista de estados(unidades federativas) do Brasil

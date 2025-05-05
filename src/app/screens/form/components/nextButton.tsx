@@ -1,5 +1,6 @@
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { ChevronRight } from "lucide-react-native";
 import React from "react";
 
 interface NextButtonProps {
@@ -28,6 +29,7 @@ const NextButton = ({
       ) : (
         <ButtonText className="font-bold text-lg">{title}</ButtonText>
       )}
+      <ButtonIcon as={ChevronRight} />
     </Button>
   );
 };

@@ -27,9 +27,9 @@ import colors from "tailwindcss/colors";
 import GoBackArrow from "@/components/common/goBackArrow";
 
 // Componentes específicos do signup
-import SelectUF from "@/components/signup/SelectUF";
-import TermsCheckbox from "@/components/signup/TermsCheckBox";
-import TermsModal from "@/components/signup/TermsModal";
+import SelectUF from "./components/signup/SelectUF";
+import TermsCheckbox from "./components/signup/TermsCheckBox";
+import TermsModal from "./components/signup/TermsModal";
 import {
   formatCPF,
   formatCRM,
@@ -38,7 +38,6 @@ import {
 } from "@/utils/fieldFormatters";
 
 // Serviços
-import { registerUser, RegisterResponse } from "@/services/authServices";
 import { useAuth } from "@/hooks/useAuth";
 
 // Schema de validação Zod

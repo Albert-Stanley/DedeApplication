@@ -5,10 +5,10 @@ import {
   CheckboxIndicator,
   CheckboxIcon,
   CheckboxLabel,
-} from "../ui/checkbox";
-import { Text } from "../ui/text";
+} from "../../../../../components/ui/checkbox";
+import { Text } from "../../../../../components/ui/text";
 import { AlertTriangle, CheckIcon } from "lucide-react-native";
-import { VStack } from "../ui/vstack";
+import { VStack } from "../../../../../components/ui/vstack";
 
 interface TermsCheckboxProps {
   isChecked: boolean;
