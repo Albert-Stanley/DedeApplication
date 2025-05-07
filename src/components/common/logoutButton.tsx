@@ -7,8 +7,7 @@ const LogoutButton = () => {
   const router = useRouter(); // Navegação com o 'useRouter' do Next.js (ou outro que você estiver usando)
 
   const handleLogout = async () => {
-    await logout(); // Executa a função de logout que limpa o token e o usuário
-    // Redireciona o usuário para a página de login após o logout
+    await logout();
     router.push("/login");
   };
 

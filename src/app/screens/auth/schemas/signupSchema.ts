@@ -1,7 +1,6 @@
 import { z } from "zod";
 import {
   formatCPF,
-  formatCRM,
   formatCNPJ,
   formatDataNascimento,
 } from "../../../../utils/fieldFormatters";
@@ -27,48 +26,48 @@ export const SignupSchema = z
       .string()
       .refine(
         (val) => {
-          const cleaned = val.replace(/\D/g, ""); // Limpeza para remover qualquer caractere não numérico
-          return cleaned.length === 11 && isValidCPF(cleaned); // Verifica a validade do CPF
+          const cleaned = val.replace(/\D/g, "");
+          return cleaned.length === 11 && isValidCPF(cleaned);
         },
         {
           message: "CPF inválido. Formato esperado: 111.111.111-11.",
         }
       )
       .transform((val) => {
-        const cleaned = val.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
-        return formatCPF(cleaned); // Formata o CPF após a validação
+        const cleaned = val.replace(/\D/g, "");
+        return formatCPF(cleaned);
       }),
 
     CNPJ: z
       .string()
       .refine(
         (val) => {
-          const cleaned = val.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
-          return cleaned.length === 14 && isValidCNPJ(cleaned); // Verifica a validade do CNPJ
+          const cleaned = val.replace(/\D/g, "");
+          return cleaned.length === 14 && isValidCNPJ(cleaned);
         },
         {
           message: "CNPJ inválido. Formato esperado: 11.111.111/1111-11.",
         }
       )
       .transform((val) => {
-        const cleaned = val.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
-        return formatCNPJ(cleaned); // Formata o CNPJ após a validação
+        const cleaned = val.replace(/\D/g, "");
+        return formatCNPJ(cleaned);
       }),
 
     DataNascimento: z
       .string()
       .refine(
         (val) => {
-          const cleaned = val.replace(/\D/g, ""); // Remove os caracteres não numéricos
-          return cleaned.length === 8 && isValidDataNascimento(cleaned); // Verifica a validade da Data de Nascimento
+          const cleaned = val.replace(/\D/g, "");
+          return cleaned.length === 8 && isValidDataNascimento(cleaned);
         },
         {
           message: "Data de nascimento inválida. Formato esperado: dd/mm/aaaa.",
         }
       )
       .transform((val) => {
-        const cleaned = val.replace(/\D/g, ""); // Limpeza do valor
-        return formatDataNascimento(cleaned); // Formata a Data de Nascimento após a validação
+        const cleaned = val.replace(/\D/g, "");
+        return formatDataNascimento(cleaned);
       }),
 
     CRM: z
@@ -76,7 +75,7 @@ export const SignupSchema = z
       .min(1, "O CRM é obrigatório.")
       .max(10, "O CRM deve ter no máximo 10 caracteres.")
       .regex(/^\d+$/, "O CRM deve conter apenas números.")
-      .length(10, "O CRM deve ter exatamente 10 caracteres.") // Valida tamanho exato
+      .length(10, "O CRM deve ter exatamente 10 caracteres.")
       .trim(),
 
     HospitalName: z
@@ -125,5 +124,4 @@ export const SignupSchema = z
     path: ["ConfirmPassword"], // Campo que receberá a mensagem de erro
   });
 
-// Tipo inferido do schema Zod
 export type Signup = z.infer<typeof SignupSchema>;

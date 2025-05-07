@@ -3,7 +3,7 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { ArrowDown, UserRoundPen } from "lucide-react-native";
+import { ArrowDown } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import UserQuickMenu from "./components/UserQuickMenu";
 

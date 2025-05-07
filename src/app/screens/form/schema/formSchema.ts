@@ -5,7 +5,7 @@ export const formSchema = z.object({
   NomePaciente: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
   DataVisita: z
     .string()
-    .regex(/^(\d{2})\/(\d{2})\/(\d{4})$/, "Formato de data inválido") // Regex para validar o formato dd/mm/aaaa
+    .regex(/^(\d{2})\/(\d{2})\/(\d{4})$/, "Formato de data inválido") // formato dd/mm/aaaa
     .refine(
       (value) => {
         const [day, month, year] = value.split("/").map(Number);

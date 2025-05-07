@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "../context/AuthContext";
 import ThemeToggleButton from "@/components/common/ThemeToggleButton";
 import { Box } from "@/components/ui/box";
-import { useThemeStore } from "@/stores/useThemeStore";
+import { useTheme } from "@/stores/useThemeStore";
 import { StatusBar } from "react-native";
 
 export default function Layout() {
@@ -21,7 +21,7 @@ export default function Layout() {
 }
 
 function ThemeWrapper() {
-  const theme = useThemeStore((state) => state.theme);
+  const theme = useTheme();
 
   return (
     <GluestackUIProvider mode={theme}>

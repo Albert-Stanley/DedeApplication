@@ -21,7 +21,7 @@ export const useFormStore = create<FormState>()(
     }),
     {
       name: "multi-step-form-storage",
-      storage: createJSONStorage(() => localStorage), // make ready also for mobile
+      storage: createJSONStorage(() => localStorage), // preparar para mobile também
     }
   )
 );

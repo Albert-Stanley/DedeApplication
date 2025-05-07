@@ -1,12 +1,14 @@
 import React, { useCallback, useRef } from "react";
 import { TouchableOpacity, View, Animated } from "react-native";
-import { useThemeStore } from "../../stores/useThemeStore";
+import { useTheme, useToggleTheme } from "../../stores/useThemeStore";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ThemeToggleButton() {
-  const theme = useThemeStore((state) => state.theme);
-  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  const theme = useTheme();
+  const toggleTheme = useToggleTheme();
   const scale = useRef(new Animated.Value(1)).current;
+
+  // console.log("Renderizou");
 
   // Animação suave ao pressionar o botão
   const handlePress = useCallback(() => {
@@ -15,13 +17,13 @@ export default function ThemeToggleButton() {
         toValue: 1.2,
         friction: 4,
         tension: 40,
-        useNativeDriver: false, // Removido o `useNativeDriver` para evitar o erro
+        useNativeDriver: false,
       }),
       Animated.spring(scale, {
         toValue: 1,
         friction: 4,
         tension: 40,
-        useNativeDriver: false, // Removido o `useNativeDriver`
+        useNativeDriver: false,
       }),
     ]).start();
 
@@ -32,22 +34,22 @@ export default function ThemeToggleButton() {
     <Animated.View
       style={{
         position: "absolute",
-        top: 20, // Ajuste da distância do topo
-        right: 20, // Ajuste da distância da direita
-        zIndex: 9999, // Garantir que o botão fique no topo de outros elementos
+        top: 20,
+        right: 20,
+        zIndex: 9999,
         transform: [{ scale }],
-        marginTop: 10, // Adicionando margem superior
+        marginTop: 10,
       }}
     >
       <TouchableOpacity onPress={handlePress}>
         <View
           style={{
-            backgroundColor: theme === "dark" ? "#333" : "#fff", // Cor do botão conforme o tema
+            backgroundColor: theme === "dark" ? "#333" : "#fff",
             borderRadius: 50,
             padding: 10,
             justifyContent: "center",
             alignItems: "center",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)", // Usando `boxShadow` para sombra
+            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
           }}
         >
           <Ionicons

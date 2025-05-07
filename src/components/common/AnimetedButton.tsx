@@ -8,7 +8,7 @@ import Animated, {
 import { Button, ButtonIcon } from "../ui/button";
 import { Text } from "../ui/text";
 import { Spinner } from "../ui/spinner";
-import { useThemeStore } from "../../stores/useThemeStore";
+import { useTheme } from "../../stores/useThemeStore";
 
 interface AnimatedButtonProps {
   text: string;
@@ -24,7 +24,7 @@ const AnimatedButton = ({
   isLoading,
   icon,
 }: AnimatedButtonProps) => {
-  const theme = useThemeStore((state) => state.theme);
+  const theme = useTheme();
   const spinnerColor = theme === "dark" ? "#fff" : "#000";
 
   const scale = useSharedValue(1);

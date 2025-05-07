@@ -11,10 +11,9 @@ const GoBackArrow = () => {
   const handleBack = () => {
     // Verifica se há uma navegação anterior para voltar
     if (router.canGoBack()) {
-      router.back(); // Volta para a página anterior
+      router.back();
     } else {
-      // Se não houver página para voltar, redireciona para a página inicial
-      router.push("/"); // Substitua pela rota que deseja redirecionar
+      router.push("/");
     }
   };
 

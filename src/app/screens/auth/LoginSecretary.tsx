@@ -21,9 +21,8 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, LogInIcon } from "lucide-react-native";
 import GoBackArrow from "@/components/common/goBackArrow";
-import { validateAccessKey } from "@/services/secretaryServices"; // Atualizando para a nova função de validação de chave
+import { validateAccessKey } from "@/services/secretaryServices";
 
-// Schema de validação com Zod
 const loginSecretarySchema = z.object({
   chave: z
     .string()

@@ -41,7 +41,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 
 // Schema de validação Zod
-import { SignupSchema, Signup } from "../auth/schemas/signupSchema";
+import { SignupSchema, Signup } from "./schemas/signupSchema";
 
 // Componente de tela para o cadastro
 const SignupScreen = () => {

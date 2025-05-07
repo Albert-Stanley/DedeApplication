@@ -10,7 +10,7 @@ import {
 import { cssInterop } from "nativewind";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import { PrimitiveIcon, UIIcon } from "@gluestack-ui/icon";
-import { useThemeStore } from "@/stores/useThemeStore"; // ajuste o path
+import { useTheme } from "@/stores/useThemeStore"; // ajuste o path
 
 const SCOPE = "INPUT";
 
@@ -191,7 +191,7 @@ const InputField = React.forwardRef<
   IInputFieldProps
 >(({ className, ...props }, ref) => {
   const { variant: parentVariant, size: parentSize } = useStyleContext(SCOPE);
-  const theme = useThemeStore((state) => state.theme);
+  const theme = useTheme();
 
   return (
     <UIInput.Input

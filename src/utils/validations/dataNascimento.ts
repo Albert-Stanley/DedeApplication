@@ -1,10 +1,8 @@
-// Função de validação de Data de Nascimento
 export function isValidDataNascimento(data: string): boolean {
   if (!data) return false;
 
-  const onlyNumbers = data.replace(/\D/g, ""); // Limpeza dos caracteres não numéricos
-
-  if (onlyNumbers.length !== 8) return false; // Verifica se tem 8 dígitos
+  const onlyNumbers = data.replace(/\D/g, "");
+  if (onlyNumbers.length !== 8) return false;
 
   const regexData = /^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])(\d{4})$/;
   if (!regexData.test(onlyNumbers)) return false;
@@ -28,5 +26,5 @@ export function isValidDataNascimento(data: string): boolean {
   const hoje = new Date();
   const idade = hoje.getFullYear() - ano;
 
-  return idade >= 18 && idade <= 100; // Idade entre 18 e 100 anos
+  return idade >= 18 && idade <= 120; // Idade entre 18 e 120 anos
 }

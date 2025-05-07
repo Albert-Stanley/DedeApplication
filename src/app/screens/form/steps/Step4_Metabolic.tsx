@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { formSchema } from "../schema/formSchema"; // Importando o schema completo
+import { formSchema } from "../schema/formSchema";
 import { z } from "zod";
 import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView } from "react-native";

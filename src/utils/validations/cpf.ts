@@ -1,5 +1,5 @@
 export const isValidCPF = (cpf: string) => {
-  const onlyNumbers = cpf.replace(/\D/g, ""); // Remove caracteres não numéricos
+  const onlyNumbers = cpf.replace(/\D/g, "");
 
   if (onlyNumbers.length !== 11) return false;
 

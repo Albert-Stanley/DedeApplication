@@ -5,14 +5,8 @@ import {
   MenuItemLabel,
   MenuSeparator,
 } from "@/components/ui/menu";
-import { Icon, MenuIcon, PhoneIcon, SettingsIcon } from "@/components/ui/icon";
-import {
-  Headset,
-  HelpCircleIcon,
-  LifeBuoy,
-  MessageSquare,
-  User,
-} from "lucide-react-native";
+import { Icon, MenuIcon, SettingsIcon } from "@/components/ui/icon";
+import { Headset, MessageSquare, User } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
 const UserQuickMenu = () => {
