@@ -11,7 +11,7 @@ import {
 import { Input, InputField } from "@/components/ui/input";
 import { AlertTriangle } from "lucide-react-native";
 import { View } from "react-native";
-import { useThemeStore } from "@/stores/useThemeStore";
+import { useTheme } from "@/stores/useThemeStore";
 
 interface DateInputProps {
   name: string;
@@ -40,7 +40,7 @@ const DateInput = ({
     return formatted;
   };
 
-  const theme = useThemeStore((state) => state.theme);
+  const theme = useTheme();
 
   return (
     <View className="w-full items-center justify-center">

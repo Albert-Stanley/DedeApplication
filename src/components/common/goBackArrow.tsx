@@ -3,7 +3,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { VStack } from "@/components/ui/vstack";
 import { useRouter } from "expo-router";
 import { Icon } from "@/components/ui/icon";
-import { ArrowLeftIcon } from "lucide-react-native";
+import { ChevronLeft } from "lucide-react-native";
 
 const GoBackArrow = () => {
   const router = useRouter();
@@ -24,7 +24,7 @@ const GoBackArrow = () => {
         accessibilityRole="button"
         className="w-16 h-16 p-3 items-center justify-center rounded-full bg-transparent hover:bg-background-300 active:bg-background-400"
       >
-        <Icon as={ArrowLeftIcon} className="stroke-background-800" size="xl" />
+        <Icon as={ChevronLeft} className="stroke-background-800" size="xl" />
       </Pressable>
     </VStack>
   );
