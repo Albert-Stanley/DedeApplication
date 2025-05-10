@@ -96,7 +96,7 @@ const LoginScreen = () => {
                     {...field}
                     placeholder="Digite seu e-mail"
                     keyboardType="email-address"
-                    autoComplete="email"
+                    // autoComplete="email"
                   />
                 </Input>
               )}
