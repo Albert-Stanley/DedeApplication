@@ -3,16 +3,20 @@ const { withNativeWind } = require("nativewind/metro");
 
 const config = getDefaultConfig(__dirname);
 
-// Configuração do NativeWind com suporte ao input global.css
-const nativeWindConfig = withNativeWind(config, { input: "./global.css" });
+// ⚠️ Correção: Adiciona 'mjs' e 'cjs' nas extensões reconhecidas
+config.resolver.sourceExts.push("mjs", "cjs");
+
+const nativeWindConfig = withNativeWind(config, {
+  input: "./global.css",
+});
 
 module.exports = {
   ...nativeWindConfig,
   transformer: {
     ...nativeWindConfig.transformer,
-    // A configuração do React Native Reanimated é feita automaticamente
   },
   resolver: {
     ...nativeWindConfig.resolver,
+    sourceExts: [...nativeWindConfig.resolver.sourceExts, "mjs", "cjs"],
   },
 };
