@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from "react";
-import { TouchableOpacity, View, Animated } from "react-native";
+import { TouchableOpacity, View, Animated, Platform } from "react-native";
 import { useTheme, useToggleTheme } from "../../stores/useThemeStore";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -49,7 +49,15 @@ export default function ThemeToggleButton() {
             padding: 10,
             justifyContent: "center",
             alignItems: "center",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+            ...(Platform.OS === "web"
+              ? { boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)" }
+              : {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 4,
+                  elevation: 5,
+                }),
           }}
         >
           <Ionicons
