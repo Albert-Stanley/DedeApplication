@@ -3,9 +3,10 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react-native";
+import { ArrowDown, SearchIcon } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import UserQuickMenu from "./components/UserQuickMenu";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 
 const homepage = () => {
   const router = useRouter();
@@ -21,15 +22,21 @@ const homepage = () => {
       <ScrollView>
         <Box className="flex-1 justify-center items-center px-4">
           <VStack space="lg" className="w-full max-w-lg p-6">
-            <View className="items-start">
-              <UserQuickMenu />
-            </View>
             {/* Nome e email do Usuário */}
             <View className="items-center mb-6">
               <Text className="text-xl font-bold text-neutral-100">
                 Albert Dev
               </Text>
               <Text className="text-neutral-500">albert@email.com</Text>
+            </View>
+            <View className="align-items-center col">
+              <Input>
+                <InputSlot>
+                  <UserQuickMenu />
+                </InputSlot>
+                <InputField placeholder="Pesquisar paciente" />
+                <InputIcon as={SearchIcon} className="mr-2" />
+              </Input>
             </View>
             <Button
               onPress={handleShowPatients}
