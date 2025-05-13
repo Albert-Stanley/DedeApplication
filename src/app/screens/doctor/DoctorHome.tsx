@@ -3,10 +3,11 @@ import React from "react";
 import { VStack } from "@/components/ui/vstack";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
-import { ArrowDown, SearchIcon } from "lucide-react-native";
+import { ArrowDown } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import UserQuickMenu from "./components/UserQuickMenu";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import SearchBar from "./components/SearchBar";
+import { HStack } from "@/components/ui/hstack";
 
 const homepage = () => {
   const router = useRouter();
@@ -23,27 +24,23 @@ const homepage = () => {
         <Box className="flex-1 justify-center items-center px-4">
           <VStack space="lg" className="w-full max-w-lg p-6">
             {/* Nome e email do Usuário */}
-            <View className="items-center mb-6">
-              <Text className="text-xl font-bold text-neutral-100">
-                Albert Dev
-              </Text>
-              <Text className="text-neutral-500">albert@email.com</Text>
-            </View>
-            <View className="align-items-center col">
-              <Input>
-                <InputSlot>
-                  <UserQuickMenu />
-                </InputSlot>
-                <InputField placeholder="Pesquisar paciente" />
-                <InputIcon as={SearchIcon} className="mr-2" />
-              </Input>
-            </View>
+            <HStack className="items-center  mb-6">
+              <UserQuickMenu />
+              {/* Nome e email do médico alinhados à direita */}
+              <View className="ml-auto items-end">
+                <Text className="text-xl font-bold text-neutral-400">
+                  Albert Dev
+                </Text>
+                <Text className="text-neutral-500">albert@email.com</Text>
+              </View>
+            </HStack>
+            <SearchBar />
             <Button
               onPress={handleShowPatients}
               variant="solid"
               className="mt-2"
             >
-              <ButtonText>Listar pacientes:</ButtonText>
+              <ButtonText>Listar meus pacientes:</ButtonText>
               <ButtonIcon as={ArrowDown} className="ml-2" />
             </Button>
           </VStack>

@@ -20,8 +20,13 @@ const UserQuickMenu = () => {
       offset={5}
       trigger={({ ...triggerProps }) => {
         return (
-          <Button {...triggerProps} size="xs">
-            <ButtonIcon as={MenuIcon} size="md" />
+          <Button
+            variant="link"
+            {...triggerProps}
+            className="justify-self-start"
+            size="xl"
+          >
+            <ButtonIcon className="w-10 h-10" as={MenuIcon} size="xl" />
           </Button>
         );
       }}
