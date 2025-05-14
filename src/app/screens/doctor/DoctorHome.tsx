@@ -8,6 +8,9 @@ import { useRouter } from "expo-router";
 import UserQuickMenu from "./components/UserQuickMenu";
 import SearchBar from "./components/SearchBar";
 import { HStack } from "@/components/ui/hstack";
+import CreateForm from "./components/CreateForm";
+import { Divider } from "@/components/ui/divider";
+import CreateAccess from "./components/CreateAccess";
 
 const homepage = () => {
   const router = useRouter();
@@ -24,17 +27,22 @@ const homepage = () => {
         <Box className="flex-1 justify-center items-center px-4">
           <VStack space="lg" className="w-full max-w-lg p-6">
             {/* Nome e email do Usuário */}
-            <HStack className="items-center  mb-6">
+            <HStack className="items-center mb-2">
               <UserQuickMenu />
               {/* Nome e email do médico alinhados à direita */}
-              <View className="ml-auto items-end">
+              <View className="justify-center ml-16">
                 <Text className="text-xl font-bold text-neutral-400">
                   Albert Dev
                 </Text>
                 <Text className="text-neutral-500">albert@email.com</Text>
               </View>
             </HStack>
+            {/* <HStack className="items-center  mb-2">
+              <CreateForm />
+              <CreateAccess />
+            </HStack> */}
             <SearchBar />
+            <Divider className="mb-4" />
             <Button
               onPress={handleShowPatients}
               variant="solid"

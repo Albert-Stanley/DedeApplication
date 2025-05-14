@@ -8,9 +8,8 @@ export default function ThemeToggleButton() {
   const toggleTheme = useToggleTheme();
   const scale = useRef(new Animated.Value(1)).current;
 
-  // console.log("Renderizou");
+  console.log("Renderizou");
 
-  // Animação suave ao pressionar o botão
   const handlePress = useCallback(() => {
     Animated.sequence([
       Animated.spring(scale, {
@@ -34,8 +33,8 @@ export default function ThemeToggleButton() {
     <Animated.View
       style={{
         position: "absolute",
-        top: 20,
-        right: 20,
+        top: 10,
+        right: 10,
         zIndex: 9999,
         transform: [{ scale }],
         marginTop: 10,

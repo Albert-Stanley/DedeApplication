@@ -1,6 +1,5 @@
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { ChevronRight } from "lucide-react-native";
 import React from "react";
 
 interface NextButtonProps {
@@ -14,7 +13,7 @@ const NextButton = ({
   onPress,
   isPending = false,
   isDisabled = false,
-  title = "Próximo",
+  title = "Continuar",
 }: NextButtonProps) => {
   return (
     <Button
@@ -23,13 +22,14 @@ const NextButton = ({
       action="primary"
       onPress={onPress}
       isDisabled={isDisabled || isPending}
+      className="mb-4 w-full"
     >
       {isPending ? (
         <Spinner size="small" color="$textLight50" />
       ) : (
         <ButtonText className="font-bold text-lg">{title}</ButtonText>
       )}
-      <ButtonIcon as={ChevronRight} />
+      {/* <ButtonIcon as={ChevronRight} /> */}
     </Button>
   );
 };

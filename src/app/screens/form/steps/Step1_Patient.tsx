@@ -85,7 +85,8 @@ const PatientInfo = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      <GoBackArrow />
+      {/* Adicionar rota correta */}
+      {/* <GoBackArrow destinationRoute="?"/> */}
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
@@ -150,7 +151,6 @@ const PatientInfo = () => {
               placeholder="Ferramentas Pendentes"
             />
             <HStack className="justify-between">
-              <BackButton destinationRoute="/" />
               <NextButton
                 onPress={handleSubmit(onSubmit)}
                 isPending={isSubmitting}

@@ -1,13 +1,15 @@
-import { View, Text, SafeAreaView, Image } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React from "react";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
-import { LogOut, MoveLeft, Edit } from "lucide-react-native";
+import { LogOut, Edit, MoveLeft } from "lucide-react-native";
 import { router } from "expo-router";
 import GoBackArrow from "@/components/common/goBackArrow";
+import { VStack } from "@/components/ui/vstack";
+import { Divider } from "@/components/ui/divider";
 
 const Profile = () => {
   const goBack = () => {
-    router.replace("/screens/home");
+    router.replace("/screens/doctor/DoctorHome");
   };
 
   const handleLogout = () => {
@@ -16,17 +18,17 @@ const Profile = () => {
 
   return (
     <SafeAreaView className="flex-1 justify-center text-center items-center px-4 bg-background-50">
-      <GoBackArrow />
+      <GoBackArrow destinationRoute="/screens/doctor/DoctorHome" />
       {/* Nome e email do Usuário */}
-      <View className="items-center mb-6">
-        <Text className="text-xl font-bold text-neutral-100">Albert Dev</Text>
+      <View className="items-start mb-6">
+        <Text className="text-xl font-bold text-neutral-400">Albert Dev</Text>
         <Text className="text-neutral-500">albert@email.com</Text>
       </View>
 
       {/* Botão de Editar Perfil */}
       <Button
-        className="rounded-lg mb-6"
-        variant="solid"
+        className="rounded-lg w-full mb-6"
+        variant="outline"
         action="primary"
         onPress={() => router.push("/edit-profile")}
       >
@@ -35,21 +37,30 @@ const Profile = () => {
       </Button>
 
       {/* Botão de Voltar para Home */}
-      <Button onPress={goBack} className="rounded-lg mb-6" variant="outline">
-        <ButtonIcon as={MoveLeft} />
-        <ButtonText>Voltar para a Home</ButtonText>
-      </Button>
 
-      {/* Botão de Sair */}
+      <Divider className="mb-4" />
 
-      <Button
-        onPress={handleLogout}
-        className="rounded-lg mb-6"
-        variant="solid"
-      >
-        <ButtonText>Sair da Conta</ButtonText>
-        <ButtonIcon as={LogOut} />
-      </Button>
+      <VStack space="md" className="w-full">
+        <Button
+          onPress={goBack}
+          className="rounded-lg w-full"
+          variant="outline"
+          action="secondary" // Para consistência visual
+        >
+          <ButtonIcon as={MoveLeft} className="mr-2" />
+          <ButtonText>Voltar para a Home</ButtonText>
+        </Button>
+
+        <Button
+          onPress={handleLogout}
+          className="rounded-lg w-full"
+          variant="outline"
+          action="negative"
+        >
+          <ButtonIcon as={LogOut} className="mr-2" />
+          <ButtonText>Sair da Conta</ButtonText>
+        </Button>
+      </VStack>
     </SafeAreaView>
   );
 };

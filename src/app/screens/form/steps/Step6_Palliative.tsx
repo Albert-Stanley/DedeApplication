@@ -96,7 +96,7 @@ const Palliative = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      <GoBackArrow />
+      <GoBackArrow destinationRoute="/screens/form/steps/Step5_Antibiotics" />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
@@ -201,13 +201,13 @@ const Palliative = () => {
               ]}
               errors={errors.AltaUTI?.message}
             />
-            <HStack className="justify-between">
-              <BackButton destinationRoute="/screens/form/steps/Step5_Antibiotics" />
+            <VStack className="justify-between">
               <NextButton
                 onPress={handleSubmit(onSubmit)}
                 isPending={isSubmitting}
               />
-            </HStack>
+              <BackButton destinationRoute="/screens/form/steps/Step5_Antibiotics" />
+            </VStack>
           </VStack>
         </Box>
       </ScrollView>
