@@ -3,17 +3,17 @@ import { useForm } from "react-hook-form";
 import { formSchema } from "../schema/formSchema";
 import { z } from "zod";
 import { SafeAreaView, ScrollView } from "react-native";
-import { Box } from "../../../components/ui/box";
-import { VStack } from "../../../components/ui/vstack";
+import { Box } from "@/components/ui/box";
+import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
-import GoBackArrow from "../../../components/common/goBackArrow";
+import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
 import BackButton from "../components/BackButton";
-import { HStack } from "../../../components/ui/hstack";
+import { HStack } from "@/components/ui/hstack";
 
 const PalliativeSchema = formSchema.pick({
   TipoCultura: true,

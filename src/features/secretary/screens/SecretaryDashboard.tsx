@@ -1,8 +1,8 @@
 import { SafeAreaView } from "react-native";
 import React from "react";
-import GoBackArrow from "../../../components/common/goBackArrow";
-import { VStack } from "../../../components/ui/vstack";
-import { Text } from "../../../components/ui/text";
+import GoBackArrow from "@/components/common/goBackArrow";
+import { VStack } from "@/components/ui/vstack";
+import { Text } from "@/components/ui/text";
 
 const SecretaryDashboard = () => {
   return (

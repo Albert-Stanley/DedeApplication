@@ -1,14 +1,14 @@
 import React from "react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
-import GoBackArrow from "../../../components/common/goBackArrow";
-import { VStack } from "../../../components/ui/vstack";
+import GoBackArrow from "@/components/common/goBackArrow";
+import { VStack } from "@/components/ui/vstack";
 import { AlertTriangle, SendHorizonal } from "lucide-react-native";
-import { Input, InputField } from "../../../components/ui/input";
-import { Text } from "../../../components/ui/text";
-import { Button, ButtonIcon, ButtonText } from "../../../components/ui/button";
-import { Spinner } from "../../../components/ui/spinner";
+import { Input, InputField } from "@/components/ui/input";
+import { Text } from "@/components/ui/text";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutation } from "@tanstack/react-query";
 import {
   FormControl,
@@ -17,10 +17,10 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-} from "../../../components/ui/form-control";
+} from "@/components/ui/form-control";
 import { Controller, useForm } from "react-hook-form";
-import { Toast, ToastTitle, useToast } from "../../../components/ui/toast";
-import { Heading } from "../../../components/ui/heading";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { Heading } from "@/components/ui/heading";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

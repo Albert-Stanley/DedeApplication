@@ -1,8 +1,8 @@
 import React from "react";
-import { Toast, ToastTitle, useToast } from "../../../components/ui/toast";
-import { VStack } from "../../../components/ui/vstack";
-import { Heading } from "../../../components/ui/heading";
-import { Text } from "../../../components/ui/text";
+import { Toast, ToastTitle, useToast } from "@/components/ui/toast";
+import { VStack } from "@/components/ui/vstack";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
@@ -10,9 +10,9 @@ import {
   FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
-} from "../../../components/ui/form-control";
-import { Input, InputField } from "../../../components/ui/input";
-import { Button, ButtonIcon, ButtonText } from "../../../components/ui/button";
+} from "@/components/ui/form-control";
+import { Input, InputField } from "@/components/ui/input";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,8 +20,8 @@ import { AlertTriangle, SendIcon } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
-import { Spinner } from "../../../components/ui/spinner";
-import GoBackArrow from "../../../components/common/goBackArrow";
+import { Spinner } from "@/components/ui/spinner";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 const forgotPasswordSchema = z.object({
   email: z

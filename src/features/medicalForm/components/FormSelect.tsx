@@ -5,7 +5,7 @@ import {
   FormControlError,
   FormControlErrorText,
   FormControlErrorIcon,
-} from "../../../components/ui/form-control";
+} from "@/components/ui/form-control";
 import { Controller } from "react-hook-form";
 import { AlertTriangle } from "lucide-react-native";
 import {
@@ -15,8 +15,8 @@ import {
   SelectIcon,
   SelectContent,
   SelectItem,
-} from "../../../components/ui/select";
-import { ChevronDownIcon } from "../../../components/ui/icon";
+} from "@/components/ui/select";
+import { ChevronDownIcon } from "@/components/ui/icon";
 
 interface FormSelectProps {
   name: string;

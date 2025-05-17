@@ -1,15 +1,15 @@
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import React from "react";
-import { VStack } from "../../../components/ui/vstack";
-import { Box } from "../../../components/ui/box";
-import { Button, ButtonIcon, ButtonText } from "../../../components/ui/button";
+import { VStack } from "@/components/ui/vstack";
+import { Box } from "@/components/ui/box";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import UserQuickMenu from "../components/UserQuickMenu";
 import SearchBar from "../components/SearchBar";
-import { HStack } from "../../../components/ui/hstack";
+import { HStack } from "@/components/ui/hstack";
 import CreateForm from "../components/CreateForm";
-import { Divider } from "../../../components/ui/divider";
+import { Divider } from "@/components/ui/divider";
 import CreateAccess from "../components/CreateAccess";
 
 const homepage = () => {

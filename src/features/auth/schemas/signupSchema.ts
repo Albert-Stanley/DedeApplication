@@ -3,12 +3,12 @@ import {
   formatCPF,
   formatCNPJ,
   formatDataNascimento,
-} from "../../../utils/fieldFormatters";
+} from "@/utils/fieldFormatters";
 import {
   isValidCPF,
   isValidCNPJ,
   isValidDataNascimento,
-} from "../../../utils/validations";
+} from "@/utils/validations";
 
 export const SignupSchema = z
   .object({

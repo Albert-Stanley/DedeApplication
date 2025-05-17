@@ -1,11 +1,11 @@
-import { Button, ButtonIcon } from "../../../components/ui/button";
+import { Button, ButtonIcon } from "@/components/ui/button";
 import {
   Menu,
   MenuItem,
   MenuItemLabel,
   MenuSeparator,
-} from "../../../components/ui/menu";
-import { Icon, MenuIcon, SettingsIcon } from "../../../components/ui/icon";
+} from "@/components/ui/menu";
+import { Icon, MenuIcon, SettingsIcon } from "@/components/ui/icon";
 import { Headset, MessageSquare, User } from "lucide-react-native";
 import { useRouter } from "expo-router";
 
