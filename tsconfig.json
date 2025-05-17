@@ -6,21 +6,11 @@
     "esModuleInterop": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["src/*"],
-      "tailwind.config": ["./tailwind.config.js"]
+      "@/*": ["*"],
+      "tailwind.config": ["../tailwind.config.js"]
     }
   },
-  "include": [
-    "env.d.ts",
-    "src/app/**/*",
-    "node_modules/react-native-dotenv",
-    "nativewind-env.d.ts",
-    "src/services",
-    "src/_layout.tsx",
-    "src/services",
-    "src/auth",
-    "src/screens"
-  ]
+  "include": ["env.d.ts", "nativewind-env.d.ts", "src"]
 }
