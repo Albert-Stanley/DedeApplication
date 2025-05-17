@@ -17,21 +17,21 @@ const App = () => {
   const loginMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/Login");
+      router.push("/Login");
     },
   });
 
   const registerMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/auth/Signup");
+      router.push("/Signup");
     },
   });
 
   const nurseMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/screens/doctor/DoctorHome");
+      router.push("/doctor");
     },
   });
 
