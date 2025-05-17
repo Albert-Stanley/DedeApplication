@@ -8,14 +8,10 @@ import {
   Text,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Button,
-  ButtonIcon,
-  ButtonText,
-} from "../../../../components/ui/button";
-import { VStack } from "../../../../components/ui/vstack";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { VStack } from "@/components/ui/vstack";
 import { CircleX } from "lucide-react-native";
-import { Box } from "../../../../components/ui/box";
+import { Box } from "@/components/ui/box";
 
 interface TermsModalProps {
   visible: boolean;

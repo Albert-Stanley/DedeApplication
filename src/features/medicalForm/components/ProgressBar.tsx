@@ -1,7 +1,7 @@
 import React from "react";
-import { Progress, ProgressFilledTrack } from "../../../components/ui/progress";
-import { Center } from "../../../components/ui/center";
-import { Text } from "../../../components/ui/text";
+import { Progress, ProgressFilledTrack } from "@/components/ui/progress";
+import { Center } from "@/components/ui/center";
+import { Text } from "@/components/ui/text";
 
 interface ProgressBarProps {
   value: number;

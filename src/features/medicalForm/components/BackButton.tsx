@@ -1,4 +1,4 @@
-import { Button, ButtonText } from "../../../components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { router } from "expo-router";
 
 interface BackButtonProps {

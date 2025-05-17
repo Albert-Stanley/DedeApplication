@@ -4,16 +4,16 @@ import { formSchema } from "../schema/formSchema";
 import { z } from "zod";
 import { useRouter } from "expo-router";
 import { SafeAreaView, ScrollView } from "react-native";
-import { Box } from "../../../components/ui/box";
-import { VStack } from "../../../components/ui/vstack";
+import { Box } from "@/components/ui/box";
+import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
-import GoBackArrow from "../../../components/common/goBackArrow";
+import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/NextButton";
 import DateInput from "../components/DateInput";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
-import { HStack } from "../../../components/ui/hstack";
+import { HStack } from "@/components/ui/hstack";
 
 const patientInfoSchema = formSchema.pick({
   NomePaciente: true,

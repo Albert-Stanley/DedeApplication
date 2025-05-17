@@ -1,11 +1,11 @@
 import { View, Text, SafeAreaView } from "react-native";
 import React from "react";
-import { Button, ButtonText, ButtonIcon } from "../../../components/ui/button";
+import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { LogOut, Edit, MoveLeft } from "lucide-react-native";
 import { router } from "expo-router";
-import GoBackArrow from "../../../components/common/goBackArrow";
-import { VStack } from "../../../components/ui/vstack";
-import { Divider } from "../../../components/ui/divider";
+import GoBackArrow from "@/components/common/goBackArrow";
+import { VStack } from "@/components/ui/vstack";
+import { Divider } from "@/components/ui/divider";
 
 const Profile = () => {
   const goBack = () => {

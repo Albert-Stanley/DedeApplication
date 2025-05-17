@@ -5,12 +5,12 @@ import {
   FormControlLabelText,
   FormControlErrorIcon,
   FormControlError,
-} from "../../../components/ui/form-control";
+} from "@/components/ui/form-control";
 import { Controller } from "react-hook-form";
 import { AlertTriangle } from "lucide-react-native";
-import { Input, InputField } from "../../../components/ui/input";
+import { Input, InputField } from "@/components/ui/input";
 import { View } from "react-native";
-import { useTheme } from "../../../stores/useThemeStore";
+import { useTheme } from "@/stores/useThemeStore";
 
 interface FormInputProps {
   name: string;

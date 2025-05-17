@@ -1,5 +1,5 @@
-import { Button, ButtonText } from "../../../components/ui/button";
-import { Spinner } from "../../../components/ui/spinner";
+import { Button, ButtonText } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import React from "react";
 
 interface NextButtonProps {

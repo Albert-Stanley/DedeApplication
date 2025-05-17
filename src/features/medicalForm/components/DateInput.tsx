@@ -7,11 +7,11 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-} from "../../../components/ui/form-control";
-import { Input, InputField } from "../../../components/ui/input";
+} from "@/components/ui/form-control";
+import { Input, InputField } from "@/components/ui/input";
 import { AlertTriangle } from "lucide-react-native";
 import { View } from "react-native";
-import { useTheme } from "../../../stores/useThemeStore";
+import { useTheme } from "@/stores/useThemeStore";
 
 interface DateInputProps {
   name: string;

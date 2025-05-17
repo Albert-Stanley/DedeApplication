@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, InputField, InputIcon } from "../../../components/ui/input";
+import { Input, InputField, InputIcon } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react-native";
 
 const SearchBar = () => {

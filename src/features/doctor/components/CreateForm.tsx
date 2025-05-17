@@ -1,5 +1,5 @@
-import { Button, ButtonIcon, ButtonText } from "../../../components/ui/button";
-import { AddIcon } from "../../../components/ui/icon";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { AddIcon } from "@/components/ui/icon";
 import React from "react";
 
 const CreateForm = () => {

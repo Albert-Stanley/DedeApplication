@@ -6,19 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import z from "zod";
 
-import { Box } from "../../../components/ui/box";
-import { VStack } from "../../../components/ui/vstack";
-import { HStack } from "../../../components/ui/hstack";
-import { Text } from "../../../components/ui/text";
-import {
-  Input,
-  InputSlot,
-  InputField,
-  InputIcon,
-} from "../../../components/ui/input";
-import { Button, ButtonIcon, ButtonText } from "../../../components/ui/button";
-import { Spinner } from "../../../components/ui/spinner";
-import { LinkText } from "../../../components/ui/link";
+import { Box } from "@/components/ui/box";
+import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
+import { Input, InputSlot, InputField, InputIcon } from "@/components/ui/input";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { LinkText } from "@/components/ui/link";
 import {
   FormControl,
   FormControlError,
@@ -26,15 +21,15 @@ import {
   FormControlErrorText,
   FormControlLabel,
   FormControlLabelText,
-} from "../../../components/ui/form-control";
+} from "@/components/ui/form-control";
 import {
   AlertTriangle,
   EyeIcon,
   EyeOffIcon,
   LogInIcon,
 } from "lucide-react-native";
-import GoBackArrow from "../../../components/common/goBackArrow";
-import { useAuth } from "../../../hooks/useAuth";
+import GoBackArrow from "@/components/common/goBackArrow";
+import { useAuth } from "@/hooks/useAuth";
 
 // Esquema de validação com Zod
 const LoginSchema = z.object({

@@ -5,7 +5,7 @@ import {
   FormControlError,
   FormControlErrorText,
   FormControlErrorIcon,
-} from "../../../components/ui/form-control";
+} from "@/components/ui/form-control";
 import { Controller } from "react-hook-form";
 import { AlertTriangle, CircleIcon } from "lucide-react-native";
 import {
@@ -14,8 +14,8 @@ import {
   RadioIcon,
   RadioIndicator,
   RadioLabel,
-} from "../../../components/ui/radio"; // Alterando para usar Radio
-import { HStack } from "../../../components/ui/hstack";
+} from "@/components/ui/radio"; // Alterando para usar Radio
+import { HStack } from "@/components/ui/hstack";
 
 interface FormRadioProps {
   name: string;

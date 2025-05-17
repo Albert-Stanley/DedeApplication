@@ -5,9 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-import { VStack } from "../../../components/ui/vstack";
-import { Heading } from "../../../components/ui/heading";
-import { Text } from "../../../components/ui/text";
+import { VStack } from "@/components/ui/vstack";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
@@ -15,13 +15,13 @@ import {
   FormControlLabelText,
   FormControlErrorText,
   FormControlErrorIcon,
-} from "../../../components/ui/form-control";
-import { Input, InputField } from "../../../components/ui/input";
-import { Button, ButtonIcon, ButtonText } from "../../../components/ui/button";
-import { Spinner } from "../../../components/ui/spinner";
+} from "@/components/ui/form-control";
+import { Input, InputField } from "@/components/ui/input";
+import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, LogInIcon } from "lucide-react-native";
-import GoBackArrow from "../../../components/common/goBackArrow";
-import { validateAccessKey } from "../../../services/secretaryServices";
+import GoBackArrow from "@/components/common/goBackArrow";
+import { validateAccessKey } from "@/services/secretaryServices";
 
 const loginSecretarySchema = z.object({
   chave: z
