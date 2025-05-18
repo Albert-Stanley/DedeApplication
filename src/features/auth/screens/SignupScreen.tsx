@@ -38,7 +38,7 @@ import {
 } from "@/utils/fieldFormatters";
 
 // Serviços
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 // Schema de validação Zod
 import { SignupSchema, Signup } from "../schemas/signupSchema";
@@ -89,14 +89,14 @@ const SignupScreen = () => {
   const router = useRouter();
 
   // Hook de autenticação para cadastro
-  const { handleRegister, setPendingEmail } = useAuth();
+  const { register, setPendingEmail } = useAuthStore();
 
   // Mutação para cadastro do usuário
   const signupMutation = useMutation({
     // Renomeado para clareza
     mutationFn: async (data: Signup) => {
       // Chama a função do contexto que encapsula a lógica
-      const success = await handleRegister({
+      const success = await register({
         Name: data.Name,
         CPF: data.CPF,
         CNPJ: data.CNPJ || "",

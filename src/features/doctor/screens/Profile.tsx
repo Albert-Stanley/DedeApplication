@@ -9,7 +9,7 @@ import { Divider } from "@/components/ui/divider";
 
 const Profile = () => {
   const goBack = () => {
-    router.replace("/screens/doctor/DoctorHome");
+    router.replace("/doctor");
   };
 
   const handleLogout = () => {
@@ -18,7 +18,7 @@ const Profile = () => {
 
   return (
     <SafeAreaView className="flex-1 justify-center text-center items-center px-4 bg-background-50">
-      <GoBackArrow destinationRoute="/screens/doctor/DoctorHome" />
+      <GoBackArrow destinationRoute="/doctor" />
       {/* Nome e email do Usuário */}
       <View className="items-start mb-6">
         <Text className="text-xl font-bold text-neutral-400">Albert Dev</Text>

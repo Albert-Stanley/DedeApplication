@@ -1,5 +1,5 @@
 import React from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/features/auth/store/authStore";
 import { Alert, SafeAreaView } from "react-native";
 import { useRouter } from "expo-router";
 import GoBackArrow from "@/components/common/goBackArrow";
@@ -36,7 +36,7 @@ const emailVerificationSchema = z.object({
 type EmailVerificationSchemaType = z.infer<typeof emailVerificationSchema>;
 
 const EmailVerificationScreen = () => {
-  const { handleEmailVerification, pendingEmail } = useAuth();
+  const { handleEmailVerification, pendingEmail } = useAuthStore();
   const router = useRouter();
   const toast = useToast();
 

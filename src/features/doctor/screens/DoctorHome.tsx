@@ -11,6 +11,8 @@ import { HStack } from "@/components/ui/hstack";
 import CreateForm from "../components/CreateForm";
 import { Divider } from "@/components/ui/divider";
 import CreateAccess from "../components/CreateAccess";
+import { P } from "@expo/html-elements";
+import PatientFormCard from "../components/PatientFormCard";
 
 const homepage = () => {
   const router = useRouter();
@@ -51,6 +53,7 @@ const homepage = () => {
               <ButtonText>Listar meus pacientes:</ButtonText>
               <ButtonIcon as={ArrowDown} className="ml-2" />
             </Button>
+            <PatientFormCard />
           </VStack>
         </Box>
       </ScrollView>

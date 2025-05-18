@@ -2,7 +2,6 @@ import "../../global.css";
 import { Stack } from "expo-router";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "../context/AuthContext";
 import ThemeToggleButton from "@/components/common/ThemeToggleButton";
 import { Box } from "@/components/ui/box";
 import { useTheme } from "@/stores/useThemeStore";
@@ -13,9 +12,7 @@ export default function Layout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ThemeWrapper />
-      </AuthProvider>
+      <ThemeWrapper />
     </QueryClientProvider>
   );
 }

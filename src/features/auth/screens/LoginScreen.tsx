@@ -29,7 +29,7 @@ import {
   LogInIcon,
 } from "lucide-react-native";
 import GoBackArrow from "@/components/common/goBackArrow";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/features/auth/store/authStore"; // Hook de autenticação
 
 // Esquema de validação com Zod
 const LoginSchema = z.object({
@@ -48,7 +48,7 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const { login } = useAuth();
+  const { login } = useAuthStore();
 
   const {
     handleSubmit,

@@ -1,5 +1,5 @@
-import api from "./api"; // Instância do axios
-import { saveToken, getToken, removeToken } from "./tokenStorageService"; // Serviços para guardar e remover o token
+import api from "./api";
+import { saveToken, getToken, removeToken } from "./tokenStorageService";
 
 // Interface do usuário
 export interface User {

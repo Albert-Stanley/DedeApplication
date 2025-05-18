@@ -13,7 +13,7 @@ const UserQuickMenu = () => {
   const router = useRouter();
 
   const goProfile = () => {
-    router.push("/screens/doctor/Profile");
+    router.push("/doctor/Profile");
   };
   return (
     <Menu
