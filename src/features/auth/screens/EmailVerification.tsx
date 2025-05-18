@@ -64,7 +64,7 @@ const EmailVerificationScreen = () => {
             </Toast>
           ),
         });
-        router.push("/screens/auth/Login");
+        router.push("/Login");
       } else {
         Alert.alert("Erro", "Código de verificação inválido. Tente novamente.");
       }
@@ -85,7 +85,7 @@ const EmailVerificationScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
-      {/* <GoBackArrow /> */}
+      <GoBackArrow destinationRoute="/Signup" />
       <VStack className="flex-1 items-center justify-center px-4">
         <VStack className="max-w-[440px] w-full space-y-6">
           <VStack>

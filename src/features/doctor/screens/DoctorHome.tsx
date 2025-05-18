@@ -11,14 +11,13 @@ import { HStack } from "@/components/ui/hstack";
 import CreateForm from "../components/CreateForm";
 import { Divider } from "@/components/ui/divider";
 import CreateAccess from "../components/CreateAccess";
-import { P } from "@expo/html-elements";
 import PatientFormCard from "../components/PatientFormCard";
 
 const homepage = () => {
   const router = useRouter();
 
   const handleShowPatients = () => {
-    // router.push("/screens/patients/form");
+    // router.push("medical-form/Step1");
     //jogar para a tela com os pacientes que o médico tem acesso
     //cada paciente ao ser clicado aparece seu formulario, ao qual o medico pode alterar os dados
   };

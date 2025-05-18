@@ -89,11 +89,10 @@ const SignupScreen = () => {
   const router = useRouter();
 
   // Hook de autenticação para cadastro
-  const { register, setPendingEmail } = useAuthStore();
+  const { register } = useAuthStore();
 
   // Mutação para cadastro do usuário
   const signupMutation = useMutation({
-    // Renomeado para clareza
     mutationFn: async (data: Signup) => {
       // Chama a função do contexto que encapsula a lógica
       const success = await register({
@@ -105,27 +104,30 @@ const SignupScreen = () => {
         HospitalName: data.HospitalName,
         UF: data.UF,
         Email: data.Email,
-        Password: data.Password, // Passa a senha original do form
+        Password: data.Password,
       });
 
+      console.log("Resultado do authStore.register:", success); // DEBUG
+
       if (!success) {
-        // Se handleRegister retornar false, lança um erro para acionar onError
-        // Você pode querer buscar a mensagem de erro específica do contexto/serviço se disponível
+        // Se a função 'register' da store indicar falha,
+        // lançamos um erro aqui. Isso fará com que o hook useMutation
+        // execute a callback 'onError' em vez de 'onSuccess'.
         throw new Error(
-          "Falha ao registrar usuário ou enviar e-mail de verificação."
+          "Falha ao registrar usuário. Verifique os dados ou tente mais tarde."
         );
       }
-      // Retorna os dados originais ou o email para uso no onSuccess, se necessário
-      return { success: true, email: data.Email };
+      // Se chegou aqui, 'register' foi bem-sucedido.
+      // O pendingEmail já foi setado dentro da ação 'register' da sua store.
+      return { success: true, email: data.Email }; // Dados para a callback onSuccess
     },
     onSuccess: (result) => {
-      // result agora contém { success: true, email: ... }
-      // setPendingEmail(result.email); // O handleRegister no contexto JÁ FAZ ISSO. Não precisa aqui.
+      // Esta callback só é executada se mutationFn NÃO lançar um erro.
       Alert.alert(
         "Cadastro Iniciado!",
-        "Enviamos um código de verificação para o seu e-mail." // Mensagem mais precisa
+        `Enviamos um código de verificação para o seu e-mail ${result.email}. Por favor, verifique sua caixa de entrada e spam.`
       );
-      router.push("/screens/auth/EmailVerification"); // Navega para verificação
+      router.push("/EmailVerification"); // Navega para verificação
     },
     onError: (error: Error) => {
       // Tipar o erro
@@ -279,7 +281,7 @@ const SignupScreen = () => {
                       }}
                       placeholder="Digite sua Data de Nascimento"
                       keyboardType="numeric"
-                      autoComplete="birthdate-full"
+                      // autoComplete="birthdate-full"
                     />
                   </Input>
                 )}

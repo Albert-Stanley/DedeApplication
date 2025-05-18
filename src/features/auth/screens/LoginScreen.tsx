@@ -66,7 +66,7 @@ const LoginScreen = () => {
       return success;
     },
     onSuccess: () => {
-      router.push("/screens/doctor/DoctorHome"); // Redireciona para a home do médico
+      router.push("/doctor"); // Redireciona para a home do médico
     },
     onError: (error: Error) => {
       Alert.alert("Erro no Login", error.message || "Erro inesperado");
