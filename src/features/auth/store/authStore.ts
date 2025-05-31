@@ -15,48 +15,38 @@ import type {
   AuthStoreState,
   RegisterUserData,
   User,
-} from "./types"; // Importando tipos atualizados
+} from "./types"; // Importação dos tipos utilizados na store
 
-// Estado inicial da store
 const initialState: AuthStoreState = {
   user: null,
-  token: null, // No web, isso pode não refletir o token do cookie, mas sim se há uma sessão.
-  isLoading: true, // Loading inicial da aplicação para verificar auth
-  isAuthLoading: false, // Loading para ações específicas como login, registro
-  pendingEmail: null,
+  token: null,
+  isLoading: true, // Indica carregamento inicial da aplicação (verificação de autenticação)
+  isAuthLoading: false, // Indica carregamento durante ações específicas (login, registro, etc.)
+  pendingEmail: null, // Email pendente de verificação
 };
 
-// Criação da store Zustand
 export const useAuthStore = create<AuthStore>((set, get) => ({
   ...initialState,
 
+  // Inicializa a autenticação ao abrir o app
   initializeAuth: async () => {
     set({ isLoading: true });
     try {
-      // Para web, verifyCurrentUser tentará usar o cookie HttpOnly.
-      // Para mobile, verifyCurrentUser tentará usar o token do SecureStore.
       const userResponse = await verifyCurrentUser();
 
       if (userResponse.success && userResponse.user) {
         set({
           user: userResponse.user as User,
-          // Para mobile, podemos querer popular o token aqui se verifyCurrentUser retornasse,
-          // mas como verifyCurrentUser pega o token internamente para mobile,
-          // e saveToken já o salvou no login, podemos buscar novamente se necessário
-          // ou assumir que está ok se user estiver presente.
-          // Para consistência, e se o loginService retorna token, podemos setá-lo aqui.
-          // Por ora, focamos no usuário. Se o token for necessário na store para mobile,
-          // podemos buscar com fetchStoredToken.
-          token: Platform.OS !== "web" ? await fetchStoredToken() : null, // Preenche o token para mobile se existir
+          token: Platform.OS !== "web" ? await fetchStoredToken() : null, // Recupera o token no mobile
           isLoading: false,
         });
       } else {
-        // Se a verificação falhar, limpamos qualquer estado residual.
-        // Não chamamos logoutService aqui para evitar loop se o logout falhar também.
-        // Apenas limpamos o estado local.
+        // Se a verificação falhar, limpa o estado local
         set({ user: null, token: null, isLoading: false });
+
+        // Para mobile, chama logoutService para limpar o SecureStore
         if (Platform.OS !== "web") {
-          await logoutService(); // Tenta limpar o token do SecureStore no mobile se a verificação falhar
+          await logoutService();
         }
       }
     } catch (error) {
@@ -65,6 +55,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
+  // Realiza login com CRM ou Email e senha
   login: async (CRMorEmail, Password) => {
     set({ isAuthLoading: true });
     try {
@@ -72,32 +63,29 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       if (response.success && response.user) {
         set({
           user: response.user as User,
-          // O token da resposta é crucial para mobile.
-          // Para web, o cookie já foi setado pelo backend.
-          // Armazenar response.token aqui é útil para mobile e para consistência do estado.
-          token: response.token || null,
+          token: response.token || null, // Armazena token (importante para mobile)
           isAuthLoading: false,
         });
         return true;
       }
-      set({ isAuthLoading: false /* authError: response.message */ }); // Pode setar um erro aqui
+      set({ isAuthLoading: false });
       return false;
     } catch (error: any) {
       console.error("Erro no login (store):", error);
-      set({ isAuthLoading: false /* authError: error.message */ });
+      set({ isAuthLoading: false });
       return false;
     }
   },
 
+  // Realiza logout e limpa completamente o estado da store
   logout: async () => {
     set({ isAuthLoading: true });
     try {
-      await logoutService(); // Chama o serviço que lida com API (web) e SecureStore (mobile)
+      await logoutService(); // Remove dados da sessão no backend e no storage local
     } catch (error) {
       console.error("Erro ao fazer logout do serviço (store):", error);
-      // Mesmo com erro no serviço, limpamos o estado local como fallback.
     } finally {
-      // Limpa o estado da store independentemente do sucesso/falha da chamada de serviço
+      // Independentemente do resultado, garante que o estado local será limpo
       set({
         ...initialState,
         isLoading: false,
@@ -109,40 +97,39 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
+  // Realiza o registro de um novo usuário
   register: async (userData: RegisterUserData) => {
     set({ isAuthLoading: true });
     try {
       const response = await registerUserService(userData);
       if (response.success && response.data) {
-        // Usuário registrado com sucesso no backend
-        set({ pendingEmail: userData.Email }); // Define o email pendente, mas mantém isAuthLoading: true por enquanto
+        set({ pendingEmail: userData.Email });
 
-        // Tenta enviar o email de verificação
+        // Tenta enviar o e-mail de verificação após o registro
         const emailSent = await sendVerificationEmailService(userData.Email);
         if (!emailSent.success) {
           console.warn(
-            "Usuário registrado, mas falha ao enviar e-mail de verificação inicialmente:",
+            "Usuário registrado, mas falha ao enviar e-mail de verificação:",
             emailSent.message
           );
-          // Mesmo que o envio do email falhe, o processo de registro do usuário foi bem-sucedido
-          // e o pendingEmail está definido. O usuário será redirecionado para a tela de verificação.
         }
 
-        set({ isAuthLoading: false }); // Define isAuthLoading como false após ambas as operações.
-        return true; // Indica sucesso geral do processo de registro inicial
+        set({ isAuthLoading: false });
+        return true;
       }
-      // Se o registro do usuário no backend falhou
-      set({ isAuthLoading: false /* authError: response.message */ });
+
+      set({ isAuthLoading: false });
       return false;
     } catch (error: any) {
       console.error("Erro no registro (store):", error);
-      set({ isAuthLoading: false /* authError: error.message */ });
+      set({ isAuthLoading: false });
       return false;
     }
   },
 
+  // Reenvia o e-mail de verificação
   sendVerificationEmailAction: async (email: string) => {
-    set({ isAuthLoading: true }); // Pode ter um loading específico se preferir
+    set({ isAuthLoading: true });
     try {
       const response = await sendVerificationEmailService(email);
       set({ isAuthLoading: false });
@@ -154,16 +141,16 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
+  // Verifica o código enviado ao email
   handleEmailVerification: async (code: string) => {
     const currentPendingEmail = get().pendingEmail;
     if (!currentPendingEmail) {
       console.error("Nenhum e-mail pendente para verificação.");
-      // set({ authError: "Nenhum e-mail pendente para verificação." });
       return false;
     }
+
     set({ isAuthLoading: true });
     try {
-      // Passando o email junto com o código para o backend
       const verificationResponse = await verifyEmailCodeService(
         code,
         currentPendingEmail
@@ -172,22 +159,23 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         set({ pendingEmail: null, isAuthLoading: false });
         return true;
       }
-      set({
-        isAuthLoading: false /* authError: verificationResponse.message */,
-      });
+
+      set({ isAuthLoading: false });
       return false;
     } catch (error: any) {
       console.error("Erro ao verificar o código de e-mail (store):", error);
-      set({ isAuthLoading: false /* authError: error.message */ });
+      set({ isAuthLoading: false });
       return false;
     }
   },
 
+  // Define o e-mail pendente de verificação manualmente
   setPendingEmail: (email: string | null) => {
     set({ pendingEmail: email });
   },
 
+  // Limpa erros de autenticação (placeholder)
   clearAuthError: () => {
-    // set({ authError: null });
+    // Exemplo: set({ authError: null });
   },
 }));

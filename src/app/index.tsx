@@ -3,7 +3,7 @@ import { SafeAreaView, ScrollView } from "react-native";
 import React from "react";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
-import { LogInIcon, UserPlusIcon, Headset } from "lucide-react-native";
+import { LogInIcon, UserPlusIcon, Headset, Route } from "lucide-react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Text } from "@/components/ui/text";
 import { useMutation } from "@tanstack/react-query";
@@ -34,6 +34,13 @@ const App = () => {
       router.push("/doctor");
     },
   });
+
+  // const siteMapMutation = useMutation({
+  //   mutationFn: async () => {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000));
+  //     router.push("/");
+  //   },
+  // });
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
@@ -73,6 +80,13 @@ const App = () => {
               darkColor="#4A5568"
               icon={Headset}
             />
+            {/* <AnimatedButton
+              text="Rotas da Aplicação"
+              onPress={() => siteMapMutation.mutate()}
+              isLoading={siteMapMutation.isPending}
+              darkColor="#4A5568"
+              icon={Route}
+            /> */}
           </VStack>
         </Box>
       </ScrollView>
