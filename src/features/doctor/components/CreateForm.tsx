@@ -5,7 +5,7 @@ import React from "react";
 const CreateForm = () => {
   return (
     <Button
-      className="rounded-lg justify-start mb-6"
+      className="rounded-lg  mb-6"
       variant="outline"
       action="primary"
     >

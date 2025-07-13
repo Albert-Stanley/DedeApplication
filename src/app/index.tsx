@@ -8,6 +8,8 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { Text } from "@/components/ui/text";
 import { useMutation } from "@tanstack/react-query";
 
+import DoctorHome from "@/features/doctor/screens/DoctorHome";
+
 import AnimatedButton from "@/components/common/AnimetedButton";
 
 const App = () => {
@@ -95,3 +97,7 @@ const App = () => {
 };
 
 export default App;
+
+// export default function App() {
+//   return <DoctorHome />;
+// }

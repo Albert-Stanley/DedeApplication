@@ -25,13 +25,13 @@ const homepage = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-0">
+    <SafeAreaView className="flex-1 bg-background-50">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <Box className=" px-6 pt-4 pb-8">
           <HStack className="items-center justify-between mb-6">
             <UserQuickMenu />
-            <View className="items-end">
+            <View className="items-end mr-8">
               <Text className="text-lg font-bold text-white">
                 Dr. Albert Dev
               </Text>
@@ -42,12 +42,12 @@ const homepage = () => {
           {/* Welcome Card */}
           <Card className=" backdrop-blur-sm border-white/20 p-4 mb-4">
             <VStack space="sm">
-              <Heading className="text-white text-xl font-semibold">
-                Bem-vindo de volta! 👋
+              <Heading className=" text-xl font-semibold">
+                Bem-vindo de volta!
               </Heading>
-              <Text className="text-primary-100 text-sm">
+              <Heading className="text-sm">
                 Gerencie seus pacientes e formulários médicos
-              </Text>
+              </Heading>
             </VStack>
           </Card>
         </Box>
@@ -56,7 +56,7 @@ const homepage = () => {
         <Box className="flex-1 px-6 -mt-6">
           <VStack space="lg" className="w-full">
             {/* Search Section */}
-            <Card className="bg-white shadow-sm border border-outline-200 p-4">
+            <Card className=" shadow-sm  p-4">
               <SearchBar />
             </Card>
 
@@ -67,10 +67,10 @@ const homepage = () => {
               </Heading>
 
               <HStack space="md" className="w-full">
-                <Card className="flex-1 bg-white shadow-sm border border-outline-200">
+                <Card className="flex-1 shadow-sm ">
                   <CreateForm />
                 </Card>
-                <Card className="flex-1 bg-white shadow-sm border border-outline-200">
+                <Card className="flex-1 shadow-sm ">
                   <CreateAccess />
                 </Card>
               </HStack>

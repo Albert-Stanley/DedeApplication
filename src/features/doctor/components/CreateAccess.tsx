@@ -4,11 +4,7 @@ import React from "react";
 
 const CreateAccess = () => {
   return (
-    <Button
-      className="rounded-lg justify-end mb-6"
-      variant="outline"
-      action="primary"
-    >
+    <Button className="rounded-lg mb-6" variant="outline" action="primary">
       <ButtonText>Dar acesso</ButtonText>
       <ButtonIcon as={AddIcon} />
     </Button>
