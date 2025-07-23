@@ -103,17 +103,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     try {
       const response = await registerUserService(userData);
       if (response.success && response.data) {
-        set({ pendingEmail: userData.Email });
-
-        // Tenta enviar o e-mail de verificação após o registro
-        const emailSent = await sendVerificationEmailService(userData.Email);
-        if (!emailSent.success) {
-          console.warn(
-            "Usuário registrado, mas falha ao enviar e-mail de verificação:",
-            emailSent.message
-          );
-        }
-
+        // Since we don't have email in the new signup, we don't need to handle email verification
         set({ isAuthLoading: false });
         return true;
       }

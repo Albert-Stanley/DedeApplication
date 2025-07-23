@@ -4,6 +4,12 @@ export const formatCRM = (value: string) => {
   return onlyNumbers.slice(0, 10); // Limita o CRM a 10 caracteres
 };
 
+// Função para formatar o RG, removendo qualquer caractere não numérico e garantindo que o valor tenha no máximo 9 caracteres
+export const formatRG = (value: string) => {
+  const onlyNumbers = value.replace(/\D/g, "");
+  return onlyNumbers.slice(0, 9); // Limita o RG a 9 caracteres
+};
+
 // Função para formatar o CPF, removendo qualquer caractere não numérico e garantindo que o valor tenha no máximo 11 caracteres
 export const formatCPF = (value: string) => {
   const onlyNumbers = value.replace(/\D/g, "");

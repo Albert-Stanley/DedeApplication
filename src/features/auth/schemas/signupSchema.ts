@@ -1,127 +1,87 @@
 import { z } from "zod";
 import {
   formatCPF,
-  formatCNPJ,
+  formatCRM,
+  formatRG,
   formatDataNascimento,
 } from "@/utils/fieldFormatters";
-import {
-  isValidCPF,
-  isValidCNPJ,
-  isValidDataNascimento,
-} from "@/utils/validations";
+import { isValidCPF, isValidDataNascimento } from "@/utils/validations";
 
-export const SignupSchema = z
-  .object({
-    Name: z
-      .string()
-      .min(1, "O nome é obrigatório.")
-      .max(100, "O nome deve ter no máximo 100 caracteres.")
-      .regex(
-        /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/,
-        "O nome não pode conter números ou caracteres especiais."
-      )
-      .trim(),
+// Regex patterns for validation
+const crmRegex = /^\d{4,6}$/;
+const rgRegex = /^\d{7,9}$/;
 
-    CPF: z
-      .string()
-      .refine(
-        (val) => {
-          const cleaned = val.replace(/\D/g, "");
-          return cleaned.length === 11 && isValidCPF(cleaned);
-        },
-        {
-          message: "CPF inválido. Formato esperado: 111.111.111-11.",
-        }
-      )
-      .transform((val) => {
+export const SignupSchema = z.object({
+  CRM: z
+    .string()
+    .min(1, "CRM é obrigatório")
+    .refine((val) => {
+      const cleaned = val.replace(/\D/g, "");
+      return crmRegex.test(cleaned);
+    }, "CRM deve conter entre 4 e 6 dígitos"),
+
+  RG: z
+    .string()
+    .min(1, "RG é obrigatório")
+    .refine((val) => {
+      const cleaned = val.replace(/\D/g, "");
+      return rgRegex.test(cleaned);
+    }, "RG deve conter entre 7 e 9 dígitos"),
+
+  CPF: z
+    .string()
+    .min(1, "CPF é obrigatório")
+    .refine(
+      (val) => {
         const cleaned = val.replace(/\D/g, "");
-        return formatCPF(cleaned);
-      }),
+        return cleaned.length === 11 && isValidCPF(cleaned);
+      },
+      {
+        message: "CPF inválido. Formato esperado: 000.000.000-00.",
+      }
+    ),
 
-    CNPJ: z
-      .string()
-      .refine(
-        (val) => {
-          const cleaned = val.replace(/\D/g, "");
-          return cleaned.length === 14 && isValidCNPJ(cleaned);
-        },
-        {
-          message: "CNPJ inválido. Formato esperado: 11.111.111/1111-11.",
-        }
-      )
-      .transform((val) => {
+  DataNascimento: z
+    .string()
+    .min(1, "Data de nascimento é obrigatória")
+    .refine(
+      (val) => {
         const cleaned = val.replace(/\D/g, "");
-        return formatCNPJ(cleaned);
-      }),
+        return cleaned.length === 8 && isValidDataNascimento(cleaned);
+      },
+      {
+        message: "Data de nascimento inválida. Formato esperado: DD/MM/AAAA.",
+      }
+    )
+    .refine((val) => {
+      const cleaned = val.replace(/\D/g, "");
+      if (cleaned.length === 8) {
+        const day = parseInt(cleaned.substr(0, 2));
+        const month = parseInt(cleaned.substr(2, 2));
+        const year = parseInt(cleaned.substr(4, 4));
+        const birthDate = new Date(year, month - 1, day);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
 
-    DataNascimento: z
-      .string()
-      .refine(
-        (val) => {
-          const cleaned = val.replace(/\D/g, "");
-          return cleaned.length === 8 && isValidDataNascimento(cleaned);
-        },
-        {
-          message: "Data de nascimento inválida. Formato esperado: dd/mm/aaaa.",
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+          return age - 1 >= 18 && age - 1 <= 100;
         }
-      )
-      .transform((val) => {
-        const cleaned = val.replace(/\D/g, "");
-        return formatDataNascimento(cleaned);
-      }),
+        return age >= 18 && age <= 100;
+      }
+      return false;
+    }, "Você deve ter entre 18 e 100 anos"),
 
-    CRM: z
-      .string()
-      .min(1, "O CRM é obrigatório.")
-      .max(10, "O CRM deve ter no máximo 10 caracteres.")
-      .regex(/^\d+$/, "O CRM deve conter apenas números.")
-      .length(10, "O CRM deve ter exatamente 10 caracteres.")
-      .trim(),
-
-    HospitalName: z
-      .string()
-      .min(1, "O nome do hospital é obrigatório.")
-      .max(100, "O nome do hospital deve ter no máximo 100 caracteres.")
-      .trim(),
-
-    UF: z
-      .string()
-      .length(2, "Por favor, selecione sua UF.")
-      .refine((uf) => uf.includes(uf.toUpperCase()), {
-        message: "UF inválida. Escolha uma UF válida.",
-      }),
-
-    Email: z
-      .string()
-      .email("E-mail inválido.")
-      .min(5, "O E-mail é obrigatório.")
-      .max(150, "Máximo de 150 caracteres."),
-
-    Password: z
-      .string()
-      .min(6, "A senha deve ter pelo menos 6 caracteres.")
-      .max(100, "A senha deve ter no máximo 100 caracteres.")
-      .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
-      .regex(/[0-9]/, "A senha deve conter ao menos um número.")
-      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial.")
-      .trim(),
-
-    ConfirmPassword: z
-      .string()
-      .min(6, "A senha deve ter pelo menos 6 caracteres.")
-      .max(100, "A senha deve ter no máximo 100 caracteres.")
-      .regex(/[A-Z]/, "A senha deve conter ao menos uma letra maiúscula.")
-      .regex(/[0-9]/, "A senha deve conter ao menos um número.")
-      .regex(/[\W_]/, "A senha deve conter ao menos um caractere especial.")
-      .trim(),
-
-    isTermsAccepted: z.boolean().refine((val) => val === true, {
-      message: "Você deve aceitar os termos de uso.",
-    }),
-  })
-  .refine((data) => data.Password === data.ConfirmPassword, {
-    message: "As senhas não coincidem.",
-    path: ["ConfirmPassword"], // Campo que receberá a mensagem de erro
-  });
+  Password: z
+    .string()
+    .min(8, "Senha deve ter pelo menos 8 caracteres")
+    .max(100, "Senha deve ter no máximo 100 caracteres")
+    .regex(/[A-Z]/, "Senha deve conter pelo menos uma letra maiúscula")
+    .regex(/[a-z]/, "Senha deve conter pelo menos uma letra minúscula")
+    .regex(/\d/, "Senha deve conter pelo menos um número"),
+});
 
 export type Signup = z.infer<typeof SignupSchema>;

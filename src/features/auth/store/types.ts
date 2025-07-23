@@ -6,16 +6,11 @@ export interface User extends ServiceUser {}
 
 // Interface para os dados de registro
 export interface RegisterUserData {
-  Name: string;
+  CRM: string;
+  RG: string;
   CPF: string;
-  CNPJ?: string; // CNPJ é opcional
   DataNascimento: string;
-  CRM?: string; // CRM é opcional
-  HospitalName: string;
-  UF: string;
-  Email: string;
   Password: string;
-  // confirmPassword?: string; // Se usado no formulário, mas não enviado para API
 }
 
 // Interface para o estado e ações da store de autenticação

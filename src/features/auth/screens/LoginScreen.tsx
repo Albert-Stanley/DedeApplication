@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { SafeAreaView, Alert } from "react-native";
+import { SafeAreaView, Alert, ScrollView } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import z from "zod";
 
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
@@ -29,25 +28,16 @@ import {
   LogInIcon,
 } from "lucide-react-native";
 import GoBackArrow from "@/components/common/goBackArrow";
-import { useAuthStore } from "@/features/auth/store/authStore"; // Hook de autenticação
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { formatCRM } from "@/utils/fieldFormatters";
+import colors from "tailwindcss/colors";
 
-// Esquema de validação com Zod
-const LoginSchema = z.object({
-  CRMorEmail: z.string().min(1, "Por favor, insira um e-mail.").max(100).trim(),
-  Password: z
-    .string()
-    .min(6, "A senha deve ter pelo menos 6 caracteres.")
-    .max(100)
-    .trim(),
-});
-
-// Tipagem inferida do esquema
-type Login = z.infer<typeof LoginSchema>;
+// Schema de validação
+import { LoginSchema, Login } from "../schemas/loginSchema";
 
 const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-
   const { login } = useAuthStore();
 
   const {
@@ -56,145 +46,183 @@ const LoginScreen = () => {
     control,
   } = useForm<Login>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: { CRMorEmail: "", Password: "" },
+    defaultValues: {
+      identifier: "",
+      Password: "",
+    },
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (data: { CRMorEmail: string; Password: string }) => {
-      const success = await login(data.CRMorEmail, data.Password);
-      if (!success) throw new Error("Erro ao fazer login.");
-      return success;
+    mutationFn: async (data: Login) => {
+      const success = await login(data.identifier, data.Password);
+
+      if (!success) {
+        throw new Error("Credenciais inválidas. Verifique CRM/Email e senha.");
+      }
+      return { success: true };
     },
     onSuccess: () => {
-      router.push("/doctor"); // Redireciona para a home do médico
+      Alert.alert("Login realizado!", "Bem-vindo de volta!");
+      router.push("/doctor"); // ou rota principal da sua app
     },
     onError: (error: Error) => {
-      Alert.alert("Erro no Login", error.message || "Erro inesperado");
+      Alert.alert(
+        "Erro no Login",
+        error.message || "Ocorreu um erro. Tente novamente."
+      );
     },
   });
+
+  const onSubmit = (data: Login) => {
+    loginMutation.mutate(data);
+  };
+
+  const isNumeric = (str: string) => /^\d+$/.test(str.replace(/\D/g, ""));
 
   return (
     <SafeAreaView className="flex-1 bg-background-50">
       <GoBackArrow destinationRoute="/" />
-      <Box className="flex-1 justify-center items-center px-4">
-        <VStack space="lg" className="w-full max-w-lg p-6">
-          <Text size="2xl" className="text-center mb-4 font-bold">
-            Olá, seja bem-vindo(a) novamente!
-          </Text>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Box className="flex-1 justify-center items-center px-4">
+          <VStack space="sm" className="w-full max-w-lg p-6">
+            {/* Cabeçalho */}
+            <Text
+              size="2xl"
+              className="text-center font-bold text-typography-900 mb-6"
+            >
+              Faça seu login
+            </Text>
 
-          {/* Campo CRM ou E-mail */}
-          <FormControl isInvalid={!!errors?.CRMorEmail} className="w-full">
-            <FormControlLabel>
-              <FormControlLabelText>CRM ou E-mail</FormControlLabelText>
-            </FormControlLabel>
-            <Controller
-              name="CRMorEmail"
-              control={control}
-              render={({ field }) => (
-                <Input size="lg" className="mb-2">
-                  <InputField
-                    {...field}
-                    placeholder="Digite seu e-mail"
-                    keyboardType="email-address"
-                    // autoComplete="email"
-                  />
-                </Input>
-              )}
-            />
-            {errors.CRMorEmail && (
-              <FormControlError className="mt-1">
-                <FormControlErrorIcon as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors.CRMorEmail.message}
-                </FormControlErrorText>
-              </FormControlError>
-            )}
-          </FormControl>
-
-          {/* Campo Senha */}
-          <FormControl isInvalid={!!errors?.Password} className="w-full">
-            <FormControlLabel>
-              <FormControlLabelText>Senha</FormControlLabelText>
-            </FormControlLabel>
-            <Controller
-              name="Password"
-              control={control}
-              render={({ field }) => (
-                <Input size="lg" className="mb-2">
-                  <InputField
-                    {...field}
-                    placeholder="Digite sua senha"
-                    secureTextEntry={!showPassword}
-                  />
-                  <InputSlot onPress={() => setShowPassword(!showPassword)}>
-                    <InputIcon
-                      className="mr-2"
-                      as={showPassword ? EyeIcon : EyeOffIcon}
+            {/* Campo CRM ou Email */}
+            <FormControl size="lg" isInvalid={!!errors.identifier}>
+              <FormControlLabel>
+                <FormControlLabelText>CRM ou Email</FormControlLabelText>
+              </FormControlLabel>
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite seu CRM (apenas números) ou email
+              </Text>
+              <Controller
+                name="identifier"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputField
+                      placeholder="CRM ou email"
+                      value={value}
+                      onChangeText={(text) => {
+                        // Se for numérico, aplica formatação de CRM
+                        if (isNumeric(text)) {
+                          onChange(formatCRM(text));
+                        } else {
+                          onChange(text);
+                        }
+                      }}
+                      onBlur={onBlur}
+                      keyboardType={
+                        isNumeric(value) ? "numeric" : "email-address"
+                      }
+                      autoComplete={isNumeric(value) ? "off" : "email"}
+                      textContentType={
+                        isNumeric(value) ? "none" : "emailAddress"
+                      }
+                      returnKeyType="next"
                     />
-                  </InputSlot>
-                </Input>
+                  </Input>
+                )}
+              />
+              {errors?.identifier && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.identifier.message}
+                  </FormControlErrorText>
+                </FormControlError>
               )}
-            />
-            {errors.Password && (
-              <FormControlError className="mt-1">
-                <FormControlErrorIcon as={AlertTriangle} />
-                <FormControlErrorText>
-                  {errors.Password.message}
-                </FormControlErrorText>
-              </FormControlError>
-            )}
-          </FormControl>
+            </FormControl>
 
-          {/* Esqueceu a senha */}
-          <HStack className="w-full justify-between">
-            <Link href="/ForgotPassword">
-              <LinkText className="text-primary-700">
-                Esqueceu sua Senha?
-              </LinkText>
-            </Link>
-          </HStack>
+            {/* Campo de Senha */}
+            <FormControl size="lg" isInvalid={!!errors?.Password}>
+              <FormControlLabel>
+                <FormControlLabelText>Senha</FormControlLabelText>
+              </FormControlLabel>
+              <Controller
+                name="Password"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input className="mb-1" size="lg">
+                    <InputField
+                      placeholder="Digite sua senha"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      secureTextEntry={!showPassword}
+                      returnKeyType="done"
+                    />
+                    <InputSlot
+                      onPress={() => setShowPassword(!showPassword)}
+                      className="mr-2"
+                    >
+                      {showPassword ? (
+                        <InputIcon as={EyeIcon} />
+                      ) : (
+                        <InputIcon as={EyeOffIcon} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                )}
+              />
+              {errors?.Password && (
+                <FormControlError>
+                  <FormControlErrorIcon as={AlertTriangle} />
+                  <FormControlErrorText>
+                    {errors.Password.message}
+                  </FormControlErrorText>
+                </FormControlError>
+              )}
+            </FormControl>
 
-          {/* Botão de Login */}
-          <Button
-            size="lg"
-            variant="solid"
-            action="primary"
-            className="rounded-lg mb-6 flex-row items-center justify-center"
-            onPress={handleSubmit((data) => loginMutation.mutate(data))}
-            disabled={loginMutation.isPending}
-          >
-            {loginMutation.isPending ? (
-              <>
-                <Spinner size="small" className="mr-2" />
-                <ButtonText className="font-bold text-lg">
-                  Entrando...
-                </ButtonText>
-              </>
-            ) : (
-              <>
-                <ButtonText className="font-bold text-lg">Entrar</ButtonText>
-                <ButtonIcon as={LogInIcon} className="ml-2" />
-              </>
-            )}
-          </Button>
+            {/* Esqueceu a senha */}
+            <HStack className="w-full justify-between">
+              <Link href="/ForgotPassword">
+                <LinkText className="text-primary-700">
+                  Esqueceu sua Senha?
+                </LinkText>
+              </Link>
+            </HStack>
 
-          {/* Cadastro */}
-          <Text size="xl" className="text-left font-bold">
-            Não possui registro? Faça seu cadastro
-          </Text>
-          <Button
-            size="lg"
-            variant="outline"
-            action="secondary"
-            className="rounded-lg border-primary-200"
-            onPress={() => router.push("/Signup")}
-          >
-            <ButtonText className="font-bold text-primary-500 text-lg">
-              Cadastre-se agora
-            </ButtonText>
-          </Button>
-        </VStack>
-      </Box>
+            {/* Botão de Login */}
+            <Button
+              className="w-full mt-6"
+              onPress={handleSubmit(onSubmit)}
+              isDisabled={loginMutation.isPending}
+            >
+              <ButtonText className="font-bold text-lg">
+                {loginMutation.isPending ? (
+                  <Spinner size="small" color={colors.gray[500]} />
+                ) : (
+                  "Entrar"
+                )}
+              </ButtonText>
+            </Button>
+
+            <Text className="text-lg font-bold text-center mt-4">
+              Ainda não possui conta?
+            </Text>
+
+            {/* Ir para o Cadastro */}
+            <Button
+              variant="outline"
+              action="secondary"
+              className="rounded-lg border-primary-200"
+              onPress={() => router.push("/Signup")}
+            >
+              <ButtonText className="font-bold text-primary-500 text-lg">
+                Criar conta
+              </ButtonText>
+            </Button>
+          </VStack>
+        </Box>
+      </ScrollView>
     </SafeAreaView>
   );
 };
