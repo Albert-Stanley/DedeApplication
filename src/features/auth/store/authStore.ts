@@ -15,13 +15,13 @@ import type {
   AuthStoreState,
   RegisterUserData,
   User,
-} from "./types"; // Importação dos tipos utilizados na store
+} from "./types";   
 
 const initialState: AuthStoreState = {
   user: null,
   token: null,
-  isLoading: true, // Indica carregamento inicial da aplicação (verificação de autenticação)
-  isAuthLoading: false, // Indica carregamento durante ações específicas (login, registro, etc.)
+  isLoading: true,  
+  isAuthLoading: false,   
   pendingEmail: null, // Email pendente de verificação
 };
 

@@ -10,7 +10,7 @@ import { VStack } from "@/components/ui/vstack";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { Input, InputSlot, InputField, InputIcon } from "@/components/ui/input";
-import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
+import { Button, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { LinkText } from "@/components/ui/link";
 import {
@@ -63,7 +63,7 @@ const LoginScreen = () => {
     },
     onSuccess: () => {
       Alert.alert("Login realizado!", "Bem-vindo de volta!");
-      router.push("/doctor"); // ou rota principal da sua app
+      router.push("/doctor");
     },
     onError: (error: Error) => {
       Alert.alert(
@@ -110,8 +110,9 @@ const LoginScreen = () => {
                       placeholder="CRM ou email"
                       value={value}
                       onChangeText={(text) => {
-                        // Se for numérico, aplica formatação de CRM
-                        if (isNumeric(text)) {
+                        if (text.includes("@")) {
+                          onChange(text);
+                        } else if (isNumeric(text)) {
                           onChange(formatCRM(text));
                         } else {
                           onChange(text);
@@ -121,10 +122,7 @@ const LoginScreen = () => {
                       keyboardType={
                         isNumeric(value) ? "numeric" : "email-address"
                       }
-                      autoComplete={isNumeric(value) ? "off" : "email"}
-                      textContentType={
-                        isNumeric(value) ? "none" : "emailAddress"
-                      }
+                      autoComplete="email"
                       returnKeyType="next"
                     />
                   </Input>
