@@ -54,9 +54,9 @@ const DoctorSearchBar: React.FC = () => {
 
   return (
     <Box className="relative">
-      <Input size="lg" className="bg-white">
+      <Input size="lg" className="">
         <InputSlot className="pl-3">
-          <InputIcon as={Search} className="text-gray-400" />
+          <InputIcon as={Search} />
         </InputSlot>
         <InputField
           placeholder="Buscar pacientes por nome, CPF..."
@@ -71,7 +71,7 @@ const DoctorSearchBar: React.FC = () => {
         {query.length > 0 && (
           <InputSlot className="pr-3">
             <TouchableOpacity onPress={clearSearch}>
-              <InputIcon as={X} className="text-gray-400" />
+              <InputIcon as={X} />
             </TouchableOpacity>
           </InputSlot>
         )}

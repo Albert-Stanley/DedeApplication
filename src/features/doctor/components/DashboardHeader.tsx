@@ -28,11 +28,11 @@ const DashboardHeader: React.FC = () => {
   };
 
   return (
-    <Box className="px-6 pt-4 pb-8 bg-gradient-to-br from-primary-500 to-primary-700">
+    <Box className="px-6 pt-4 pb-8  from-primary-500 to-primary-700">
       <HStack className="items-center justify-between mb-6">
         <UserQuickMenu />
         <View className="items-end mr-8">
-          <Text className="text-lg font-bold text-white">
+          <Text className="text-lg font-bold">
             {user?.name ? formatName(user.name) : "Dr. Usuário"}
           </Text>
           <Text className="text-primary-100 text-sm">
@@ -42,9 +42,9 @@ const DashboardHeader: React.FC = () => {
       </HStack>
 
       {/* Welcome Card */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-4 mb-4">
+      <Card className=" backdrop-blur-sm border-white/20 p-4 mb-4">
         <VStack space="sm">
-          <Heading className="text-white text-xl font-semibold">
+          <Heading className=" text-xl font-semibold">
             {getGreeting()}, seja bem-vindo de volta!
           </Heading>
           <Text className="text-primary-100 text-sm">
