@@ -28,29 +28,32 @@ const DashboardHeader: React.FC = () => {
   };
 
   return (
-    <Box className="px-6 pt-4 pb-8  from-primary-500 to-primary-700">
-      <HStack className="items-center justify-between mb-6">
+    <Box className="px-4 pt-4 pb-6 bg-gradient-to-br ">
+      <HStack className="items-center justify-between mb-4">
         <UserQuickMenu />
-        <View className="items-end mr-8">
+        <View className="mr-10 items-end">
           <Text className="text-lg font-bold">
             {user?.name ? formatName(user.name) : "Dr. Usuário"}
           </Text>
-          <Text className="text-primary-100 text-sm">
+          <Text className="text-primary-300 text-sm">
             ID: {user?.CRMorEmail || "N/A"}
           </Text>
         </View>
       </HStack>
 
       {/* Welcome Card */}
-      <Card className=" backdrop-blur-sm border-white/20 p-4 mb-4">
-        <VStack space="sm">
-          <Heading className=" text-xl font-semibold">
-            {getGreeting()}, seja bem-vindo de volta!
-          </Heading>
-          <Text className="text-primary-100 text-sm">
-            Gerencie seus pacientes e formulários médicos de forma eficiente
-          </Text>
-        </VStack>
+      {/* <Card className="bg-white/10 dark:bg-gray-800backdrop-blur-sm border-white/20 rounded-xl shadow-lg"> */}
+      <Card className="bg-white/10 dark:bg-gray-800  border-white/20 rounded-xl shadow-lg">
+        <Box className="p-4">
+          <VStack space="sm">
+            <Heading className=" text-xl font-semibold">
+              {getGreeting()}, seja bem-vindo de volta!
+            </Heading>
+            <Text className="text-primary-300 text-sm">
+              Gerencie seus pacientes e formulários médicos de forma eficiente
+            </Text>
+          </VStack>
+        </Box>
       </Card>
     </Box>
   );

@@ -2,7 +2,6 @@ import React from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Box } from "@/components/ui/box";
-import { Card } from "@/components/ui/card";
 
 import DashboardHeader from "../components/DashboardHeader";
 import DoctorSearchBar from "../components/DoctorSearchBar";
@@ -12,30 +11,36 @@ import RecentPatients from "../components/RecentPatients";
 
 const DoctorHome: React.FC = () => {
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
+    <SafeAreaView className="flex-1 bg-background-50 ">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <DashboardHeader />
 
         {/* Main Content */}
-        <Box className="flex-1 px-6 -mt-6">
-          <VStack space="lg" className="w-full">
-            {/* Search Section */}
-            <Card className="shadow-sm p-4">
+        <Box className="flex-1 px-4 -mt-4">
+          <VStack space="md" className="w-full">
+            {/* Search Section - Removed Card wrapper */}
+            <Box className="mt-2 z-50">
               <DoctorSearchBar />
-            </Card>
+            </Box>
 
             {/* Quick Actions */}
-            <QuickActions />
+            <Box className="z-10">
+              <QuickActions />
+            </Box>
 
             {/* Statistics Cards */}
-            <DashboardStats />
+            <Box className="z-10">
+              <DashboardStats />
+            </Box>
 
             {/* Recent Patients Section */}
-            <RecentPatients />
+            <Box className="z-10">
+              <RecentPatients />
+            </Box>
 
             {/* Bottom Spacing */}
-            <Box className="h-6" />
+            <Box className="h-8" />
           </VStack>
         </Box>
       </ScrollView>

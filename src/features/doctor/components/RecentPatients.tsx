@@ -31,13 +31,13 @@ const RecentPatients: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "text-green-600";
+        return "text-green-600 dark:text-green-400";
       case "in_progress":
-        return "text-yellow-600";
+        return "text-yellow-600 dark:text-yellow-400";
       case "pending":
-        return "text-red-600";
+        return "text-red-600 dark:text-red-400";
       default:
-        return "text-gray-600";
+        return "text-gray-600 dark:text-gray-400";
     }
   };
 
@@ -64,110 +64,132 @@ const RecentPatients: React.FC = () => {
 
   if (isLoading) {
     return (
-      <VStack space="md">
-        <HStack className="items-center justify-between">
-          <Heading className="text-typography-900 text-lg font-semibold">
-            Meus Pacientes
-          </Heading>
-        </HStack>
+      <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+        <Box className="p-4">
+          <VStack space="md">
+            <HStack className="items-center justify-between">
+              <Heading className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
+                Meus Pacientes
+              </Heading>
+            </HStack>
 
-        <VStack space="sm">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <Card key={index} className="p-4">
-              <HStack className="items-center justify-between">
-                <HStack space="md" className="flex-1 items-center">
-                  <Box className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
-                  <VStack className="flex-1">
-                    <Box className="w-32 h-4 bg-gray-200 rounded animate-pulse mb-1" />
-                    <Box className="w-24 h-3 bg-gray-200 rounded animate-pulse" />
-                  </VStack>
-                </HStack>
-                <Box className="w-6 h-6 bg-gray-200 rounded animate-pulse" />
-              </HStack>
-            </Card>
-          ))}
-        </VStack>
-      </VStack>
+            <VStack space="sm">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <Box
+                  key={index}
+                  className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg"
+                >
+                  <HStack className="items-center justify-between">
+                    <HStack space="md" className="flex-1 items-center">
+                      <Box className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+                      <VStack className="flex-1">
+                        <Box className="w-32 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-1" />
+                        <Box className="w-24 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                      </VStack>
+                    </HStack>
+                    <Box className="w-6 h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  </HStack>
+                </Box>
+              ))}
+            </VStack>
+          </VStack>
+        </Box>
+      </Card>
     );
   }
 
   return (
-    <VStack space="md">
-      <HStack className="items-center justify-between">
-        <Heading className="text-typography-900 text-lg font-semibold">
-          Meus Pacientes
-        </Heading>
-        <Button
-          onPress={handleShowAllPatients}
-          variant="outline"
-          size="sm"
-          className="border-primary-300"
-        >
-          <ButtonText className="text-primary-600">Ver todos</ButtonText>
-          <ButtonIcon
-            as={ArrowRight}
-            className="ml-1 text-primary-600"
-            size="sm"
-          />
-        </Button>
-      </HStack>
+    <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+      <Box className="p-4">
+        <VStack space="md">
+          <HStack className="items-center justify-between">
+            <Heading className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
+              Meus Pacientes
+            </Heading>
+            <Button
+              onPress={handleShowAllPatients}
+              variant="outline"
+              size="sm"
+              className="border-primary-300 dark:border-primary-600"
+            >
+              <ButtonText className="text-primary-600 dark:text-primary-400">
+                Ver todos
+              </ButtonText>
+              <ButtonIcon
+                as={ArrowRight}
+                className="ml-1 text-primary-600 dark:text-primary-400"
+                size="sm"
+              />
+            </Button>
+          </HStack>
 
-      <VStack space="sm">
-        {patients && patients.length > 0 ? (
-          patients.map((patient) => {
-            const StatusIcon = getStatusIcon(patient.formStatus);
-            return (
-              <TouchableOpacity
-                key={patient.id}
-                onPress={() => handlePatientPress(patient.id)}
-                activeOpacity={0.7}
-              >
-                <Card className="p-4 hover:bg-gray-50 transition-colors">
-                  <HStack className="items-center justify-between">
-                    <HStack space="md" className="flex-1 items-center">
-                      <Box className="bg-primary-100 p-2 rounded-full">
-                        <User className="text-primary-600" size={20} />
-                      </Box>
-                      <VStack className="flex-1">
-                        <Text className="text-typography-900 font-semibold text-base">
-                          {patient.name}
-                        </Text>
-                        <Text className="text-typography-500 text-sm">
-                          Última atualização:{" "}
-                          {formatDate(patient.lastFormUpdate)}
-                        </Text>
-                      </VStack>
-                    </HStack>
+          <VStack space="sm">
+            {patients && patients.length > 0 ? (
+              patients.map((patient) => {
+                const StatusIcon = getStatusIcon(patient.formStatus);
+                return (
+                  <TouchableOpacity
+                    key={patient.id}
+                    onPress={() => handlePatientPress(patient.id)}
+                    activeOpacity={0.7}
+                  >
+                    <Box className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <HStack className="items-center justify-between">
+                        <HStack space="md" className="flex-1 items-center">
+                          <Box className="bg-primary-100 dark:bg-primary-900 p-2 rounded-full">
+                            <User
+                              className="text-primary-600 dark:text-primary-400"
+                              size={20}
+                            />
+                          </Box>
+                          <VStack className="flex-1">
+                            <Text className="text-gray-900 dark:text-gray-100 font-semibold text-base">
+                              {patient.name}
+                            </Text>
+                            <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                              Última atualização:{" "}
+                              {formatDate(patient.lastFormUpdate)}
+                            </Text>
+                          </VStack>
+                        </HStack>
 
-                    <HStack space="sm" className="items-center">
-                      <StatusIcon
-                        className={getStatusColor(patient.formStatus)}
-                        size={16}
-                      />
-                      <ArrowRight className="text-gray-400" size={16} />
-                    </HStack>
-                  </HStack>
-                </Card>
-              </TouchableOpacity>
-            );
-          })
-        ) : (
-          <Card className="p-6">
-            <VStack space="sm" className="items-center">
-              <Box className="bg-gray-100 p-4 rounded-full">
-                <User className="text-gray-400" size={32} />
+                        <HStack space="sm" className="items-center">
+                          <StatusIcon
+                            className={getStatusColor(patient.formStatus)}
+                            size={16}
+                          />
+                          <ArrowRight
+                            className="text-gray-400 dark:text-gray-500"
+                            size={16}
+                          />
+                        </HStack>
+                      </HStack>
+                    </Box>
+                  </TouchableOpacity>
+                );
+              })
+            ) : (
+              <Box className="p-6 border border-gray-100 dark:border-gray-700 rounded-lg">
+                <VStack space="sm" className="items-center">
+                  <Box className="bg-gray-100 dark:bg-gray-800 p-4 rounded-full">
+                    <User
+                      className="text-gray-400 dark:text-gray-500"
+                      size={32}
+                    />
+                  </Box>
+                  <Text className="text-gray-500 dark:text-gray-400 text-center">
+                    Nenhum paciente encontrado
+                  </Text>
+                  <Text className="text-gray-400 dark:text-gray-500 text-sm text-center">
+                    Quando você tiver pacientes, eles aparecerão aqui
+                  </Text>
+                </VStack>
               </Box>
-              <Text className="text-typography-500 text-center">
-                Nenhum paciente encontrado
-              </Text>
-              <Text className="text-typography-400 text-sm text-center">
-                Quando você tiver pacientes, eles aparecerão aqui
-              </Text>
-            </VStack>
-          </Card>
-        )}
-      </VStack>
-    </VStack>
+            )}
+          </VStack>
+        </VStack>
+      </Box>
+    </Card>
   );
 };
 
