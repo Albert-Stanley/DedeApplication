@@ -54,6 +54,11 @@ const searchPatients = async (query: string): Promise<Patient[]> => {
   return response.data;
 };
 
+const fetchAllPatients = async (): Promise<Patient[]> => {
+  const response = await api.get<Patient[]>("/doctor/patients");
+  return response.data;
+};
+
 // Custom Hooks
 export const useDoctorStats = () => {
   return useQuery({
@@ -96,5 +101,13 @@ export const useFetchAccessKey = (doctorId: string) => {
 export const useSearchPatients = () => {
   return useMutation({
     mutationFn: searchPatients,
+  });
+};
+
+export const useAllPatients = () => {
+  return useQuery({
+    queryKey: ["doctor", "patients", "all"],
+    queryFn: fetchAllPatients,
+    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 };
