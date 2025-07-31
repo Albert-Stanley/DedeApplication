@@ -22,6 +22,7 @@ import {
 import { useRouter } from "expo-router";
 import { useAllPatients } from "../../services/doctorService";
 import type { Patient } from "../../types";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 const PatientsListScreen: React.FC = () => {
   const router = useRouter();
@@ -30,10 +31,6 @@ const PatientsListScreen: React.FC = () => {
   const [sortBy, setSortBy] = useState<"name" | "date">("name");
 
   const { data: patients, isLoading, refetch } = useAllPatients();
-
-  const handleGoBack = () => {
-    router.back();
-  };
 
   const handlePatientPress = (patientId: string) => {
     router.push(`/doctor/patients/${patientId}`);
@@ -126,7 +123,7 @@ const PatientsListScreen: React.FC = () => {
       }) || [];
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50 dark:bg-background-950">
+    <SafeAreaView className="flex-1 screen-bg">
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -135,11 +132,9 @@ const PatientsListScreen: React.FC = () => {
         }
       >
         {/* Header */}
-        <Box className="px-4 pt-4 pb-6 bg-gradient-to-br from-primary-500 to-primary-700 dark:from-primary-600 dark:to-primary-800">
+        <Box className="px-4 pt-4 pb-6 header-bg">
           <HStack className="items-center justify-between mb-4">
-            <TouchableOpacity onPress={handleGoBack} className="p-2 -ml-2">
-              <ArrowLeft className="text-white" size={24} />
-            </TouchableOpacity>
+            <GoBackArrow />
             <Heading className="text-white text-xl font-semibold flex-1 text-center">
               Todos os Pacientes
             </Heading>
@@ -149,7 +144,7 @@ const PatientsListScreen: React.FC = () => {
           </HStack>
 
           {/* Search and Filters */}
-          <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-sm border-white/20 rounded-xl">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20 rounded-xl">
             <Box className="p-3">
               <VStack space="sm">
                 {/* Search Input */}
@@ -170,9 +165,11 @@ const PatientsListScreen: React.FC = () => {
                 <HStack space="sm" className="flex-wrap">
                   <TouchableOpacity
                     onPress={() => setFilterStatus("all")}
-                    className={`px-3 py-2 rounded-lg ${
-                      filterStatus === "all" ? "bg-white/30" : "bg-white/10"
-                    }`}
+                    className={
+                      filterStatus === "all"
+                        ? "filter-button-active"
+                        : "filter-button"
+                    }
                   >
                     <Text className="text-white text-sm font-medium">
                       Todos
@@ -180,9 +177,11 @@ const PatientsListScreen: React.FC = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setFilterStatus("pending")}
-                    className={`px-3 py-2 rounded-lg ${
-                      filterStatus === "pending" ? "bg-white/30" : "bg-white/10"
-                    }`}
+                    className={
+                      filterStatus === "pending"
+                        ? "filter-button-active"
+                        : "filter-button"
+                    }
                   >
                     <Text className="text-white text-sm font-medium">
                       Pendentes
@@ -190,11 +189,11 @@ const PatientsListScreen: React.FC = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setFilterStatus("in_progress")}
-                    className={`px-3 py-2 rounded-lg ${
+                    className={
                       filterStatus === "in_progress"
-                        ? "bg-white/30"
-                        : "bg-white/10"
-                    }`}
+                        ? "filter-button-active"
+                        : "filter-button"
+                    }
                   >
                     <Text className="text-white text-sm font-medium">
                       Em andamento
@@ -202,11 +201,11 @@ const PatientsListScreen: React.FC = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setFilterStatus("completed")}
-                    className={`px-3 py-2 rounded-lg ${
+                    className={
                       filterStatus === "completed"
-                        ? "bg-white/30"
-                        : "bg-white/10"
-                    }`}
+                        ? "filter-button-active"
+                        : "filter-button"
+                    }
                   >
                     <Text className="text-white text-sm font-medium">
                       Concluídos
@@ -222,10 +221,10 @@ const PatientsListScreen: React.FC = () => {
         <Box className="flex-1 px-4 -mt-4">
           <VStack space="md" className="w-full">
             {/* Sort and Results Count */}
-            <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+            <Card className="card-bg shadow-card rounded-xl">
               <Box className="p-4">
                 <HStack className="items-center justify-between">
-                  <Text className="text-gray-600 dark:text-gray-400 text-sm">
+                  <Text className="text-secondary text-sm">
                     {filteredPatients.length} paciente(s) encontrado(s)
                   </Text>
                   <TouchableOpacity
@@ -247,7 +246,7 @@ const PatientsListScreen: React.FC = () => {
             </Card>
 
             {/* Patients List */}
-            <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+            <Card className="card-bg shadow-card rounded-xl">
               <Box className="p-4">
                 <VStack space="sm">
                   {isLoading ? (
@@ -279,7 +278,7 @@ const PatientsListScreen: React.FC = () => {
                           onPress={() => handlePatientPress(patient.id)}
                           activeOpacity={0.7}
                         >
-                          <Box className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                          <Box className="p-4 border-default rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <HStack className="items-center justify-between">
                               <HStack
                                 space="md"
@@ -292,13 +291,13 @@ const PatientsListScreen: React.FC = () => {
                                   />
                                 </Box>
                                 <VStack className="flex-1">
-                                  <Text className="text-gray-900 dark:text-gray-100 font-semibold text-base">
+                                  <Text className="text-primary font-semibold text-base">
                                     {patient.name}
                                   </Text>
-                                  <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                                  <Text className="text-secondary text-sm">
                                     CPF: {patient.cpf}
                                   </Text>
-                                  <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                                  <Text className="text-secondary text-sm">
                                     Última atualização:{" "}
                                     {formatDate(patient.lastFormUpdate)}
                                   </Text>
@@ -337,18 +336,15 @@ const PatientsListScreen: React.FC = () => {
                     <Box className="p-8">
                       <VStack space="md" className="items-center">
                         <Box className="bg-gray-100 dark:bg-gray-800 p-6 rounded-full">
-                          <User
-                            className="text-gray-400 dark:text-gray-500"
-                            size={48}
-                          />
+                          <User className="text-secondary" size={48} />
                         </Box>
                         <VStack space="sm" className="items-center">
-                          <Text className="text-gray-500 dark:text-gray-400 text-center font-medium">
+                          <Text className="text-secondary text-center font-medium">
                             {searchQuery || filterStatus !== "all"
                               ? "Nenhum paciente encontrado"
                               : "Nenhum paciente cadastrado"}
                           </Text>
-                          <Text className="text-gray-400 dark:text-gray-500 text-sm text-center">
+                          <Text className="text-secondary text-sm text-center opacity-75">
                             {searchQuery || filterStatus !== "all"
                               ? "Tente ajustar os filtros de busca"
                               : "Adicione seu primeiro paciente para começar"}

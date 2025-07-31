@@ -164,6 +164,37 @@ module.exports = {
           dark: "#181719",
           new: "var(--color-background-new)",
         },
+        // Custom app colors for consistent theming
+        surface: {
+          light: "#ffffff",
+          dark: "#1f2937",
+        },
+        screen: {
+          light: "#f9fafb",
+          dark: "#0f172a",
+        },
+        card: {
+          light: "#ffffff",
+          dark: "#1f2937",
+        },
+        header: {
+          light: "#3b82f6",
+          dark: "#2563eb",
+        },
+        text: {
+          primary: {
+            light: "#111827",
+            dark: "#f9fafb",
+          },
+          secondary: {
+            light: "#6b7280",
+            dark: "#9ca3af",
+          },
+        },
+        border: {
+          light: "#e5e7eb",
+          dark: "#374151",
+        },
         indicator: {
           primary: "rgb(var(--color-indicator-primary)/<alpha-value>)",
           info: "rgb(var(--color-indicator-info)/<alpha-value>)",
@@ -195,5 +226,45 @@ module.exports = {
       },
     },
   },
-  plugins: [gluestackPlugin],
+  plugins: [
+    gluestackPlugin,
+    function ({ addUtilities }) {
+      const newUtilities = {
+        ".screen-bg": {
+          "@apply bg-screen-light dark:bg-screen-dark": {},
+        },
+        ".card-bg": {
+          "@apply bg-card-light dark:bg-card-dark": {},
+        },
+        ".surface-bg": {
+          "@apply bg-surface-light dark:bg-surface-dark": {},
+        },
+        ".header-bg": {
+          "@apply bg-gradient-to-br from-header-light to-blue-600 dark:from-header-dark dark:to-blue-700":
+            {},
+        },
+        ".text-primary": {
+          "@apply text-text-primary-light dark:text-text-primary-dark": {},
+        },
+        ".text-secondary": {
+          "@apply text-text-secondary-light dark:text-text-secondary-dark": {},
+        },
+        ".border-default": {
+          "@apply border-border-light dark:border-border-dark": {},
+        },
+        ".shadow-card": {
+          "@apply shadow-sm border border-border-light dark:border-border-dark":
+            {},
+        },
+        ".filter-button": {
+          "@apply px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 dark:bg-white/10 dark:hover:bg-white/20":
+            {},
+        },
+        ".filter-button-active": {
+          "@apply px-3 py-2 rounded-lg bg-white/30 dark:bg-white/30": {},
+        },
+      };
+      addUtilities(newUtilities);
+    },
+  ],
 };

@@ -22,6 +22,7 @@ import {
   AlertCircle,
 } from "lucide-react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 const PatientDetailScreen: React.FC = () => {
   const router = useRouter();
@@ -146,14 +147,12 @@ const PatientDetailScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50 dark:bg-background-950">
+    <SafeAreaView className="flex-1 screen-bg">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <Box className="px-4 pt-4 pb-6 bg-gradient-to-br from-primary-500 to-primary-700 dark:from-primary-600 dark:to-primary-800">
+        <Box className="px-4 pt-4 pb-6 header-bg">
           <HStack className="items-center justify-between mb-4">
-            <TouchableOpacity onPress={handleGoBack} className="p-2 -ml-2">
-              <ArrowLeft className="text-white" size={24} />
-            </TouchableOpacity>
+            <GoBackArrow />
             <Heading className="text-white text-xl font-semibold flex-1 text-center">
               Detalhes do Paciente
             </Heading>
@@ -163,7 +162,7 @@ const PatientDetailScreen: React.FC = () => {
           </HStack>
 
           {/* Patient Summary Card */}
-          <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-sm border-white/20 rounded-xl">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20 rounded-xl">
             <Box className="p-4">
               <HStack space="md" className="items-center">
                 <Box className="bg-white/20 p-4 rounded-full">

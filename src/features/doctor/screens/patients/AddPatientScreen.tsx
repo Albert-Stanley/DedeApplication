@@ -9,9 +9,9 @@ import { Heading } from "@/components/ui/heading";
 import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { FormControl } from "@/components/ui/form-control";
-import { TouchableOpacity } from "react-native";
-import { ArrowLeft, Save, User } from "lucide-react-native";
+import { Save, User } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import GoBackArrow from "@/components/common/goBackArrow";
 
 const AddPatientScreen: React.FC = () => {
   const router = useRouter();
@@ -90,14 +90,12 @@ const AddPatientScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50 dark:bg-background-950">
+    <SafeAreaView className="flex-1 screen-bg">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header */}
-        <Box className="px-4 pt-4 pb-6 bg-gradient-to-br from-primary-500 to-primary-700 dark:from-primary-600 dark:to-primary-800">
+        <GoBackArrow destinationRoute={""} />
+        <Box className="px-4 pt-4 pb-6 header-bg">
           <HStack className="items-center justify-between mb-4">
-            <TouchableOpacity onPress={handleGoBack} className="p-2 -ml-2">
-              <ArrowLeft className="text-white" size={24} />
-            </TouchableOpacity>
             <Heading className="text-white text-xl font-semibold flex-1 text-center">
               Adicionar Paciente
             </Heading>
@@ -105,7 +103,7 @@ const AddPatientScreen: React.FC = () => {
           </HStack>
 
           {/* Header Card */}
-          <Card className="bg-white/10 dark:bg-white/5 backdrop-blur-sm border-white/20 rounded-xl">
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20 rounded-xl">
             <Box className="p-4">
               <HStack space="md" className="items-center">
                 <Box className="bg-white/20 p-3 rounded-full">
@@ -128,15 +126,15 @@ const AddPatientScreen: React.FC = () => {
         <Box className="flex-1 px-4 -mt-4">
           <VStack space="md" className="w-full">
             {/* Form */}
-            <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+            <Card className="card-bg shadow-card rounded-xl">
               <Box className="p-4">
                 <VStack space="md">
-                  <Heading className="text-gray-900 dark:text-gray-100 text-lg font-semibold mb-2">
+                  <Heading className="text-primary text-lg font-semibold mb-2">
                     Informações Pessoais
                   </Heading>
 
                   <FormControl>
-                    <Text className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    <Text className="text-primary font-medium mb-2">
                       Nome Completo *
                     </Text>
                     <Input size="md">
@@ -151,9 +149,7 @@ const AddPatientScreen: React.FC = () => {
                   </FormControl>
 
                   <FormControl>
-                    <Text className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                      CPF *
-                    </Text>
+                    <Text className="text-primary font-medium mb-2">CPF *</Text>
                     <Input size="md">
                       <InputField
                         placeholder="000.000.000-00"
@@ -167,7 +163,7 @@ const AddPatientScreen: React.FC = () => {
                   </FormControl>
 
                   <FormControl>
-                    <Text className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    <Text className="text-primary font-medium mb-2">
                       E-mail *
                     </Text>
                     <Input size="md">
@@ -184,7 +180,7 @@ const AddPatientScreen: React.FC = () => {
                   </FormControl>
 
                   <FormControl>
-                    <Text className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    <Text className="text-primary font-medium mb-2">
                       Telefone *
                     </Text>
                     <Input size="md">
@@ -200,7 +196,7 @@ const AddPatientScreen: React.FC = () => {
                   </FormControl>
 
                   <FormControl>
-                    <Text className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    <Text className="text-primary font-medium mb-2">
                       Data de Nascimento *
                     </Text>
                     <Input size="md">
@@ -216,7 +212,7 @@ const AddPatientScreen: React.FC = () => {
                   </FormControl>
 
                   <FormControl>
-                    <Text className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    <Text className="text-primary font-medium mb-2">
                       Endereço
                     </Text>
                     <Input size="md">
@@ -232,7 +228,7 @@ const AddPatientScreen: React.FC = () => {
                     </Input>
                   </FormControl>
 
-                  <Text className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                  <Text className="text-secondary text-sm mt-2">
                     * Campos obrigatórios
                   </Text>
                 </VStack>
@@ -240,7 +236,7 @@ const AddPatientScreen: React.FC = () => {
             </Card>
 
             {/* Actions */}
-            <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+            <Card className="card-bg shadow-card rounded-xl">
               <Box className="p-4">
                 <VStack space="sm">
                   <Button
@@ -260,12 +256,10 @@ const AddPatientScreen: React.FC = () => {
                     onPress={handleGoBack}
                     variant="outline"
                     size="md"
-                    className="border-gray-300 dark:border-gray-600"
+                    className="border-default"
                     disabled={isLoading}
                   >
-                    <ButtonText className="text-gray-700 dark:text-gray-300">
-                      Cancelar
-                    </ButtonText>
+                    <ButtonText className="text-secondary">Cancelar</ButtonText>
                   </Button>
                 </VStack>
               </Box>

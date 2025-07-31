@@ -6,19 +6,23 @@ import { Icon } from "@/components/ui/icon";
 import { ChevronLeft } from "lucide-react-native";
 
 interface GoBackArrowProps {
-  destinationRoute: string;
+  destinationRoute?: string;
 }
 
 const GoBackArrow = ({ destinationRoute }: GoBackArrowProps) => {
   const handleBack = () => {
-    router.push(destinationRoute);
+    if (destinationRoute) {
+      router.push(destinationRoute);
+    } else {
+      router.back();
+    }
   };
   return (
     <VStack className="absolute -top-4 -left-6 right-0 px-4 pt-8 z-10">
       <Pressable
         onPress={handleBack}
         accessibilityRole="button"
-        className="w-16 h-16 p-3 items-center justify-center rounded-full bg-transparent hover:bg-background-300 active:bg-background-400"
+        className="w-16 h-16 p-3 items-center justify-center rounded-full bg-transparent hover:bg-background-300 active:bg-background-400 z-30"
       >
         <Icon as={ChevronLeft} className="stroke-background-800" size="xl" />
       </Pressable>
