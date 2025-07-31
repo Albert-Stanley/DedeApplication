@@ -7,13 +7,13 @@ import { SafeAreaView, ScrollView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
-import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/NextButton";
 import DateInput from "../components/DateInput";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import { HStack } from "@/components/ui/hstack";
+import CustomHeader from "@/components/common/CustomHeader";
 
 const patientInfoSchema = formSchema.pick({
   NomePaciente: true,
@@ -81,9 +81,13 @@ const PatientInfo = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
-      {/* Adicionar rota correta */}
-      {/* <GoBackArrow destinationRoute="?"/> */}
+    <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader
+        title="Formulário Médico - Etapa 1/6"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">

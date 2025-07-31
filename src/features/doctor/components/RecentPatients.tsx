@@ -37,7 +37,7 @@ const RecentPatients: React.FC = () => {
       case "pending":
         return "text-red-600 dark:text-red-400";
       default:
-        return "text-gray-600 dark:text-gray-400";
+        return "text-secondary";
     }
   };
 
@@ -64,21 +64,18 @@ const RecentPatients: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+      <Card className="card-bg shadow-card rounded-xl">
         <Box className="p-4">
           <VStack space="md">
             <HStack className="items-center justify-between">
-              <Heading className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
+              <Heading className="text-primary text-lg font-semibold">
                 Meus Pacientes
               </Heading>
             </HStack>
 
             <VStack space="sm">
               {Array.from({ length: 3 }).map((_, index) => (
-                <Box
-                  key={index}
-                  className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg"
-                >
+                <Box key={index} className="p-4 border-default rounded-lg">
                   <HStack className="items-center justify-between">
                     <HStack space="md" className="flex-1 items-center">
                       <Box className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
@@ -99,11 +96,11 @@ const RecentPatients: React.FC = () => {
   }
 
   return (
-    <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+    <Card className="card-bg shadow-card rounded-xl">
       <Box className="p-4">
         <VStack space="md">
           <HStack className="items-center justify-between">
-            <Heading className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
+            <Heading className="text-primary text-lg font-semibold">
               Meus Pacientes
             </Heading>
             <Button
@@ -133,7 +130,7 @@ const RecentPatients: React.FC = () => {
                     onPress={() => handlePatientPress(patient.id)}
                     activeOpacity={0.7}
                   >
-                    <Box className="p-4 border border-gray-100 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <Box className="p-4 border-default rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       <HStack className="items-center justify-between">
                         <HStack space="md" className="flex-1 items-center">
                           <Box className="bg-primary-100 dark:bg-primary-900 p-2 rounded-full">
@@ -143,10 +140,10 @@ const RecentPatients: React.FC = () => {
                             />
                           </Box>
                           <VStack className="flex-1">
-                            <Text className="text-gray-900 dark:text-gray-100 font-semibold text-base">
+                            <Text className="text-primary font-semibold text-base">
                               {patient.name}
                             </Text>
-                            <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                            <Text className="text-secondary text-sm">
                               Última atualização:{" "}
                               {formatDate(patient.lastFormUpdate)}
                             </Text>
@@ -158,10 +155,7 @@ const RecentPatients: React.FC = () => {
                             className={getStatusColor(patient.formStatus)}
                             size={16}
                           />
-                          <ArrowRight
-                            className="text-gray-400 dark:text-gray-500"
-                            size={16}
-                          />
+                          <ArrowRight className="text-secondary" size={16} />
                         </HStack>
                       </HStack>
                     </Box>
@@ -169,18 +163,15 @@ const RecentPatients: React.FC = () => {
                 );
               })
             ) : (
-              <Box className="p-6 border border-gray-100 dark:border-gray-700 rounded-lg">
+              <Box className="p-6 border-default rounded-lg">
                 <VStack space="sm" className="items-center">
                   <Box className="bg-gray-100 dark:bg-gray-800 p-4 rounded-full">
-                    <User
-                      className="text-gray-400 dark:text-gray-500"
-                      size={32}
-                    />
+                    <User className="text-secondary" size={32} />
                   </Box>
-                  <Text className="text-gray-500 dark:text-gray-400 text-center">
+                  <Text className="text-secondary text-center">
                     Nenhum paciente encontrado
                   </Text>
-                  <Text className="text-gray-400 dark:text-gray-500 text-sm text-center">
+                  <Text className="text-secondary text-sm text-center opacity-75">
                     Quando você tiver pacientes, eles aparecerão aqui
                   </Text>
                 </VStack>

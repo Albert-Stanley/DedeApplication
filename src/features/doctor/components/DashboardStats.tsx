@@ -54,9 +54,7 @@ const DashboardStats: React.FC = () => {
 
   return (
     <VStack space="md" className="w-full">
-      <Heading className="text-gray-900 dark:text-gray-100 text-lg font-semibold">
-        Resumo
-      </Heading>
+      <Heading className="text-primary text-lg font-semibold">Resumo</Heading>
 
       <VStack space="sm" className="w-full">
         <HStack space="sm" className="w-full">

@@ -7,13 +7,13 @@ import { SafeAreaView, ScrollView } from "react-native";
 import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import FormInput from "../components/FormInput";
-import GoBackArrow from "@/components/common/goBackArrow";
 import { useFormStore } from "../store/formStore";
 import NextButton from "../components/NextButton";
 import React from "react";
 import ProgressBar from "../components/ProgressBar";
 import FormRadio from "../components/FormRadio";
 import BackButton from "../components/BackButton";
+import CustomHeader from "@/components/common/CustomHeader";
 import { HStack } from "@/components/ui/hstack";
 
 const MetabolicSchema = formSchema.pick({
@@ -88,8 +88,13 @@ const Metabolic = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
-      <GoBackArrow destinationRoute="/medical-form/Step3" />
+    <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader
+        title="Formulário Médico - Etapa 4/6"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">

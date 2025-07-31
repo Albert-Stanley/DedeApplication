@@ -6,12 +6,13 @@ import { Box } from "@/components/ui/box";
 import DashboardHeader from "../components/DashboardHeader";
 import DoctorSearchBar from "../components/DoctorSearchBar";
 import QuickActions from "../components/QuickActions";
+import DoctorNavigation from "../components/DoctorNavigation";
 import DashboardStats from "../components/DashboardStats";
 import RecentPatients from "../components/RecentPatients";
 
 const DoctorHome: React.FC = () => {
   return (
-    <SafeAreaView className="flex-1 bg-background-50 ">
+    <SafeAreaView className="flex-1 screen-bg">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Header Section */}
         <DashboardHeader />
@@ -19,7 +20,7 @@ const DoctorHome: React.FC = () => {
         {/* Main Content */}
         <Box className="flex-1 px-4 -mt-4">
           <VStack space="md" className="w-full">
-            {/* Search Section - Removed Card wrapper */}
+            {/* Search Section */}
             <Box className="mt-2 z-50">
               <DoctorSearchBar />
             </Box>
@@ -27,6 +28,11 @@ const DoctorHome: React.FC = () => {
             {/* Quick Actions */}
             <Box className="z-10">
               <QuickActions />
+            </Box>
+
+            {/* Navigation Section */}
+            <Box className="z-10">
+              <DoctorNavigation />
             </Box>
 
             {/* Statistics Cards */}

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import UserQuickMenu from "./UserQuickMenu";
+import ThemeToggleButton from "@/components/common/ThemeToggleButton";
 import { useAuthStore } from "@/features/auth/store/authStore";
 
 const DashboardHeader: React.FC = () => {
@@ -28,28 +29,30 @@ const DashboardHeader: React.FC = () => {
   };
 
   return (
-    <Box className="px-4 pt-4 pb-6 bg-gradient-to-br ">
+    <Box className="px-4 pt-4 pb-6 header-bg">
       <HStack className="items-center justify-between mb-4">
         <UserQuickMenu />
-        <View className="mr-10 items-end">
-          <Text className="text-lg font-bold">
+        <View className="flex-1 items-center">
+          <Text className="text-white text-lg font-bold">
             {user?.name ? formatName(user.name) : "Dr. Usuário"}
           </Text>
-          <Text className="text-primary-300 text-sm">
+          <Text className="text-white/80 text-sm">
             ID: {user?.CRMorEmail || "N/A"}
           </Text>
         </View>
+        <Box className="w-12 h-12 justify-center items-end">
+          <ThemeToggleButton position="relative" size="sm" />
+        </Box>
       </HStack>
 
       {/* Welcome Card */}
-      {/* <Card className="bg-white/10 dark:bg-gray-800backdrop-blur-sm border-white/20 rounded-xl shadow-lg"> */}
-      <Card className="bg-white/10 dark:bg-gray-800  border-white/20 rounded-xl shadow-lg">
+      <Card className="bg-white/10 backdrop-blur-sm border-white/20 rounded-xl shadow-lg">
         <Box className="p-4">
           <VStack space="sm">
-            <Heading className=" text-xl font-semibold">
+            <Heading className="text-white text-xl font-semibold">
               {getGreeting()}, seja bem-vindo de volta!
             </Heading>
-            <Text className="text-primary-300 text-sm">
+            <Text className="text-white/80 text-sm">
               Gerencie seus pacientes e formulários médicos de forma eficiente
             </Text>
           </VStack>

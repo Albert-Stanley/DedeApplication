@@ -26,7 +26,7 @@ import colors from "tailwindcss/colors";
 
 import { useCreateAccessKey } from "../services/doctorService";
 import { useAuthStore } from "@/features/auth/store/authStore";
-import GoBackArrow from "@/components/common/goBackArrow";
+import CustomHeader from "@/components/common/CustomHeader";
 
 // Validation schema
 const createAccessKeySchema = z.object({
@@ -91,10 +91,15 @@ const CreateAccessKeyScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
-      <GoBackArrow destinationRoute="/doctor" />
+    <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader
+        title="Criar Chave de Acesso"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
 
-      <Box className="flex-1 mt-16 px-8 pt-4">
+      <Box className="flex-1 px-4 py-6">
         <VStack space="lg" className="w-full">
           {/* Header */}
           <VStack space="sm">

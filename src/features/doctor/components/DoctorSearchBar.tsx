@@ -55,14 +55,11 @@ const DoctorSearchBar: React.FC = () => {
   return (
     <Box className="relative w-full">
       {/* Search Input */}
-      <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">
+      <Card className="card-bg shadow-card rounded-xl">
         <Box className="p-3">
           <Input size="lg" className="bg-transparent border-0 focus:border-0">
             <InputSlot className="pl-3">
-              <InputIcon
-                as={Search}
-                className="text-gray-400 dark:text-gray-500"
-              />
+              <InputIcon as={Search} className="text-secondary" />
             </InputSlot>
             <InputField
               placeholder="Buscar pacientes por nome, CPF..."
@@ -73,7 +70,7 @@ const DoctorSearchBar: React.FC = () => {
                   setIsOpen(true);
                 }
               }}
-              className="text-gray-700 dark:text-gray-200"
+              className="text-primary"
             />
             {query.length > 0 && (
               <InputSlot className="pr-3">
@@ -81,10 +78,7 @@ const DoctorSearchBar: React.FC = () => {
                   onPress={clearSearch}
                   className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                  <InputIcon
-                    as={X}
-                    className="text-gray-400 dark:text-gray-500"
-                  />
+                  <InputIcon as={X} className="text-secondary" />
                 </TouchableOpacity>
               </InputSlot>
             )}
@@ -94,13 +88,11 @@ const DoctorSearchBar: React.FC = () => {
 
       {/* Search Results Dropdown */}
       {isOpen && (
-        <Card className="absolute top-full left-0 right-0 mt-2 max-h-64 shadow-xl border border-gray-200 dark:border-gray-700 rounded-xl z-[9999] bg-white dark:bg-gray-800">
+        <Card className="absolute top-full left-0 right-0 mt-2 max-h-64 shadow-xl border-default rounded-xl z-[9999] card-bg">
           <VStack className="overflow-hidden rounded-xl">
             {searchMutation.isPending ? (
               <Box className="p-4">
-                <Text className="text-center text-gray-500 dark:text-gray-400">
-                  Buscando...
-                </Text>
+                <Text className="text-center text-secondary">Buscando...</Text>
               </Box>
             ) : results.length > 0 ? (
               <>
@@ -110,7 +102,7 @@ const DoctorSearchBar: React.FC = () => {
                     onPress={() => handlePatientSelect(patient)}
                     className={`p-4 hover:bg-gray-50 dark:hover:bg-gray-700 ${
                       index !== results.length - 1
-                        ? "border-b border-gray-100 dark:border-gray-700"
+                        ? "border-b border-default"
                         : ""
                     }`}
                   >
@@ -122,10 +114,10 @@ const DoctorSearchBar: React.FC = () => {
                         />
                       </Box>
                       <VStack className="flex-1">
-                        <Text className="text-gray-900 dark:text-gray-100 font-medium">
+                        <Text className="text-primary font-medium">
                           {patient.name}
                         </Text>
-                        <Text className="text-gray-500 dark:text-gray-400 text-sm">
+                        <Text className="text-secondary text-sm">
                           CPF: {patient.cpf}
                         </Text>
                       </VStack>
@@ -160,7 +152,7 @@ const DoctorSearchBar: React.FC = () => {
               </>
             ) : (
               <Box className="p-4">
-                <Text className="text-center text-gray-500 dark:text-gray-400">
+                <Text className="text-center text-secondary">
                   {debouncedQuery.trim().length < 2
                     ? "Digite pelo menos 2 caracteres para buscar"
                     : "Nenhum paciente encontrado"}

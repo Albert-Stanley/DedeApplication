@@ -24,7 +24,7 @@ import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
-import GoBackArrow from "@/components/common/goBackArrow";
+import CustomHeader from "@/components/common/CustomHeader";
 
 // Componentes específicos do signup
 import {
@@ -110,8 +110,13 @@ const SignupScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
-      <GoBackArrow destinationRoute="/" />
+    <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader
+        title="Criar Conta"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">

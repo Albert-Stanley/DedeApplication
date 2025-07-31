@@ -3,12 +3,31 @@ import { TouchableOpacity, View, Animated, Platform } from "react-native";
 import { useTheme, useToggleTheme } from "../../stores/useThemeStore";
 import { Ionicons } from "@expo/vector-icons";
 
-export default function ThemeToggleButton() {
+interface ThemeToggleButtonProps {
+  position?: "absolute" | "relative";
+  size?: "sm" | "md" | "lg";
+}
+
+export default function ThemeToggleButton({
+  position = "absolute",
+  size = "md",
+}: ThemeToggleButtonProps) {
   const theme = useTheme();
   const toggleTheme = useToggleTheme();
   const scale = useRef(new Animated.Value(1)).current;
 
-  console.log("Renderizou");
+  const getSizeStyles = () => {
+    switch (size) {
+      case "sm":
+        return { padding: 8, iconSize: 18 };
+      case "lg":
+        return { padding: 12, iconSize: 28 };
+      default:
+        return { padding: 10, iconSize: 24 };
+    }
+  };
+
+  const { padding, iconSize } = getSizeStyles();
 
   const handlePress = useCallback(() => {
     Animated.sequence([
@@ -29,23 +48,28 @@ export default function ThemeToggleButton() {
     toggleTheme();
   }, [scale, toggleTheme]);
 
+  const containerStyle =
+    position === "absolute"
+      ? {
+          position: "absolute" as const,
+          top: 10,
+          right: 10,
+          zIndex: 9999,
+          transform: [{ scale }],
+          marginTop: 10,
+        }
+      : {
+          transform: [{ scale }],
+        };
+
   return (
-    <Animated.View
-      style={{
-        position: "absolute",
-        top: 10,
-        right: 10,
-        zIndex: 9999,
-        transform: [{ scale }],
-        marginTop: 10,
-      }}
-    >
+    <Animated.View style={containerStyle}>
       <TouchableOpacity onPress={handlePress}>
         <View
           style={{
             backgroundColor: theme === "dark" ? "#333" : "#fff",
             borderRadius: 50,
-            padding: 10,
+            padding,
             justifyContent: "center",
             alignItems: "center",
             ...(Platform.OS === "web"
@@ -61,7 +85,7 @@ export default function ThemeToggleButton() {
         >
           <Ionicons
             name={theme === "dark" ? "moon-outline" : "sunny"}
-            size={24}
+            size={iconSize}
             color={theme === "dark" ? "#d0e0e3" : "	#333333"}
           />
         </View>

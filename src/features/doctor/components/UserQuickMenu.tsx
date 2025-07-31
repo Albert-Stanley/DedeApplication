@@ -26,7 +26,11 @@ const UserQuickMenu = () => {
             className="justify-self-start"
             size="xl"
           >
-            <ButtonIcon className="w-10 h-10" as={MenuIcon} size="xl" />
+            <ButtonIcon
+              className="w-10 h-10 text-white"
+              as={MenuIcon}
+              size="xl"
+            />
           </Button>
         );
       }}

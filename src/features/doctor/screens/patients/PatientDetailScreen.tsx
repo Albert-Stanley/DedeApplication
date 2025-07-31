@@ -22,7 +22,7 @@ import {
   AlertCircle,
 } from "lucide-react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import GoBackArrow from "@/components/common/goBackArrow";
+import CustomHeader from "@/components/common/CustomHeader";
 
 const PatientDetailScreen: React.FC = () => {
   const router = useRouter();
@@ -148,50 +148,51 @@ const PatientDetailScreen: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader
+        title="Detalhes do Paciente"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Header */}
-        <Box className="px-4 pt-4 pb-6 header-bg">
-          <HStack className="items-center justify-between mb-4">
-            <GoBackArrow />
-            <Heading className="text-white text-xl font-semibold flex-1 text-center">
-              Detalhes do Paciente
-            </Heading>
-            <TouchableOpacity onPress={handleEditPatient} className="p-2 -mr-2">
-              <Edit className="text-white" size={24} />
-            </TouchableOpacity>
-          </HStack>
-
-          {/* Patient Summary Card */}
-          <Card className="bg-white/10 backdrop-blur-sm border-white/20 rounded-xl">
+        {/* Patient Summary Card */}
+        <Box className="px-4 pt-4 pb-6">
+          <Card className="card-bg shadow-card rounded-xl">
             <Box className="p-4">
-              <HStack space="md" className="items-center">
-                <Box className="bg-white/20 p-4 rounded-full">
-                  <User className="text-white" size={32} />
-                </Box>
-                <VStack className="flex-1">
-                  <Heading className="text-white text-lg font-semibold">
-                    {patient.name}
-                  </Heading>
-                  <Text className="text-white/80 text-sm">
-                    {calculateAge(patient.birthDate)} anos • CPF: {patient.cpf}
-                  </Text>
-                  <HStack space="xs" className="items-center mt-1">
-                    {React.createElement(getStatusIcon(patient.formStatus), {
-                      className: "text-white",
-                      size: 16,
-                    })}
-                    <Text className="text-white text-sm font-medium">
-                      {getStatusText(patient.formStatus)}
+              <HStack className="items-center justify-between mb-3">
+                <HStack space="md" className="items-center flex-1">
+                  <Box className="bg-primary-100 dark:bg-primary-900 p-3 rounded-full">
+                    <User className="text-primary" size={24} />
+                  </Box>
+                  <VStack className="flex-1">
+                    <Heading className="text-primary text-lg font-semibold">
+                      {patient.name}
+                    </Heading>
+                    <Text className="text-secondary text-sm">
+                      {calculateAge(patient.birthDate)} anos • CPF:{" "}
+                      {patient.cpf}
                     </Text>
-                  </HStack>
-                </VStack>
+                  </VStack>
+                </HStack>
+                <TouchableOpacity onPress={handleEditPatient} className="p-2">
+                  <Edit className="text-primary" size={20} />
+                </TouchableOpacity>
+              </HStack>
+              <HStack space="xs" className="items-center">
+                {React.createElement(getStatusIcon(patient.formStatus), {
+                  className: "text-primary",
+                  size: 16,
+                })}
+                <Text className="text-secondary text-sm font-medium">
+                  {getStatusText(patient.formStatus)}
+                </Text>
               </HStack>
             </Box>
           </Card>
         </Box>
 
         {/* Content */}
-        <Box className="flex-1 px-4 -mt-4">
+        <Box className="flex-1 px-4">
           <VStack space="md" className="w-full">
             {/* Action Buttons */}
             <Card className="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl">

@@ -22,7 +22,8 @@ import {
 import { useRouter } from "expo-router";
 import { useAllPatients } from "../../services/doctorService";
 import type { Patient } from "../../types";
-import GoBackArrow from "@/components/common/goBackArrow";
+import CustomHeader from "@/components/common/CustomHeader";
+import PatientsActions from "../../components/PatientsActions";
 
 const PatientsListScreen: React.FC = () => {
   const router = useRouter();
@@ -38,6 +39,16 @@ const PatientsListScreen: React.FC = () => {
 
   const handleAddPatient = () => {
     router.push("/doctor/patients/add");
+  };
+
+  const handleExportData = () => {
+    // Future functionality - export patients data
+    console.log("Exportar dados - Em desenvolvimento");
+  };
+
+  const handleFilter = () => {
+    // Future functionality - advanced filter modal
+    console.log("Filtros avançados - Em desenvolvimento");
   };
 
   const getStatusColor = (status: string) => {
@@ -124,6 +135,14 @@ const PatientsListScreen: React.FC = () => {
 
   return (
     <SafeAreaView className="flex-1 screen-bg">
+      {/* Custom Header */}
+      <CustomHeader
+        title="Todos os Pacientes"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
+
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
@@ -131,33 +150,25 @@ const PatientsListScreen: React.FC = () => {
           <RefreshControl refreshing={isLoading} onRefresh={refetch} />
         }
       >
-        {/* Header */}
-        <Box className="px-4 pt-4 pb-6 header-bg">
-          <HStack className="items-center justify-between mb-4">
-            <GoBackArrow />
-            <Heading className="text-white text-xl font-semibold flex-1 text-center">
-              Todos os Pacientes
-            </Heading>
-            <TouchableOpacity onPress={handleAddPatient} className="p-2 -mr-2">
-              <Plus className="text-white" size={24} />
-            </TouchableOpacity>
-          </HStack>
-
-          {/* Search and Filters */}
+        {/* Search and Filters Section */}
+        <Box className="px-4 py-4">
           <Card className="bg-white/10 backdrop-blur-sm border-white/20 rounded-xl">
             <Box className="p-3">
               <VStack space="sm">
                 {/* Search Input */}
                 <Input size="md" className="bg-white/20 border-white/30">
                   <InputSlot className="pl-3">
-                    <InputIcon as={Search} className="text-white/70" />
+                    <InputIcon
+                      as={Search}
+                      className="text-gray-600 dark:text-gray-300"
+                    />
                   </InputSlot>
                   <InputField
                     placeholder="Buscar por nome ou CPF..."
                     value={searchQuery}
                     onChangeText={setSearchQuery}
-                    className="text-white"
-                    placeholderTextColor="rgba(255, 255, 255, 0.7)"
+                    className="text-primary"
+                    placeholderTextColor="rgba(107, 114, 128, 0.7)"
                   />
                 </Input>
 
@@ -171,7 +182,7 @@ const PatientsListScreen: React.FC = () => {
                         : "filter-button"
                     }
                   >
-                    <Text className="text-white text-sm font-medium">
+                    <Text className="text-primary text-sm font-medium">
                       Todos
                     </Text>
                   </TouchableOpacity>
@@ -183,7 +194,7 @@ const PatientsListScreen: React.FC = () => {
                         : "filter-button"
                     }
                   >
-                    <Text className="text-white text-sm font-medium">
+                    <Text className="text-primary text-sm font-medium">
                       Pendentes
                     </Text>
                   </TouchableOpacity>
@@ -195,7 +206,7 @@ const PatientsListScreen: React.FC = () => {
                         : "filter-button"
                     }
                   >
-                    <Text className="text-white text-sm font-medium">
+                    <Text className="text-primary text-sm font-medium">
                       Em andamento
                     </Text>
                   </TouchableOpacity>
@@ -207,7 +218,7 @@ const PatientsListScreen: React.FC = () => {
                         : "filter-button"
                     }
                   >
-                    <Text className="text-white text-sm font-medium">
+                    <Text className="text-primary text-sm font-medium">
                       Concluídos
                     </Text>
                   </TouchableOpacity>
@@ -220,6 +231,14 @@ const PatientsListScreen: React.FC = () => {
         {/* Content */}
         <Box className="flex-1 px-4 -mt-4">
           <VStack space="md" className="w-full">
+            {/* Actions Section */}
+            <PatientsActions
+              onRefresh={refetch}
+              onFilter={handleFilter}
+              onExport={handleExportData}
+              isRefreshing={isLoading}
+            />
+
             {/* Sort and Results Count */}
             <Card className="card-bg shadow-card rounded-xl">
               <Box className="p-4">

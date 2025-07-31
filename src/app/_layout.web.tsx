@@ -46,8 +46,7 @@ function ThemeWrapper() {
       <div
         className={`w-screen h-screen bg-background-50 text-white flex flex-col overflow-hidden`}
       >
-        <ThemeToggleButton />
-        <Box className="flex-1 overflow-auto p-4 ">
+        <Box className="flex-1 overflow-auto">
           <Stack screenOptions={{ headerShown: false }} />
         </Box>
       </div>
