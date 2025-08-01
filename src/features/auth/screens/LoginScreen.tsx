@@ -80,7 +80,7 @@ const LoginScreen = () => {
   const isNumeric = (str: string) => /^\d+$/.test(str.replace(/\D/g, ""));
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
+    <SafeAreaView className="screen-bg flex-1 bg-background-50">
       <GoBackArrow destinationRoute="/" />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4">

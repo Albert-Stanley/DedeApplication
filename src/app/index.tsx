@@ -58,7 +58,7 @@ const App = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
+    <SafeAreaView className="flex-1 screen-bg">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-6 space-y-8">
           <Animated.View
