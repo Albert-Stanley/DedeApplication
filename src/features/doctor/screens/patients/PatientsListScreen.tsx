@@ -5,7 +5,6 @@ import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
-import { Heading } from "@/components/ui/heading";
 import { Input, InputField, InputSlot, InputIcon } from "@/components/ui/input";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import { TouchableOpacity } from "react-native";
@@ -14,9 +13,7 @@ import {
   User,
   Clock,
   CheckCircle,
-  Filter,
   Plus,
-  ArrowLeft,
   SortAsc,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
@@ -42,12 +39,10 @@ const PatientsListScreen: React.FC = () => {
   };
 
   const handleExportData = () => {
-    // Future functionality - export patients data
     console.log("Exportar dados - Em desenvolvimento");
   };
 
   const handleFilter = () => {
-    // Future functionality - advanced filter modal
     console.log("Filtros avançados - Em desenvolvimento");
   };
 

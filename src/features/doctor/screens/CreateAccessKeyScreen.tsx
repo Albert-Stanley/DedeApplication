@@ -4,7 +4,6 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "expo-router";
-
 import { VStack } from "@/components/ui/vstack";
 import { Box } from "@/components/ui/box";
 import { Card } from "@/components/ui/card";
@@ -17,8 +16,6 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
 } from "@/components/ui/form-control";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle } from "lucide-react-native";
@@ -86,7 +83,6 @@ const CreateAccessKeyScreen: React.FC = () => {
   };
 
   const copyToClipboard = () => {
-    // TODO: Implement clipboard functionality
     Alert.alert("Copiado!", "Chave copiada para a área de transferência.");
   };
 
@@ -115,18 +111,16 @@ const CreateAccessKeyScreen: React.FC = () => {
             <VStack space="md">
               {/* Name Field */}
               <FormControl size="lg" isInvalid={!!errors.name}>
-                <FormControlLabel>
-                  <FormControlLabelText>
-                    Nome da Secretária
-                  </FormControlLabelText>
-                </FormControlLabel>
                 <Controller
                   name="name"
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <Input className="mb-1" size="lg">
+                    <Input
+                      className="mb-1"
+                      size="lg"
+                      label="Nome da Secretária"
+                    >
                       <InputField
-                        placeholder="Digite o nome completo"
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
@@ -147,18 +141,16 @@ const CreateAccessKeyScreen: React.FC = () => {
 
               {/* Email Field */}
               <FormControl size="lg" isInvalid={!!errors.email}>
-                <FormControlLabel>
-                  <FormControlLabelText>
-                    Email da Secretária
-                  </FormControlLabelText>
-                </FormControlLabel>
                 <Controller
                   name="email"
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <Input className="mb-1" size="lg">
+                    <Input
+                      className="mb-1"
+                      size="lg"
+                      label="Email da Secretária"
+                    >
                       <InputField
-                        placeholder="secretaria@exemplo.com"
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}

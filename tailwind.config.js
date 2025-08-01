@@ -164,7 +164,6 @@ module.exports = {
           dark: "#181719",
           new: "var(--color-background-new)",
         },
-        // Custom app colors for consistent theming
         surface: {
           light: "#ffffff",
           dark: "#1f2937",
@@ -261,8 +260,9 @@ module.exports = {
             {},
         },
         ".filter-button-active": {
-          "@apply px-3 py-2 rounded-lg bg-primary-500 dark:bg-primary-600 border border-primary-500 dark:border-primary-600":
-            {},
+          "@apply px-3 py-2 rounded-lg border border-[#4A90E2]": {
+            backgroundColor: "#4A90E2",
+          },
         },
       };
       addUtilities(newUtilities);

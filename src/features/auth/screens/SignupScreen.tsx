@@ -1,14 +1,11 @@
-// Bibliotecas externas
 import React, { useState } from "react";
-import { View, Alert, ScrollView } from "react-native";
+import { Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon, AlertTriangle } from "lucide-react-native";
-
-// Componentes UI internos
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import {
@@ -25,27 +22,18 @@ import { VStack } from "@/components/ui/vstack";
 import { Spinner } from "@/components/ui/spinner";
 import colors from "tailwindcss/colors";
 import CustomHeader from "@/components/common/CustomHeader";
-
-// Componentes específicos do signup
 import {
   formatCPF,
   formatCRM,
   formatRG,
   formatDataNascimento,
 } from "@/utils/fieldFormatters";
-
-// Serviços
 import { useAuthStore } from "@/features/auth/store/authStore";
-
-// Schema de validação Zod
 import { SignupSchema, Signup } from "../schemas/signupSchema";
 
-// Componente de tela para o cadastro
 const SignupScreen = () => {
-  // Hooks de estado para exibir ou ocultar a senha
   const [showPassword, setShowPassword] = useState(false);
 
-  // Hook de formulários com validação Zod
   const {
     handleSubmit,
     control,
@@ -61,13 +49,9 @@ const SignupScreen = () => {
     },
   });
 
-  // Hook de roteamento para navegação entre as telas
   const router = useRouter();
-
-  // Hook de autenticação para cadastro
   const { register } = useAuthStore();
 
-  // Mutação para cadastro do usuário
   const signupMutation = useMutation({
     mutationFn: async (data: Signup) => {
       const success = await register({
@@ -103,7 +87,6 @@ const SignupScreen = () => {
     },
   });
 
-  // Função chamada ao submeter o formulário
   const onSubmit = (data: Signup) => {
     console.log("Dados do formulário:", data);
     signupMutation.mutate(data);
@@ -130,22 +113,18 @@ const SignupScreen = () => {
 
             {/* Campo CRM */}
             <FormControl size="lg" isInvalid={!!errors.CRM}>
-              <FormControlLabel>
-                <FormControlLabelText>CRM</FormControlLabelText>
-              </FormControlLabel>
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+              <Text className="text-sm mb-1 text-typography-500">
                 Digite apenas números
               </Text>
               <Controller
                 control={control}
                 name="CRM"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="CRM">
                     <InputField
                       value={value}
                       onChangeText={(text) => onChange(formatCRM(text))}
                       onBlur={onBlur}
-                      placeholder="Digite seu CRM"
                       keyboardType="numeric"
                       returnKeyType="next"
                     />

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { SafeAreaView, ScrollView, Alert } from "react-native";
 import { VStack } from "@/components/ui/vstack";
-import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
-import { Heading } from "@/components/ui/heading";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Button, ButtonText, ButtonIcon } from "@/components/ui/button";
 import {
@@ -133,134 +131,120 @@ const LoginPartnerDoctorScreen: React.FC = () => {
                     <VStack space="md">
                       {/* Hospital Name Field */}
                       <FormControl isInvalid={!!errors.hospitalName}>
-                        <VStack space="xs">
-                          <Text className="text-primary font-medium text-sm">
-                            Nome do Hospital *
-                          </Text>
-                          <Controller
-                            control={control}
-                            name="hospitalName"
-                            render={({
-                              field: { onChange, onBlur, value },
-                            }) => (
-                              <Input size="lg" className="border-default">
-                                <InputSlot className="pl-3">
-                                  <InputIcon
-                                    as={Building2}
-                                    className="text-gray-400"
-                                  />
-                                </InputSlot>
-                                <InputField
-                                  placeholder="Ex: Hospital São Lucas"
-                                  value={value}
-                                  onChangeText={onChange}
-                                  onBlur={onBlur}
-                                  autoCapitalize="words"
-                                />
-                              </Input>
-                            )}
-                          />
-                          {errors.hospitalName && (
-                            <FormControlError>
-                              <FormControlErrorIcon as={AlertTriangle} />
-                              <FormControlErrorText>
-                                {errors.hospitalName.message}
-                              </FormControlErrorText>
-                            </FormControlError>
+                        <Controller
+                          control={control}
+                          name="hospitalName"
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Input
+                              size="lg"
+                              className="border-default"
+                              label="Nome do Hospital"
+                            >
+                              {/* <InputIcon
+                                as={Building2}
+                                className="text-gray-400"
+                              /> */}
+                              <InputField
+                                value={value}
+                                onChangeText={onChange}
+                                onBlur={onBlur}
+                                autoCapitalize="words"
+                              />
+                            </Input>
                           )}
-                        </VStack>
+                        />
+                        {errors.hospitalName && (
+                          <FormControlError>
+                            <FormControlErrorIcon as={AlertTriangle} />
+                            <FormControlErrorText>
+                              {errors.hospitalName.message}
+                            </FormControlErrorText>
+                          </FormControlError>
+                        )}
                       </FormControl>
 
                       {/* CRM Field */}
                       <FormControl isInvalid={!!errors.crm}>
-                        <VStack space="xs">
-                          <Text className="text-primary font-medium text-sm">
-                            CRM *
-                          </Text>
-                          <Controller
-                            control={control}
-                            name="crm"
-                            render={({
-                              field: { onChange, onBlur, value },
-                            }) => (
-                              <Input size="lg" className="border-default">
-                                <InputSlot className="pl-3">
-                                  <InputIcon
-                                    as={User}
-                                    className="text-gray-400"
-                                  />
-                                </InputSlot>
-                                <InputField
-                                  placeholder="Ex: SP123456"
-                                  value={value}
-                                  onChangeText={onChange}
-                                  onBlur={onBlur}
-                                  autoCapitalize="characters"
+                        <Controller
+                          control={control}
+                          name="crm"
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Input
+                              size="lg"
+                              className="border-default"
+                              label="CRM"
+                            >
+                              {/* <InputSlot className="pl-3">
+                                <InputIcon
+                                  as={User}
+                                  className="text-gray-400"
                                 />
-                              </Input>
-                            )}
-                          />
-                          {errors.crm && (
-                            <FormControlError>
-                              <FormControlErrorIcon as={AlertTriangle} />
-                              <FormControlErrorText>
-                                {errors.crm.message}
-                              </FormControlErrorText>
-                            </FormControlError>
+                              </InputSlot> */}
+                              <InputField
+                                value={value}
+                                onChangeText={onChange}
+                                onBlur={onBlur}
+                                autoCapitalize="characters"
+                              />
+                            </Input>
                           )}
-                        </VStack>
+                        />
+                        {errors.crm && (
+                          <FormControlError>
+                            <FormControlErrorIcon as={AlertTriangle} />
+                            <FormControlErrorText>
+                              {errors.crm.message}
+                            </FormControlErrorText>
+                          </FormControlError>
+                        )}
                       </FormControl>
 
                       {/* Password Field */}
                       <FormControl isInvalid={!!errors.password}>
-                        <VStack space="xs">
-                          <Text className="text-primary font-medium text-sm">
-                            Senha *
-                          </Text>
-                          <Controller
-                            control={control}
-                            name="password"
-                            render={({
-                              field: { onChange, onBlur, value },
-                            }) => (
-                              <Input size="lg" className="border-default">
-                                <InputSlot className="pl-3">
-                                  <InputIcon
-                                    as={Lock}
+                        <Controller
+                          control={control}
+                          name="password"
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Input
+                              size="lg"
+                              className="border-default"
+                              label="Senha"
+                            >
+                              {/* <InputSlot className="pl-3">
+                                <InputIcon
+                                  as={Lock}
+                                  className="text-gray-400"
+                                />
+                              </InputSlot> */}
+                              <InputField
+                                value={value}
+                                onChangeText={onChange}
+                                onBlur={onBlur}
+                                secureTextEntry={!showPassword}
+                              />
+                              <InputSlot className="pr-3">
+                                <Button
+                                  onPress={togglePasswordVisibility}
+                                  variant="link"
+                                  size="xs"
+                                >
+                                  <ButtonIcon
+                                    as={showPassword ? EyeOff : Eye}
                                     className="text-gray-400"
                                   />
-                                </InputSlot>
-                                <InputField
-                                  placeholder="Digite sua senha"
-                                  value={value}
-                                  onChangeText={onChange}
-                                  onBlur={onBlur}
-                                  secureTextEntry={!showPassword}
-                                />
-                                <InputSlot className="pr-3">
-                                  <Button
-                                    onPress={togglePasswordVisibility}
-                                    variant="link"
-                                    size="xs"
-                                  >
-                                    <ButtonIcon
-                                      as={showPassword ? EyeOff : Eye}
-                                      className="text-gray-400"
-                                    />
-                                  </Button>
-                                </InputSlot>
-                              </Input>
-                            )}
-                          />
-                          {errors.password && (
-                            <FormControlError>
-                              <FormControlErrorIcon as={AlertTriangle} />
-                              <FormControlErrorText>
-                                {errors.password.message}
-                              </FormControlErrorText>
-                            </FormControlError>
+                                </Button>
+                              </InputSlot>
+                            </Input>
                           )}
-                        </VStack>
+                        />
+                        {errors.password && (
+                          <FormControlError>
+                            <FormControlErrorIcon as={AlertTriangle} />
+                            <FormControlErrorText>
+                              {errors.password.message}
+                            </FormControlErrorText>
+                          </FormControlError>
+                        )}
                       </FormControl>
 
                       {/* Login Button */}

@@ -1,12 +1,19 @@
 import React from "react";
-import { Input, InputField, InputIcon } from "@/components/ui/input";
+import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react-native";
 
 const SearchBar = () => {
   return (
-    <Input variant="rounded" size="md" className="w-full ">
-      <InputField placeholder=" paciente" />
-      <InputIcon as={SearchIcon} className="mr-2" />
+    <Input
+      variant="rounded"
+      size="md"
+      className="w-full"
+      label="Buscar paciente"
+    >
+      <InputSlot className="pl-3">
+        <InputIcon as={SearchIcon} className="text-gray-400" />
+      </InputSlot>
+      <InputField />
     </Input>
   );
 };

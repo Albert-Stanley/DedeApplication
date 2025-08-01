@@ -11,8 +11,6 @@ import { Text } from "@/components/ui/text";
 import {
   FormControl,
   FormControlError,
-  FormControlLabel,
-  FormControlLabelText,
   FormControlErrorText,
   FormControlErrorIcon,
 } from "@/components/ui/form-control";
@@ -20,7 +18,7 @@ import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, LogInIcon } from "lucide-react-native";
-import GoBackArrow from "@/components/common/goBackArrow";
+import CustomHeader from "@/components/common/CustomHeader";
 import { validateAccessKey } from "@/services/secretaryServices";
 
 const loginSecretarySchema = z.object({
@@ -47,8 +45,6 @@ const LoginSecretaryScreen = () => {
   const { mutate: validateKey, isPending } = useMutation({
     mutationFn: async (data: LoginSecretarySchemaType) => {
       const { chave } = data;
-
-      // Valida a chave de acesso
       const response = await validateAccessKey(chave);
 
       if (!response?.isValid) {
@@ -58,48 +54,46 @@ const LoginSecretaryScreen = () => {
       return response;
     },
     onSuccess: () => {
-      // Redireciona para o dashboard após sucesso
       router.push("screens/secretary/SecretaryDashboard");
-      reset(); // Limpa o formulário após o sucesso
+      reset(); 
     },
     onError: (error) => {
-      alert(error.message); // Exibe erro caso a validação falhe
+      alert(error.message);
     },
   });
 
   const onSubmit = (data: LoginSecretarySchemaType) => {
-    validateKey(data); // Chama a mutação para validar a chave
+    validateKey(data);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
-      <GoBackArrow destinationRoute={""} />
+    <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader
+        title="Acesso Secretário(a)"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
+
       <VStack className="flex-1 items-center justify-center px-4">
         <VStack className="max-w-[440px] w-full space-y-6">
           <VStack space="sm">
-            <Heading className="text-center" size="2xl">
+            <Heading className="text-center text-primary" size="2xl">
               Enfermeiro(a) ou Secretário(a)?
             </Heading>
-            <Text className="text-center mb-2 text-lg">
+            <Text className="text-center mb-2 text-lg text-secondary">
               Digite a chave de acesso fornecida pelo Médico
             </Text>
           </VStack>
 
-          {/* Formulário de Chave de Acesso */}
           <VStack space="xl" className="w-full">
             <FormControl isInvalid={!!errors?.chave} className="w-full">
-              <FormControlLabel>
-                <FormControlLabelText className="font-medium text-base">
-                  Chave de acesso
-                </FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="chave"
                 control={control}
                 render={({ field: { onChange, onBlur, value = "" } }) => (
-                  <Input className="mb-4" size="lg">
+                  <Input className="mb-4" size="lg" label="Chave de acesso">
                     <InputField
-                      placeholder="Digite a chave de acesso"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -123,7 +117,7 @@ const LoginSecretaryScreen = () => {
               size="lg"
               variant="solid"
               action="primary"
-              className="rounded-lg mb-6 flex-row items-center justify-center"
+              className="rounded-lg mb-6 flex-row items-center justify-center bg-primary-600 hover:bg-primary-700"
               onPress={handleSubmit(onSubmit)}
               disabled={isPending}
             >

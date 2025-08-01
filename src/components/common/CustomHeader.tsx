@@ -1,5 +1,4 @@
 import React from "react";
-import { Platform } from "react-native";
 import { HStack } from "@/components/ui/hstack";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -29,12 +28,10 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   return (
     <Box className={`px-4 pt-2 ${paddingY} ${backgroundColor} relative z-50`}>
       <HStack className="items-center justify-between min-h-[44px]">
-        {/* Left side - Back button */}
         <Box className="w-12 h-12 justify-center items-start">
           {showBackButton && <GoBackArrow />}
         </Box>
 
-        {/* Center - Title */}
         <Box className="flex-1 items-center px-2">
           {title && (
             <Heading
@@ -45,7 +42,6 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
           )}
         </Box>
 
-        {/* Right side - Theme toggle */}
         <Box className="w-12 h-12 justify-center items-end">
           {showThemeToggle && (
             <ThemeToggleButton

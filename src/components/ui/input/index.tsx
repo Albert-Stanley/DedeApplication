@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { createInput } from "@gluestack-ui/input";
-import { View, Pressable, TextInput } from "react-native";
+import { View, Pressable, TextInput, Animated } from "react-native";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import {
   withStyleContext,
@@ -10,9 +10,22 @@ import {
 import { cssInterop } from "nativewind";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import { PrimitiveIcon, UIIcon } from "@gluestack-ui/icon";
-import { useTheme } from "@/stores/useThemeStore"; // ajuste o path
+import { useTheme } from "@/stores/useThemeStore";
 
 const SCOPE = "INPUT";
+
+// Context para gerenciar estado do floating label
+const FloatingLabelContext = React.createContext<{
+  isFocused: boolean;
+  setIsFocused: (focused: boolean) => void;
+  hasValue: boolean;
+  setHasValue: (hasValue: boolean) => void;
+}>({
+  isFocused: false,
+  setIsFocused: () => {},
+  hasValue: false,
+  setHasValue: () => {},
+});
 
 const UIInput = createInput({
   Root: withStyleContext(View, SCOPE),
@@ -35,7 +48,7 @@ cssInterop(PrimitiveIcon, {
 });
 
 const inputStyle = tva({
-  base: "border-background-300 flex-row overflow-hidden content-center data-[hover=true]:border-outline-400 data-[focus=true]:border-primary-700 data-[focus=true]:hover:border-primary-700 data-[disabled=true]:opacity-40 data-[disabled=true]:hover:border-background-300 items-center",
+  base: "border-background-300 flex-row overflow-hidden content-center data-[hover=true]:border-outline-400 data-[focus=true]:border-primary-700 data-[focus=true]:hover:border-primary-700 data-[disabled=true]:opacity-40 data-[disabled=true]:hover:border-background-300 items-center relative",
 
   variants: {
     size: {
@@ -77,12 +90,12 @@ const inputSlotStyle = tva({
 });
 
 const inputFieldStyle = tva({
-  base: "flex-1 text-typography-900 py-auto px-3 placeholder:text-typography-500 h-full ios:leading-[0px] web:cursor-text web:data-[disabled=true]:cursor-not-allowed",
+  base: "flex-1 text-typography-900 py-auto placeholder:text-typography-500 h-full ios:leading-[0px] web:cursor-text web:data-[disabled=true]:cursor-not-allowed",
 
   parentVariants: {
     variant: {
       underlined: "web:outline-0 web:outline-none px-0",
-      outline: "web:outline-0 web:outline-none",
+      outline: "web:outline-0 web:outline-none px-3",
       rounded: "web:outline-0 web:outline-none px-4",
     },
 
@@ -102,17 +115,143 @@ const inputFieldStyle = tva({
   },
 });
 
+// Componente FloatingLabel
+const FloatingLabel: React.FC<{
+  label: string;
+  variant?: string;
+  size?: string;
+}> = ({ label, variant = "outline", size = "md" }) => {
+  const { isFocused, hasValue } = React.useContext(FloatingLabelContext);
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const theme = useTheme();
+
+  useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: isFocused || hasValue ? 1 : 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [isFocused, hasValue, animatedValue]);
+
+  const getSizeValues = () => {
+    switch (size) {
+      case "sm":
+        return {
+          normalTop: 10,
+          floatingTop: -8,
+          normalSize: 14,
+          floatingSize: 12,
+          leftPos: 12,
+        };
+      case "lg":
+        return {
+          normalTop: 14,
+          floatingTop: -8,
+          normalSize: 16,
+          floatingSize: 12,
+          leftPos: 16,
+        };
+      case "xl":
+        return {
+          normalTop: 16,
+          floatingTop: -8,
+          normalSize: 18,
+          floatingSize: 12,
+          leftPos: 16,
+        };
+      default: // md
+        return {
+          normalTop: 12,
+          floatingTop: -8,
+          normalSize: 16,
+          floatingSize: 12,
+          leftPos: 14,
+        };
+    }
+  };
+
+  const { normalTop, floatingTop, normalSize, floatingSize, leftPos } =
+    getSizeValues();
+
+  const labelStyle = {
+    position: "absolute" as const,
+    left: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [leftPos, leftPos - 2],
+    }),
+    top: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [normalTop, floatingTop],
+    }),
+    fontSize: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [normalSize, floatingSize],
+    }),
+    color: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [
+        theme === "dark"
+          ? "rgba(156, 163, 175, 0.7)"
+          : "rgba(107, 114, 128, 0.7)",
+        theme === "dark" ? "#60A5FA" : "#3B82F6",
+      ],
+    }),
+    backgroundColor: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ["transparent", theme === "dark" ? "#1F2937" : "#FFFFFF"],
+    }),
+    paddingHorizontal: animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 4],
+    }),
+    zIndex: 10,
+    pointerEvents: "none" as const,
+  };
+
+  return <Animated.Text style={labelStyle}>{label}</Animated.Text>;
+};
+
 type IInputProps = React.ComponentProps<typeof UIInput> &
-  VariantProps<typeof inputStyle> & { className?: string };
-const Input = React.forwardRef<React.ElementRef<typeof UIInput>, IInputProps>(
-  ({ className, variant = "outline", size = "md", ...props }, ref) => {
+  VariantProps<typeof inputStyle> & {
+    className?: string;
+    label?: string;
+    floatingLabel?: boolean;
+  };
+
+const Input = React.forwardRef<React.ComponentRef<typeof UIInput>, IInputProps>(
+  (
+    {
+      className,
+      variant = "outline",
+      size = "md",
+      label,
+      floatingLabel = true, 
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const [isFocused, setIsFocused] = React.useState(false);
+    const [hasValue, setHasValue] = React.useState(false);
+
     return (
-      <UIInput
-        ref={ref}
-        {...props}
-        className={inputStyle({ variant, size, class: className })}
-        context={{ variant, size }}
-      />
+      <FloatingLabelContext.Provider
+        value={{ isFocused, setIsFocused, hasValue, setHasValue }}
+      >
+        <View className={floatingLabel ? "relative" : ""}>
+          <UIInput
+            ref={ref}
+            {...props}
+            className={inputStyle({ variant, size, class: className })}
+            context={{ variant, size, floatingLabel }}
+          >
+            {children}
+          </UIInput>
+          {floatingLabel && label && (
+            <FloatingLabel label={label} variant={variant} size={size} />
+          )}
+        </View>
+      </FloatingLabelContext.Provider>
     );
   }
 );
@@ -189,14 +328,43 @@ type IInputFieldProps = React.ComponentProps<typeof UIInput.Input> &
 const InputField = React.forwardRef<
   React.ElementRef<typeof UIInput.Input>,
   IInputFieldProps
->(({ className, ...props }, ref) => {
-  const { variant: parentVariant, size: parentSize } = useStyleContext(SCOPE);
+>(({ className, onFocus, onBlur, value, ...props }, ref) => {
+  const context = useStyleContext(SCOPE);
+  const parentVariant = context?.variant || "outline";
+  const parentSize = context?.size || "md";
+  const floatingLabel = context?.floatingLabel || false;
+
+  const { setIsFocused, setHasValue } = React.useContext(FloatingLabelContext);
   const theme = useTheme();
+
+  // Monitor value changes
+  React.useEffect(() => {
+    if (floatingLabel) {
+      setHasValue(!!value && value.length > 0);
+    }
+  }, [value, floatingLabel, setHasValue]);
+
+  const handleFocus = (e: any) => {
+    if (floatingLabel) {
+      setIsFocused(true);
+    }
+    onFocus?.(e);
+  };
+
+  const handleBlur = (e: any) => {
+    if (floatingLabel) {
+      setIsFocused(false);
+    }
+    onBlur?.(e);
+  };
 
   return (
     <UIInput.Input
       ref={ref}
       {...props}
+      value={value}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       keyboardAppearance={theme === "dark" ? "dark" : "light"}
       className={inputFieldStyle({
         parentVariants: {
