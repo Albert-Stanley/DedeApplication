@@ -104,18 +104,12 @@ const SignupScreen = () => {
         <Box className="flex-1 justify-center items-center px-4 space-y-1">
           <VStack space="sm" className="w-full max-w-lg p-6">
             {/* Cabeçalho */}
-            <Text
-              size="2xl"
-              className="text-center font-bold text-typography-900 mb-6"
-            >
-              Crie sua conta
+            <Text size="2xl" className=" font-bold text-typography-900 mb-6">
+              Para começar, crie sua conta
             </Text>
 
             {/* Campo CRM */}
             <FormControl size="lg" isInvalid={!!errors.CRM}>
-              <Text className="text-sm mb-1 text-typography-500">
-                Digite apenas números
-              </Text>
               <Controller
                 control={control}
                 name="CRM"
@@ -131,6 +125,9 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 text-typography-500">
+                Digite apenas números
+              </Text>
               {errors?.CRM && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -143,28 +140,25 @@ const SignupScreen = () => {
 
             {/* Campo RG */}
             <FormControl size="lg" isInvalid={!!errors.RG}>
-              <FormControlLabel>
-                <FormControlLabelText>RG</FormControlLabelText>
-              </FormControlLabel>
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
-                Digite apenas números
-              </Text>
+              <FormControlLabel></FormControlLabel>
               <Controller
                 control={control}
                 name="RG"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="RG">
                     <InputField
                       value={value}
                       onChangeText={(text) => onChange(formatRG(text))}
                       onBlur={onBlur}
-                      placeholder="Digite seu RG"
                       keyboardType="numeric"
                       returnKeyType="next"
                     />
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite apenas números
+              </Text>
               {errors?.RG && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -177,28 +171,25 @@ const SignupScreen = () => {
 
             {/* Campo CPF */}
             <FormControl size="lg" isInvalid={!!errors.CPF}>
-              <FormControlLabel>
-                <FormControlLabelText>CPF</FormControlLabelText>
-              </FormControlLabel>
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
-                Digite apenas números
-              </Text>
+              <FormControlLabel></FormControlLabel>
               <Controller
                 control={control}
                 name="CPF"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="CPF">
                     <InputField
                       value={value}
                       onChangeText={(text) => onChange(formatCPF(text))}
                       onBlur={onBlur}
-                      placeholder="Digite seu CPF"
                       keyboardType="numeric"
                       returnKeyType="next"
                     />
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Digite apenas números
+              </Text>
               {errors?.CPF && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -211,30 +202,27 @@ const SignupScreen = () => {
 
             {/* Campo Data de Nascimento */}
             <FormControl size="lg" isInvalid={!!errors.DataNascimento}>
-              <FormControlLabel>
-                <FormControlLabelText>Data de Nascimento</FormControlLabelText>
-              </FormControlLabel>
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
-                Formato: DD/MM/AAAA
-              </Text>
+              <FormControlLabel></FormControlLabel>
               <Controller
                 control={control}
                 name="DataNascimento"
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="Data de Nascimento">
                     <InputField
                       value={value}
                       onChangeText={(text) =>
                         onChange(formatDataNascimento(text))
                       }
                       onBlur={onBlur}
-                      placeholder="DD/MM/AAAA"
                       keyboardType="numeric"
                       returnKeyType="next"
                     />
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Formato: DD/MM/AAAA
+              </Text>
               {errors?.DataNascimento && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -247,20 +235,14 @@ const SignupScreen = () => {
 
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={!!errors?.Password}>
-              <FormControlLabel>
-                <FormControlLabelText>Senha</FormControlLabelText>
-              </FormControlLabel>
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
-                Mínimo de 8 caracteres
-              </Text>
+              <FormControlLabel></FormControlLabel>
               <Controller
                 name="Password"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="Senha">
                     <InputField
                       id="Password"
-                      placeholder="Digite sua senha"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -280,6 +262,9 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+                Mínimo de 8 caracteres
+              </Text>
               {errors?.Password && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />

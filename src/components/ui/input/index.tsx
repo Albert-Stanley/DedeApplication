@@ -145,7 +145,7 @@ const FloatingLabel: React.FC<{
         };
       case "lg":
         return {
-          normalTop: 14,
+          normalTop: 10,
           floatingTop: -8,
           normalSize: 16,
           floatingSize: 12,
@@ -264,7 +264,7 @@ type IInputIconProps = React.ComponentProps<typeof UIInput.Icon> &
   };
 
 const InputIcon = React.forwardRef<
-  React.ElementRef<typeof UIInput.Icon>,
+  React.ComponentRef<typeof UIInput.Icon>,
   IInputIconProps
 >(({ className, size, ...props }, ref) => {
   const { size: parentSize } = useStyleContext(SCOPE);
@@ -308,7 +308,7 @@ type IInputSlotProps = React.ComponentProps<typeof UIInput.Slot> &
   VariantProps<typeof inputSlotStyle> & { className?: string };
 
 const InputSlot = React.forwardRef<
-  React.ElementRef<typeof UIInput.Slot>,
+  React.ComponentRef<typeof UIInput.Slot>,
   IInputSlotProps
 >(({ className, ...props }, ref) => {
   return (
@@ -326,7 +326,7 @@ type IInputFieldProps = React.ComponentProps<typeof UIInput.Input> &
   VariantProps<typeof inputFieldStyle> & { className?: string };
 
 const InputField = React.forwardRef<
-  React.ElementRef<typeof UIInput.Input>,
+  React.ComponentRef<typeof UIInput.Input>,
   IInputFieldProps
 >(({ className, onFocus, onBlur, value, ...props }, ref) => {
   const context = useStyleContext(SCOPE);
