@@ -17,11 +17,11 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, SendIcon } from "lucide-react-native";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
 import GoBackArrow from "@/components/common/goBackArrow";
+import CustomHeader from "@/components/common/CustomHeader";
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -42,7 +42,6 @@ const ForgotPasswordScreen = () => {
     resolver: zodResolver(forgotPasswordSchema),
   });
   const toast = useToast();
-  const router = useRouter();
 
   const sendEmailMutation = useMutation({
     mutationFn: async (data: forgotPasswordSchemaType) => {
@@ -83,11 +82,12 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background-50">
-      {/* Header with Back Button */}
-      <VStack className="absolute top-0 left-0 right-0 px-4 pt-12 z-10">
-        <GoBackArrow destinationRoute="/Login" />
-      </VStack>
+    <SafeAreaView className="screen-bg flex-1 bg-background-50">
+      <CustomHeader
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
 
       {/* Main Content */}
       <VStack className="flex-1 items-center justify-center px-4">
@@ -104,19 +104,13 @@ const ForgotPasswordScreen = () => {
           {/* Form */}
           <VStack space="xl" className="w-full">
             <FormControl isInvalid={!!errors?.email} className="w-full">
-              <FormControlLabel>
-                <FormControlLabelText className="font-medium text-base">
-                  E-mail
-                </FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 defaultValue=""
                 name="email"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-4" size="lg">
+                  <Input className="mb-4" size="lg" label="Digite seu e-mail">
                     <InputField
-                      placeholder="Digite seu e-mail"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}

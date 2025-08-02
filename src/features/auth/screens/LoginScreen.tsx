@@ -21,19 +21,14 @@ import {
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import {
-  AlertTriangle,
-  EyeIcon,
-  EyeOffIcon,
-  LogInIcon,
-} from "lucide-react-native";
-import GoBackArrow from "@/components/common/goBackArrow";
+import { AlertTriangle, EyeIcon, EyeOffIcon } from "lucide-react-native";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { formatCRM } from "@/utils/fieldFormatters";
 import colors from "tailwindcss/colors";
 
 // Schema de validação
 import { LoginSchema, Login } from "../schemas/loginSchema";
+import CustomHeader from "@/components/common/CustomHeader";
 
 const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,7 +76,12 @@ const LoginScreen = () => {
 
   return (
     <SafeAreaView className="screen-bg flex-1 bg-background-50">
-      <GoBackArrow destinationRoute="/" />
+      <CustomHeader
+        title="Login"
+        showBackButton={true}
+        showThemeToggle={true}
+        titleColor="text-primary"
+      />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-4">
           <VStack space="sm" className="w-full max-w-lg p-6">
@@ -95,19 +95,12 @@ const LoginScreen = () => {
 
             {/* Campo CRM ou Email */}
             <FormControl size="lg" isInvalid={!!errors.identifier}>
-              <FormControlLabel>
-                <FormControlLabelText>CRM ou Email</FormControlLabelText>
-              </FormControlLabel>
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
-                Digite seu CRM (apenas números) ou email
-              </Text>
               <Controller
                 name="identifier"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="CRM ou Email">
                     <InputField
-                      placeholder="CRM ou email"
                       value={value}
                       onChangeText={(text) => {
                         if (text.includes("@")) {
@@ -128,6 +121,9 @@ const LoginScreen = () => {
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 text-typography-500">
+               * Digite seu CRM (apenas números) ou email
+              </Text>
               {errors?.identifier && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -140,16 +136,12 @@ const LoginScreen = () => {
 
             {/* Campo de Senha */}
             <FormControl size="lg" isInvalid={!!errors?.Password}>
-              <FormControlLabel>
-                <FormControlLabelText>Senha</FormControlLabelText>
-              </FormControlLabel>
               <Controller
                 name="Password"
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
-                  <Input className="mb-1" size="lg">
+                  <Input className="mb-1" size="lg" label="Senha">
                     <InputField
-                      placeholder="Digite sua senha"
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -158,7 +150,7 @@ const LoginScreen = () => {
                     />
                     <InputSlot
                       onPress={() => setShowPassword(!showPassword)}
-                      className="mr-2"
+                      className=" mr-2"
                     >
                       {showPassword ? (
                         <InputIcon as={EyeIcon} />
@@ -169,6 +161,10 @@ const LoginScreen = () => {
                   </Input>
                 )}
               />
+              <Text className="text-sm mb-1 text-typography-500">
+               * Digite sua senha (mínimo 6 caracteres, incluindo letras e números)
+              </Text>
+             
               {errors?.Password && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
