@@ -13,15 +13,12 @@ import {
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Text } from "@/components/ui/text";
 import { useMutation } from "@tanstack/react-query";
-
-import DoctorHome from "@/features/doctor/screens/DoctorHome";
-
 import AnimatedButton from "@/components/common/AnimetedButton";
+import CustomHeader from "@/components/common/CustomHeader";
 
 const App = () => {
   const router = useRouter();
 
-  // Mutations para gerenciar o carregamento
   const loginMutation = useMutation({
     mutationFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -59,6 +56,7 @@ const App = () => {
 
   return (
     <SafeAreaView className="flex-1 screen-bg">
+      <CustomHeader showBackButton={false} />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <Box className="flex-1 justify-center items-center px-6 space-y-8">
           <Animated.View
@@ -78,35 +76,30 @@ const App = () => {
               text="Entrar como Médico"
               onPress={() => loginMutation.mutate()}
               isLoading={loginMutation.isPending}
-              darkColor="#4A5568"
               icon={LogInIcon}
             />
             <AnimatedButton
               text="Cadastrar-se Médico"
               onPress={() => registerMutation.mutate()}
               isLoading={registerMutation.isPending}
-              darkColor="#4A5568"
               icon={UserPlusIcon}
             />
             <AnimatedButton
               text="Médico - Hospital Parceiro"
               onPress={() => partnerDoctorMutation.mutate()}
               isLoading={partnerDoctorMutation.isPending}
-              darkColor="#2563EB"
               icon={Building2}
             />
             <AnimatedButton
               text="Entrar como Secretário(a)"
               onPress={() => nurseMutation.mutate()}
               isLoading={nurseMutation.isPending}
-              darkColor="#4A5568"
               icon={Headset}
             />
             <AnimatedButton
               text="Rotas da Aplicação"
               onPress={() => siteMapMutation.mutate()}
               isLoading={siteMapMutation.isPending}
-              darkColor="#4A5568"
               icon={Route}
             />
           </VStack>
@@ -117,7 +110,3 @@ const App = () => {
 };
 
 export default App;
-
-// export default function App() {
-//   return <DoctorHome />;
-// }

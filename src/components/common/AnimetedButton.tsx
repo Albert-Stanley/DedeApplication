@@ -5,7 +5,7 @@ import Animated, {
   useAnimatedStyle,
   FadeIn,
 } from "react-native-reanimated";
-import { Button, ButtonIcon } from "../ui/button";
+import { Button, ButtonIcon, ButtonText } from "../ui/button";
 import { Text } from "../ui/text";
 import { Spinner } from "../ui/spinner";
 import { useTheme } from "../../stores/useThemeStore";
@@ -14,7 +14,6 @@ interface AnimatedButtonProps {
   text: string;
   onPress: () => void;
   isLoading: boolean;
-  darkColor: string;
   icon: any;
 }
 
@@ -56,16 +55,17 @@ const AnimatedButton = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onPress={onPress}
-        variant="outline"
+        variant="solid"
+        action="primary"
         className="hover:scale-105 transition-transform duration-200 py-3 px-5 rounded-xl flex-row items-center"
       >
         {isLoading ? (
           <Spinner color={spinnerColor} />
         ) : (
           <>
-            <Text className="text-lg leading-tight font-bold text-center">
+            <ButtonText className="text-lg leading-tight font-bold text-center">
               {text}
-            </Text>
+            </ButtonText>
             <ButtonIcon as={icon} className="ml-3" />
           </>
         )}
