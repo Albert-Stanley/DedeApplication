@@ -24,7 +24,7 @@ const AnimatedButton = ({
   icon,
 }: AnimatedButtonProps) => {
   const theme = useTheme();
-  const spinnerColor = theme === "dark" ? "#fff" : "#000";
+  const spinnerColor = theme === "dark" ?  "#000"  : "#fff";
 
   const scale = useSharedValue(1);
 
