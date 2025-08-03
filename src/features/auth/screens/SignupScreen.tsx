@@ -156,7 +156,7 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+              <Text className="text-sm mb-1  text-typography-500">
                 Digite apenas números
               </Text>
               {errors?.RG && (
@@ -187,7 +187,7 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+              <Text className="text-sm mb-1  text-typography-500">
                 Digite apenas números
               </Text>
               {errors?.CPF && (
@@ -220,7 +220,7 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+              <Text className="text-sm mb-1  text-typography-500">
                 Formato: DD/MM/AAAA
               </Text>
               {errors?.DataNascimento && (
@@ -262,7 +262,7 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 -mt-2 text-typography-500">
+              <Text className="text-sm mb-1  text-typography-500">
                 Mínimo de 8 caracteres
               </Text>
               {errors?.Password && (
