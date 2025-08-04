@@ -1,9 +1,9 @@
 import React from "react";
 import { useRouter } from "expo-router";
-import { useAuth } from "../../hooks/useAuth"; // Aponte para o arquivo correto
+import { useAuthStore } from "../../features/auth/store/authStore";
 
 const LogoutButton = () => {
-  const { logout } = useAuth(); // Usando o hook do AuthContext
+  const { logout } = useAuthStore(); // Usando o store de autenticação
   const router = useRouter(); // Navegação com o 'useRouter' do Next.js (ou outro que você estiver usando)
 
   const handleLogout = async () => {

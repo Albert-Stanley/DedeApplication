@@ -210,7 +210,8 @@ const SelectIcon = React.forwardRef<
       />
     );
   } else if (
-    (props?.height !== undefined || props?.width !== undefined) &&
+    ((props?.style && (props.style as any)?.height !== undefined) ||
+      (props?.style && (props.style as any)?.width !== undefined)) &&
     size === undefined
   ) {
     return (
