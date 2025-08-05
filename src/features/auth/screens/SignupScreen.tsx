@@ -125,9 +125,11 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 text-typography-500">
-                Digite apenas números
-              </Text>
+              {!errors?.CRM && (
+                <Text className="text-sm mb-1 text-typography-500">
+                  Digite apenas números
+                </Text>
+              )}
               {errors?.CRM && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -156,9 +158,11 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1  text-typography-500">
-                Digite apenas números
-              </Text>
+              {!errors?.RG && (
+                <Text className="text-sm mb-1  text-typography-500">
+                  Digite apenas números
+                </Text>
+              )}
               {errors?.RG && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -187,9 +191,11 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1  text-typography-500">
-                Digite apenas números
-              </Text>
+              {!errors?.CPF && (
+                <Text className="text-sm mb-1  text-typography-500">
+                  Digite apenas números
+                </Text>
+              )}
               {errors?.CPF && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -220,9 +226,11 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1  text-typography-500">
-                Formato: DD/MM/AAAA
-              </Text>
+              {!errors?.DataNascimento && (
+                <Text className="text-sm mb-1  text-typography-500">
+                  Formato: DD/MM/AAAA
+                </Text>
+              )}
               {errors?.DataNascimento && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -262,9 +270,11 @@ const SignupScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1  text-typography-500">
-                Mínimo de 8 caracteres
-              </Text>
+              {!errors?.Password && (
+                <Text className="text-sm mb-1  text-typography-500">
+                  Mínimo de 8 caracteres
+                </Text>
+              )}
               {errors?.Password && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />

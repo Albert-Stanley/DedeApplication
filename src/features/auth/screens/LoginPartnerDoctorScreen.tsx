@@ -20,6 +20,7 @@ import {
   Lock,
   Building2,
   AlertTriangle,
+  Info,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -137,7 +138,7 @@ const LoginPartnerDoctorScreen: React.FC = () => {
                           render={({ field: { onChange, onBlur, value } }) => (
                             <Input
                               size="lg"
-                              className="border-default"
+                              className="border-default mb-2"
                               label="Nome do Hospital"
                             >
                               {/* <InputIcon
@@ -171,7 +172,7 @@ const LoginPartnerDoctorScreen: React.FC = () => {
                           render={({ field: { onChange, onBlur, value } }) => (
                             <Input
                               size="lg"
-                              className="border-default"
+                              className="border-default mb-2"
                               label="CRM"
                             >
                               {/* <InputSlot className="pl-3">
@@ -207,7 +208,7 @@ const LoginPartnerDoctorScreen: React.FC = () => {
                           render={({ field: { onChange, onBlur, value } }) => (
                             <Input
                               size="lg"
-                              className="border-default"
+                              className="border-default mb-2"
                               label="Senha"
                             >
                               {/* <InputSlot className="pl-3">
@@ -267,9 +268,15 @@ const LoginPartnerDoctorScreen: React.FC = () => {
                       {/* Info Section */}
                       <Box className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                         <VStack space="xs">
-                          <Text className="text-blue-800 dark:text-blue-200 font-medium text-sm">
-                            ℹ️ Informações importantes:
-                          </Text>
+                          <Box className="flex-row items-center mb-1">
+                            <Info
+                              size={16}
+                              className="text-blue-800 dark:text-blue-200 mr-2"
+                            />
+                            <Text className="text-blue-800 dark:text-blue-200 font-medium text-sm">
+                              Informações importantes:
+                            </Text>
+                          </Box>
                           <Text className="text-blue-700 dark:text-blue-300 text-xs">
                             • Use as credenciais fornecidas pelo seu hospital
                           </Text>

@@ -121,9 +121,11 @@ const LoginScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 text-typography-500">
-               * Digite seu CRM (apenas números) ou email
-              </Text>
+              {!errors?.identifier && (
+                <Text className="text-sm mb-1 text-typography-500">
+                  * Digite seu CRM (apenas números) ou email
+                </Text>
+              )}
               {errors?.identifier && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
@@ -161,10 +163,12 @@ const LoginScreen = () => {
                   </Input>
                 )}
               />
-              <Text className="text-sm mb-1 text-typography-500">
-               * Digite sua senha (mínimo 6 caracteres, incluindo letras e números)
-              </Text>
-             
+              {!errors?.Password && (
+                <Text className="text-sm mb-1 text-typography-500">
+                  * Digite sua senha (mínimo 6 caracteres, incluindo letras e
+                  números)
+                </Text>
+              )}
               {errors?.Password && (
                 <FormControlError>
                   <FormControlErrorIcon as={AlertTriangle} />
